@@ -1,0 +1,9 @@
+addReviewers: true
+addAssignees: false
+numberOfReviewers: 1
+useReviewGroups: true
+reviewGroups:
+  OKURA_FE:
+    - yuminn-k
+    - Lainari
+    - dorimu0
