@@ -6,7 +6,10 @@ permissions:
 
 on:
   pull_request_target:
-    types: [opened, synchronize]
+    types: [opened, synchronize, ready_for_review]
+    paths:
+      - '**.ts'
+      - '**.js'
 jobs:
   test:
     runs-on: ubuntu-latest
