@@ -13,7 +13,7 @@ import {user} from '@/public/images/navbar';
 
 export default function Navbar() {
   return (
-    <div className="w-full h-screen bg-gray-50 px-6 ">
+    <div className="relative w-full h-screen bg-gray-50 px-6 ">
       {/* Profile */}
       <div className="w-full h-12 flex items-center justify-between box-content py-1">
         <div className="flex items-center">
@@ -24,7 +24,7 @@ export default function Navbar() {
             alt="userImage"
             className="w-8 h-8 rounded-lg"
           />
-          <div className="mx-2 ">Name</div>
+          <div className="mx-2">Name</div>
         </div>
         <button className="w-8 h-8 rounded-lg float-end">
           <Image src={moreVert} alt="icon" width={30} height={30}></Image>
@@ -110,7 +110,7 @@ export default function Navbar() {
       </div>
 
       {/* group exit */}
-      <div className="flex absolute bottom-14">
+      <div className="flex absolute bottom-12">
         <Image
           src={door}
           alt="icon"
