@@ -2,7 +2,6 @@ addReviewers: true
 addAssignees: author
 numberOfReviewers: 0
 reviewers:
-  - yuminn-k
   - Lainari
   - dorimu0
   - Regulus0811
