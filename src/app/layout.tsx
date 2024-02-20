@@ -18,7 +18,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
           <div className="w-72 fixed">
             <Navbar />
           </div>
-          <div className="w-5/6 pl-72">{children}</div>
+          <div className="w-full pl-72">{children}</div>
         </div>
       </body>
     </html>
