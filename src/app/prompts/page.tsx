@@ -86,7 +86,7 @@ const MyPdfViewer = () => {
                   goToPage(Number(inputValue));
                 }
               }}
-              className="border rounded p-1, w-10 text-center"
+              className="border rounded p-1 w-10 text-center"
             />
             / {numPages}
           </div>
