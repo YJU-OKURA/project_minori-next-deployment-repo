@@ -15,6 +15,7 @@ const MyPdfViewer = () => {
   const [inputValue, setInputValue] = useState<string>('1');
   const pageRefs = useRef<(React.RefObject<HTMLDivElement> | null)[]>([]);
 
+  // PDFファイルが読み込まれたときの処理
   function onDocumentLoadSuccess({numPages}: {numPages: number}) {
     setNumPages(numPages);
     pageRefs.current = Array(numPages)
@@ -22,6 +23,7 @@ const MyPdfViewer = () => {
       .map(() => React.createRef());
   }
 
+  // ファイルを選択したときの処理
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -33,6 +35,7 @@ const MyPdfViewer = () => {
     }
   };
 
+  // ページが表示されたときの処理
   const observePage = (pageIndex: number) => {
     const observer = new IntersectionObserver(
       entries => {
@@ -43,6 +46,8 @@ const MyPdfViewer = () => {
       },
       {threshold: 0.5}
     );
+
+    // ページが表示されたときにページ番号を更新する
     const pageElement = pageRefs.current[pageIndex]?.current;
     if (pageElement) {
       observer.observe(pageElement);
@@ -54,6 +59,7 @@ const MyPdfViewer = () => {
     };
   };
 
+  // ページ番号を指定してページに移動する
   const goToPage = (page: number) => {
     const pageElement = pageRefs.current[page - 1]?.current;
     if (pageElement) {
@@ -61,6 +67,7 @@ const MyPdfViewer = () => {
     }
   };
 
+  // ページ数が変わったときにページの表示を監視する
   useEffect(() => {
     const cleanupFunctions = Array(numPages || 0)
       .fill(null)
