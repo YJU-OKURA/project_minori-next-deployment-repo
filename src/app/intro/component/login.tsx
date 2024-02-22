@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import {ModalProps} from '@/src/interfaces/intro';
-import {login} from '@/public/svgs/login';
-import {google, logo} from '@/public/images/login';
+import svgs from '@/public/svgs/login';
+import {logo} from '@/public/images/login';
 
 export default function Login({onClose}: ModalProps) {
   return (
@@ -15,7 +15,7 @@ export default function Login({onClose}: ModalProps) {
               Get started - it free. No credit card needed.
             </div>
             <Image
-              src={login}
+              src={svgs.login}
               alt="logo"
               width={450}
               height={450}
@@ -33,17 +33,28 @@ export default function Login({onClose}: ModalProps) {
                 className="m-auto w-4/5 "
               />
               <div className="my-5">
-                <button className="block m-auto border-2 w-full flex items-center justify-center p-2 m-auto my-3">
-                  <Image src={google} alt="google" width={15} height={15} />
-                  <div className="ml-2">Continue with Google</div>
+                <button className="block m-auto border-2 w-full flex items-center justify-between px-10 py-2 m-auto my-3">
+                  <Image
+                    src={svgs.google}
+                    alt="google"
+                    width={15}
+                    height={15}
+                  />
+                  <div className="ml-2 text-center w-full">
+                    Continue with Google
+                  </div>
                 </button>
-                <button className="block m-auto border-2 w-full flex items-center justify-center p-2 m-auto my-3">
-                  <Image src={google} alt="google" width={15} height={15} />
-                  <div className="ml-2">Continue with Google</div>
+                <button className="block m-auto border-2 w-full flex items-center justify-between px-10 py-2 m-auto my-3">
+                  <Image src={svgs.yahoo} alt="google" width={15} height={15} />
+                  <div className="ml-2 text-center w-full">
+                    Continue with Yahoo
+                  </div>
                 </button>
-                <button className="block m-auto border-2 w-full flex items-center justify-center p-2 m-auto my-3">
-                  <Image src={google} alt="google" width={15} height={15} />
-                  <div className="ml-2">Continue with Google</div>
+                <button className="block m-auto border-2 w-full flex items-center justify-between px-10 py-2 m-auto my-3">
+                  <Image src={svgs.line} alt="google" width={15} height={15} />
+                  <div className="ml-2 text-center w-full">
+                    Continue with Line
+                  </div>
                 </button>
               </div>
               <div className="w-1/5"></div>
