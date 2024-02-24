@@ -2,7 +2,7 @@
 import {introImg} from '@/public/svgs/intro';
 import {useState} from 'react';
 import Image from 'next/image';
-import Login from './component/login';
+import Login from './components/login';
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
