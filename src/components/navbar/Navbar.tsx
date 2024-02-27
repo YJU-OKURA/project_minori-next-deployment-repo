@@ -1,6 +1,8 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
+import {usePathname} from 'next/navigation';
+import {user} from '@/public/images/navbar';
 import {
   book,
   door,
@@ -10,8 +12,6 @@ import {
   mypage,
   search,
 } from '@/public/svgs/navbar';
-import {user} from '@/public/images/navbar';
-import {usePathname} from 'next/navigation';
 
 const Navbar = () => {
   const router = usePathname();

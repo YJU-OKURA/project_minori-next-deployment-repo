@@ -1,8 +1,8 @@
 'use client';
-import {introImg} from '@/public/svgs/intro';
 import {useState} from 'react';
 import Image from 'next/image';
 import {Login} from './components/login';
+import {introImg} from '@/public/svgs/intro';
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);

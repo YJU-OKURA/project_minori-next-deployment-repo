@@ -1,9 +1,8 @@
 'use client';
 
 import React, {useState} from 'react';
-import {Favorite, Created, Joined, Invite, Waiting} from '.';
+import {Favorite, Created, Joined, Invite, Waiting, Header} from '.';
 import {Dashboard, TabsMapping} from '@/src/components/dashboard';
-import Header from './Header';
 
 const Main = () => {
   const tabs = ['Joined', 'Created', 'Favorite', 'Invite', 'Waiting'];
