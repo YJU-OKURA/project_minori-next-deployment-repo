@@ -2,7 +2,7 @@
 import {useState} from 'react';
 import Image from 'next/image';
 import {Login} from './components/login';
-import {introImg} from '@/public/svgs/intro';
+import intro from '@/public/svgs/intro';
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +23,7 @@ export default function Page() {
         Minori makes it easier and more efficient to analyze data with LLM.
       </div>
       <div>
-        <Image src={introImg} width={500} height={500} alt="mainImg" />
+        <Image src={intro.introImg} width={500} height={500} alt="mainImg" />
       </div>
       <button
         onClick={openModal}

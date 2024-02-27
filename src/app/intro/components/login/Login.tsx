@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import {ModalProps} from '@/src/interfaces/intro';
+import login from '@/public/images/login';
 import svgs from '@/public/svgs/login';
-import {logo} from '@/public/images/login';
 
 const Login = ({onClose}: ModalProps) => {
   return (
@@ -26,7 +26,7 @@ const Login = ({onClose}: ModalProps) => {
           <div className="w-2/5">
             <div className="w-4/5 text-sm">
               <Image
-                src={logo}
+                src={login.logo}
                 alt="logo"
                 width={250}
                 height={250}

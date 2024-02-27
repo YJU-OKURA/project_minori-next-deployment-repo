@@ -1,7 +1,11 @@
-export const book = '/svgs/navbar/book.svg';
-export const group = '/svgs/navbar/group.svg';
-export const door = '/svgs/navbar/door.svg';
-export const moreHoriz = '/svgs/navbar/moreHoriz.svg';
-export const moreVert = '/svgs/navbar/moreVert.svg';
-export const mypage = '/svgs/navbar/mypage.svg';
-export const search = '/svgs/navbar/search.svg';
+const icons = {
+  book: '/svgs/navbar/book.svg',
+  group: '/svgs/navbar/group.svg',
+  door: '/svgs/navbar/door.svg',
+  moreHoriz: '/svgs/navbar/moreHoriz.svg',
+  moreVert: '/svgs/navbar/moreVert.svg',
+  mypage: '/svgs/navbar/mypage.svg',
+  search: '/svgs/navbar/search.svg',
+};
+
+export default icons;

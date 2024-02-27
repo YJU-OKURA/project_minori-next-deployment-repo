@@ -1,1 +1,5 @@
-export const user = '/images/navbar/user.png';
+const test = {
+  user: '/images/navbar/user.png',
+};
+
+export default test;
