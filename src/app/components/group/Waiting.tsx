@@ -1,5 +1,15 @@
+import {Card} from '../card';
+import logos from '@/public/images/group';
+
 const Waiting = () => {
-  return <>waiting page</>;
+  return (
+    <Card
+      ImageSrc={logos.wasedauni}
+      GroupName={'Waseda University'}
+      GroupContent={'Independence of Learning'}
+      FavoriteChecked={false}
+    />
+  );
 };
 
 export default Waiting;

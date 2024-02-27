@@ -1,9 +1,15 @@
+import {Card} from '../card';
+import logos from '@/public/images/group';
+
 const Created = () => {
   return (
     <>
-      <div className="border rounded-lg w-80 h-72 border-gray-300 mr-10 mb-10 text-black">
-        Created Group
-      </div>
+      <Card
+        ImageSrc={logos.seouluni}
+        GroupName="Seoul University"
+        GroupContent="If anyone asks you the future of your country, lift up your head and let them see the orchestra."
+        FavoriteChecked={false}
+      />
     </>
   );
 };
