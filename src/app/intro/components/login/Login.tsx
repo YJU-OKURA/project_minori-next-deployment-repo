@@ -1,9 +1,9 @@
 import Image from 'next/image';
 import {ModalProps} from '@/src/interfaces/intro';
+import login from '@/public/images/login';
 import svgs from '@/public/svgs/login';
-import {logo} from '@/public/images/login';
 
-export default function Login({onClose}: ModalProps) {
+const Login = ({onClose}: ModalProps) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className=" bg-white rounded-lg w-1/2 h-3/5 py-10 box-border">
@@ -26,7 +26,7 @@ export default function Login({onClose}: ModalProps) {
           <div className="w-2/5">
             <div className="w-4/5 text-sm">
               <Image
-                src={logo}
+                src={login.logo}
                 alt="logo"
                 width={250}
                 height={250}
@@ -70,4 +70,6 @@ export default function Login({onClose}: ModalProps) {
       </div>
     </div>
   );
-}
+};
+
+export default Login;

@@ -1,19 +1,11 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  book,
-  door,
-  group,
-  moreHoriz,
-  moreVert,
-  mypage,
-  search,
-} from '@/public/svgs/navbar';
-import {user} from '@/public/images/navbar';
 import {usePathname} from 'next/navigation';
+import test from '@/public/images/navbar';
+import icons from '@/public/svgs/navbar';
 
-export default function Navbar() {
+const Navbar = () => {
   const router = usePathname();
 
   if (router === '/intro') {
@@ -27,7 +19,7 @@ export default function Navbar() {
         <div className="w-full h-12 flex items-center justify-between box-content py-1">
           <div className="flex items-center">
             <Image
-              src={user}
+              src={test.user}
               width={10}
               height={10}
               alt="userImage"
@@ -36,7 +28,12 @@ export default function Navbar() {
             <div className="mx-2">Name</div>
           </div>
           <button className="w-8 h-8 rounded-lg float-end">
-            <Image src={moreVert} alt="icon" width={30} height={30}></Image>
+            <Image
+              src={icons.moreVert}
+              alt="icon"
+              width={30}
+              height={30}
+            ></Image>
           </button>
         </div>
         <div className="h-px bg-zinc-300"></div>
@@ -48,7 +45,7 @@ export default function Navbar() {
           <ul className="w-full">
             <li className="w-full flex mb-3 py-1">
               <Image
-                src={group}
+                src={icons.group}
                 alt="icon"
                 width={30}
                 height={30}
@@ -60,7 +57,7 @@ export default function Navbar() {
             </li>
             <li className="w-full flex mb-3 py-1">
               <Image
-                src={mypage}
+                src={icons.mypage}
                 alt="icon"
                 width={30}
                 height={30}
@@ -86,7 +83,7 @@ export default function Navbar() {
           {/* prompt - search */}
           <div className="w-full flex bg-white items-center mb-3 px-1">
             <Image
-              src={search}
+              src={icons.search}
               alt="icon"
               width={20}
               height={20}
@@ -102,7 +99,7 @@ export default function Navbar() {
           <ul>
             <li className="flex mb-3 py-1 items-center">
               <Image
-                src={book}
+                src={icons.book}
                 alt="prompt"
                 width={15}
                 height={15}
@@ -113,7 +110,7 @@ export default function Navbar() {
                   prompt1
                 </Link>
                 <Image
-                  src={moreHoriz}
+                  src={icons.moreHoriz}
                   alt="icon"
                   width={30}
                   height={30}
@@ -126,7 +123,7 @@ export default function Navbar() {
         {/* group exit */}
         <div className="flex absolute bottom-12">
           <Image
-            src={door}
+            src={icons.door}
             alt="icon"
             width={30}
             height={30}
@@ -137,4 +134,6 @@ export default function Navbar() {
       </div>
     </div>
   );
-}
+};
+
+export default Navbar;

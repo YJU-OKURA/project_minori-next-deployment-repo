@@ -1,9 +1,7 @@
 import {Main} from './components/group';
 
-export default function Page() {
-  return (
-    <>
-      <Main />
-    </>
-  );
-}
+const Page = () => {
+  return <Main />;
+};
+
+export default Page;
