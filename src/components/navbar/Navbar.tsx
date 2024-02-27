@@ -13,7 +13,7 @@ import {
 import {user} from '@/public/images/navbar';
 import {usePathname} from 'next/navigation';
 
-export default function Navbar() {
+const Navbar = () => {
   const router = usePathname();
 
   if (router === '/intro') {
@@ -137,4 +137,6 @@ export default function Navbar() {
       </div>
     </div>
   );
-}
+};
+
+export default Navbar;
