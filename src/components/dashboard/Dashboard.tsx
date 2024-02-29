@@ -11,7 +11,7 @@ const Dashboard = ({tabs, activeTab, setActiveTab}: DashboardProps) => {
       {tabs.map(tab => (
         <div
           key={tab}
-          className={`grid place-items-center w-24 h-10 border-r border-gray-400 px-4 hover:cursor-pointer ${
+          className={`grid place-items-center min-w-14 max-w-40 h-10 border-r border-gray-400 px-4 hover:cursor-pointer ${
             activeTab === tab
               ? 'text-black bg-sky-50'
               : 'text-gray-400 hover:bg-slate-100 '
