@@ -4,7 +4,7 @@ import Image from 'next/image';
 import {Login} from './components/login';
 import intro from '@/public/svgs/intro';
 
-export default function Page() {
+const Page = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
@@ -34,4 +34,6 @@ export default function Page() {
       {isOpen && <Login onClose={onClose} />}
     </main>
   );
-}
+};
+
+export default Page;
