@@ -1,10 +1,10 @@
 'use client';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Image from 'next/image';
 import {Login} from './components/login';
 import intro from '@/public/svgs/intro';
 
-export default function Page() {
+const Page = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
@@ -14,6 +14,20 @@ export default function Page() {
   const onClose = () => {
     setIsOpen(false);
   };
+
+  const handleOutsideClick = (event: MouseEvent) => {
+    const modalContainer = document.getElementById('modal-container');
+    if (modalContainer && !modalContainer.contains(event.target as Node)) {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, []);
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
       <div className="text-5xl font-semibold text-center">
@@ -31,7 +45,9 @@ export default function Page() {
       >
         Get Start
       </button>
-      {isOpen && <Login onClose={onClose} />}
+      {isOpen && <Login />}
     </main>
   );
-}
+};
+
+export default Page;
