@@ -1,2 +1,4 @@
-export type {DashboardProps} from './dashboardProps';
-export type {TabsMappingProps} from './tabsMappingProps';
+import InvitationProps from './invitationProps';
+import CardProps from './cardProps';
+
+export type {InvitationProps, CardProps};

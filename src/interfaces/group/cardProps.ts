@@ -5,4 +5,4 @@ interface CardProps {
   FavoriteChecked: boolean;
 }
 
-export type {CardProps};
+export default CardProps;

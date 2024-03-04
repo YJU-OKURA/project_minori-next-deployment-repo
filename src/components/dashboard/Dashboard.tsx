@@ -1,6 +1,6 @@
 'use client';
 
-import {DashboardProps} from '@/src/interfaces/group';
+import {DashboardProps} from '@/src/interfaces/dashboard';
 
 const Dashboard = ({tabs, activeTab, setActiveTab}: DashboardProps) => {
   const handleClick = (tab: React.SetStateAction<string>) => {

@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import {CardProps} from '@/src/interfaces/group/cardProps';
+import {CardProps} from '@/src/interfaces/group';
 import icons from '@/public/svgs/group';
 
 const Card = ({

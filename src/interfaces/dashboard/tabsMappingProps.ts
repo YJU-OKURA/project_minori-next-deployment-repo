@@ -5,4 +5,4 @@ interface TabsMappingProps {
   };
 }
 
-export type {TabsMappingProps};
+export default TabsMappingProps;
