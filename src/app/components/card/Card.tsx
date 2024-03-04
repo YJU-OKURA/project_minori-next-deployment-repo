@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import {CardProps} from '@/src/interfaces/group/cardProps';
+import {CardProps} from '@/src/interfaces/group';
 import icons from '@/public/svgs/group';
 
 const Card = ({
@@ -16,9 +16,9 @@ const Card = ({
           <Image
             src={ImageSrc}
             alt={'Card Image'}
-            priority={true}
-            layout="fill"
-            objectFit="contain"
+            fill={true}
+            sizes="(max-width: 288px), (max-hight:176px)"
+            className="absolute top-0 left-0 w-full h-full object-contain"
           />
         </div>
       </div>
@@ -30,7 +30,7 @@ const Card = ({
             alt="favoriteChecked"
             width={24}
             height={24}
-            className="items-center me-2"
+            className="items-center me-2 h-6"
           />
         ) : (
           <Image
@@ -38,7 +38,7 @@ const Card = ({
             alt="noneFavoriteChecked"
             width={24}
             height={24}
-            className="items-center me-2"
+            className="items-center me-2 h-6"
           />
         )}
       </div>

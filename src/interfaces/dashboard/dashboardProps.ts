@@ -4,4 +4,4 @@ interface DashboardProps {
   tabs: string[];
 }
 
-export type {DashboardProps};
+export default DashboardProps;

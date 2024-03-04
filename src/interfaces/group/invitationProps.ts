@@ -4,4 +4,4 @@ interface InvitationProps {
   ManagerName: string;
 }
 
-export type {InvitationProps};
+export default InvitationProps;

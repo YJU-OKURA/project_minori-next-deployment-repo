@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import {InvitationProps} from '@/src/interfaces/group/invitationProps';
+import {InvitationProps} from '@/src/interfaces/group';
 
 const Invitation = ({ImageSrc, GroupName, ManagerName}: InvitationProps) => {
   return (
@@ -11,9 +11,9 @@ const Invitation = ({ImageSrc, GroupName, ManagerName}: InvitationProps) => {
           <Image
             src={ImageSrc}
             alt={'Card Image'}
-            priority={true}
-            layout="fill"
-            objectFit="contain"
+            fill={true}
+            sizes="(max-width: 288px), (max-hight:176px)"
+            className="absolute top-0 left-0 w-full h-full object-contain"
           />
         </div>
       </div>
