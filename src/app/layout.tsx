@@ -1,6 +1,7 @@
 import type {Metadata} from 'next';
 import {Inter} from 'next/font/google';
 import {Navbar} from '../components/navbar';
+import {Footer} from '../components/footer';
 import './globals.css';
 
 const inter = Inter({subsets: ['latin']});
@@ -18,6 +19,7 @@ const RootLayout = ({children}: {children: React.ReactNode}) => {
           <Navbar />
           <div className="grow overflow-x-auto overflow-y-auto pl-72">
             {children}
+            <Footer />
           </div>
         </div>
       </body>
