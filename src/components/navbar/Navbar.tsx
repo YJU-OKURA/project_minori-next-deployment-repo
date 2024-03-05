@@ -4,6 +4,7 @@ import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 import test from '@/public/images/navbar';
 import icons from '@/public/svgs/navbar';
+import '@/src/styles/variable.css';
 
 const Navbar = () => {
   const router = usePathname();
@@ -13,10 +14,10 @@ const Navbar = () => {
   }
 
   return (
-    <div className="w-72">
-      <div className="relative w-full h-screen bg-gray-50 px-6">
+    <div className="absolute left-0 w-72 h-full bg-gray-50">
+      <div className="relative w-full px-6 pt-5 navbar flex flex-col">
         {/* Profile */}
-        <div className="w-full h-12 flex items-center justify-between box-content py-1">
+        <div className="w-full h-12 flex items-start justify-between box-content ">
           <div className="flex items-center">
             <Image
               src={test.user}
@@ -69,16 +70,16 @@ const Navbar = () => {
             </li>
             {/* Billing Page - 보류 */}
             {/* <li className="w-full flex my-2 py-2">
-          <div className="w-6 h-6 bg-gray-600 mr-3"></div>
-          <Link href="/" className="">
-          Billing
-          </Link>
-        </li> */}
+                  <div className="w-6 h-6 bg-gray-600 mr-3"></div>
+                  <Link href="/" className="">
+                  Billing
+                  </Link>
+                </li> */}
           </ul>
         </div>
         <div className="h-8"></div>
         {/* Prompt */}
-        <div className="w-full h-1/2">
+        <div className="w-full flex-1">
           <div className="text-zinc-400 mb-4">Prompt</div>
           {/* prompt - search */}
           <div className="w-full flex bg-white items-center mb-3 px-1">
@@ -119,9 +120,10 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
+        <div className="h-8"></div>
 
         {/* group exit */}
-        <div className="flex absolute bottom-12">
+        <div className="flex py-2">
           <Image
             src={icons.door}
             alt="icon"
