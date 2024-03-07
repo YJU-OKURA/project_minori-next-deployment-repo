@@ -30,3 +30,14 @@ body {
 ::-webkit-scrollbar {
   scrollbar-width: none;
 }
+
+.scrollbar-visible::-webkit-scrollbar{
+  width: 8px;
+}
+.scrollbar-visible::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,255,.5);
+}
+.scrollbar-visible {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,255,.1) rgba(0,0,255,0);
+}
