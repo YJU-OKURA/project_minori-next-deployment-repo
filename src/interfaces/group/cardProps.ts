@@ -1,7 +1,7 @@
 interface CardProps {
   ImageSrc: string;
-  GroupName: string;
-  GroupContent: string;
+  ClassName: string;
+  ClassContent: string;
   FavoriteChecked: boolean;
 }
 

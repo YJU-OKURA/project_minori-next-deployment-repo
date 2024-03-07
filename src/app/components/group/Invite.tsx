@@ -5,7 +5,7 @@ const Invite = () => {
   return (
     <Invitation
       ImageSrc={logos.github}
-      GroupName={'Github'}
+      ClassName={'Github'}
       ManagerName={'TenJinseok'}
     />
   );

@@ -1,6 +1,6 @@
 interface InvitationProps {
   ImageSrc: string;
-  GroupName: string;
+  ClassName: string;
   ManagerName: string;
 }
 

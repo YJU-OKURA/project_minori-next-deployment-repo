@@ -6,8 +6,8 @@ const Favorite = () => {
     <>
       <Card
         ImageSrc={logos.yeungjin}
-        GroupName="YeungJin University"
-        GroupContent="This is YeungJin University Group blablablabla"
+        ClassName="YeungJin University"
+        ClassContent="This is YeungJin University Group blablablabla"
         FavoriteChecked={true}
       />
     </>

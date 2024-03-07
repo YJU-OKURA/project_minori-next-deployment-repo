@@ -9,14 +9,14 @@ const Joined = () => {
       <Created />
       <Card
         ImageSrc={logos.twayair}
-        GroupName={'TwayAir'}
-        GroupContent={'Safe way, Tway'}
+        ClassName={'TwayAir'}
+        ClassContent={'Safe way, Tway'}
         FavoriteChecked={false}
       />
       <Card
         ImageSrc={logos.yahoo}
-        GroupName={'Yahoo Japan'}
-        GroupContent={'To the most convenient country in the world'}
+        ClassName={'Yahoo Japan'}
+        ClassContent={'To the most convenient country in the world'}
         FavoriteChecked={false}
       />
     </>
