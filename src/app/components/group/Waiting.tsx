@@ -5,8 +5,8 @@ const Waiting = () => {
   return (
     <Card
       ImageSrc={logos.wasedauni}
-      GroupName={'Waseda University'}
-      GroupContent={'Independence of Learning'}
+      ClassName={'Waseda University'}
+      ClassContent={'Independence of Learning'}
       FavoriteChecked={false}
     />
   );

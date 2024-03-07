@@ -6,8 +6,8 @@ const Created = () => {
     <>
       <Card
         ImageSrc={logos.seouluni}
-        GroupName="Seoul University"
-        GroupContent="If anyone asks you the future of your country, lift up your head and let them see the orchestra."
+        ClassName="Seoul University"
+        ClassContent="If anyone asks you the future of your country, lift up your head and let them see the orchestra."
         FavoriteChecked={false}
       />
     </>
