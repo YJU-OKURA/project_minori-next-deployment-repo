@@ -29,7 +29,7 @@ export const req = async <T>(
 
     return response.data as T;
   } catch (error) {
-    console.error(`${method} 요청 중 에러가 발생했습니다:`, error);
+    console.error(`${method} リクエスト中にエラーが発生しました:`, error);
     throw error;
   }
 };
