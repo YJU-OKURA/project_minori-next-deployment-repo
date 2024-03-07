@@ -8,7 +8,7 @@ const api = axios.create({
   baseURL: BASE_URL,
 });
 
-export const req = async <T>(
+const req = async <T>(
   url: string,
   method: string,
   body: object | undefined = undefined
@@ -33,3 +33,5 @@ export const req = async <T>(
     throw error;
   }
 };
+
+export default req;
