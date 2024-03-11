@@ -2,11 +2,18 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
-import test from '@/public/images/navbar';
+import MaterialContainer from './material';
+import Profile from './profile';
+import User from '@/src/model/User';
 import icons from '@/public/svgs/navbar';
 import '@/src/styles/variable.css';
 
 const Navbar = () => {
+  const pages = [
+    {name: 'Class', icon: icons.group},
+    {name: 'MyPage', icon: icons.mypage},
+    /* Billing Page - 保留 */
+  ];
   const router = usePathname();
 
   if (router === '/intro') {
@@ -17,26 +24,7 @@ const Navbar = () => {
     <div className="absolute left-0 w-72 h-full bg-gray-50">
       <div className="relative w-full px-6 pt-5 navbar flex flex-col">
         {/* Profile */}
-        <div className="w-full h-12 flex items-start justify-between box-content ">
-          <div className="flex items-center">
-            <Image
-              src={test.user}
-              width={10}
-              height={10}
-              alt="userImage"
-              className="w-8 h-8 rounded-lg"
-            />
-            <div className="mx-2">Name</div>
-          </div>
-          <button className="w-8 h-8 rounded-lg float-end">
-            <Image
-              src={icons.moreVert}
-              alt="icon"
-              width={30}
-              height={30}
-            ></Image>
-          </button>
-        </div>
+        <Profile {...User} />
         <div className="h-px bg-zinc-300"></div>
         <div className="h-8"></div>
 
@@ -44,85 +32,33 @@ const Navbar = () => {
         <div className="w-full">
           <div className="text-zinc-400 mb-4">Pages</div>
           <ul className="w-full">
-            <li className="w-full flex mb-3 py-1">
-              <Image
-                src={icons.group}
-                alt="icon"
-                width={30}
-                height={30}
-                className="w-6 h-6 mr-3"
-              ></Image>
-              <Link href="/" className="">
-                Group
-              </Link>
-            </li>
-            <li className="w-full flex mb-3 py-1">
-              <Image
-                src={icons.mypage}
-                alt="icon"
-                width={30}
-                height={30}
-                className="w-6 h-6 mr-3"
-              ></Image>
-              <Link href="/" className="">
-                MyPage
-              </Link>
-            </li>
-            {/* Billing Page - 보류 */}
-            {/* <li className="w-full flex my-2 py-2">
-                  <div className="w-6 h-6 bg-gray-600 mr-3"></div>
+            {pages.map((page, index) => {
+              return (
+                <li className="w-full flex mb-3 py-1" key={index}>
+                  <Image
+                    src={page.icon}
+                    alt="icon"
+                    width={30}
+                    height={30}
+                    className="w-6 h-6 mr-3"
+                  ></Image>
                   <Link href="/" className="">
-                  Billing
+                    {page.name}
                   </Link>
-                </li> */}
+                </li>
+              );
+            })}
           </ul>
         </div>
         <div className="h-8"></div>
-        {/* Prompt */}
+        {/* Subject*/}
         <div className="w-full flex-1">
-          <div className="text-zinc-400 mb-4">Prompt</div>
-          {/* prompt - search */}
-          <div className="w-full flex bg-white items-center mb-3 px-1">
-            <Image
-              src={icons.search}
-              alt="icon"
-              width={20}
-              height={20}
-              className="w-5 h-5 opacity-50"
-            />
-            <input
-              type="text"
-              className="w-full p-1 border-0 outline-none"
-              placeholder="Search"
-            />
-          </div>
-          {/* Prompt - list */}
-          <ul>
-            <li className="flex mb-3 py-1 items-center">
-              <Image
-                src={icons.book}
-                alt="prompt"
-                width={15}
-                height={15}
-                className="w-6 h-6 mr-3"
-              ></Image>
-              <div className="flex w-full items-center justify-between">
-                <Link href="/" className="">
-                  prompt1
-                </Link>
-                <Image
-                  src={icons.moreHoriz}
-                  alt="icon"
-                  width={30}
-                  height={30}
-                ></Image>
-              </div>
-            </li>
-          </ul>
+          <div className="text-zinc-400 mb-4">Subject</div>
+          <MaterialContainer />
         </div>
         <div className="h-8"></div>
 
-        {/* group exit */}
+        {/* class exit */}
         <div className="flex py-2">
           <Image
             src={icons.door}
@@ -131,7 +67,7 @@ const Navbar = () => {
             height={30}
             className="w-6 h-6 mr-2"
           ></Image>
-          <div>그룹 나가기</div>
+          <Link href="/">Leave Class</Link>
         </div>
       </div>
     </div>
