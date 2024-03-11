@@ -2,17 +2,17 @@ import axios from 'axios';
 import {HttpStatus} from './httpStatus';
 
 const BASE_URL = 'http://43.203.66.25/api/gin';
-// const BASE_URL = 'http://15.165.15.156:3000/api/nest';
+// const BASE_URL = 'http://3.38.86.236:3000/api/nest';
 
 const api = axios.create({
   baseURL: BASE_URL,
 });
 
-const req = async <T>(
+const req = async (
   url: string,
   method: string,
   body: object | undefined = undefined
-): Promise<T> => {
+) => {
   if (typeof body !== 'undefined') {
     api.defaults.headers.common['Content-Type'] = 'application/json';
   }
@@ -27,7 +27,7 @@ const req = async <T>(
       return response.data;
     }
 
-    return response.data as T;
+    return response.data;
   } catch (error) {
     console.error(`${method} リクエスト中にエラーが発生しました:`, error);
     throw error;
