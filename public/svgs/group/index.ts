@@ -10,6 +10,7 @@ const icons = {
   post: 'svgs/group/post.svg',
   moreVert: 'svgs/group/moreVert.svg',
   addButton: 'svgs/group/addButton.svg',
+  joinIntro: 'svgs/group/joinIntro.svg',
 };
 
 export default icons;
