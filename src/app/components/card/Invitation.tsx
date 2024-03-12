@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import {InvitationProps} from '@/src/interfaces/group';
 
-const Invitation = ({ImageSrc, GroupName, ManagerName}: InvitationProps) => {
+const Invitation = ({ImageSrc, ClassName, ManagerName}: InvitationProps) => {
   return (
     <div className="border rounded-lg w-80 h-72 overflow-hidden border-gray-300 mr-10 mb-10 hover:shadow-lg active:bg-neutral-50 focus:ring focus:ring-gray-400 transform hover:scale-105 transition duration-200 ease-in-out">
       <div className="flex justify-center items-center">
@@ -19,7 +19,7 @@ const Invitation = ({ImageSrc, GroupName, ManagerName}: InvitationProps) => {
       </div>
       <div className="p-4">
         <h3 className="font-semibold text-lg text-violet-500 mb-2">
-          {GroupName}
+          {ClassName}
         </h3>
         <p className="text-base text-gray-700">
           Invited by{' '}

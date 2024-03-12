@@ -1,12 +1,31 @@
-import Image from 'next/image';
+import {Dropdown} from './dropdown';
+import {ModalProps} from '@/src/interfaces/group/modal';
 import icons from '@/public/svgs/group';
 
-const Header = () => {
+const Header = ({setActiveModalId}: ModalProps) => {
+  const dropdownItems = [
+    {
+      modalId: 'classCreate',
+      icon: icons.create,
+      alt: 'Create Icon',
+      text: 'Create Class',
+    },
+    {
+      modalId: 'classJoin',
+      icon: icons.join,
+      alt: 'Join Icon',
+      text: 'Join Class',
+    },
+  ];
   return (
     <div className="mt-6">
       <div className="flex items-center justify-between me-10">
-        <h1 className="text-black text-5xl font-medium">Groups</h1>
-        <Image src={icons.folder} width={70} height={70} alt={'folder'} />
+        <h1 className="text-black text-5xl font-medium">Classes</h1>
+        <Dropdown
+          dropdownImageSrc={icons.folder}
+          items={dropdownItems}
+          setActiveModalId={setActiveModalId}
+        />
       </div>
       <div className="border border-gray-200 w-11/12 mt-4"></div>
     </div>
