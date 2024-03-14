@@ -2,15 +2,285 @@
 
 exports[`renders homepage unchanged 1`] = `
 <div>
-  <div>
-    <h1>
-      Home
-    </h1>
-    <a
-      href="/about"
+  <div
+    class="flex min-h-72 ms-10 bg-gray-200"
+  >
+    <div
+      class="flex-grow bg-white"
     >
-      About
-    </a>
+      <div
+        class="mt-6"
+      >
+        <div
+          class="flex items-center justify-between me-10"
+        >
+          <h1
+            class="text-black text-5xl font-medium"
+          >
+            Classes
+          </h1>
+          <div
+            class="relative"
+          >
+            <img
+              alt="folder"
+              data-nimg="1"
+              decoding="async"
+              height="70"
+              id="dropdownImage"
+              loading="lazy"
+              src="/svgs/group/folder.svg"
+              style="color: transparent;"
+              width="70"
+            />
+          </div>
+        </div>
+        <div
+          class="border border-gray-200 w-11/12 mt-4"
+        />
+      </div>
+      <nav
+        class="mt-4 flex"
+      >
+        <div
+          class="grid place-items-center min-w-14 max-w-40 h-10 border-r border-gray-400 px-4 hover:cursor-pointer text-black bg-sky-50"
+        >
+          Joined
+        </div>
+        <div
+          class="grid place-items-center min-w-14 max-w-40 h-10 border-r border-gray-400 px-4 hover:cursor-pointer text-gray-400 hover:bg-slate-100 "
+        >
+          Created
+        </div>
+        <div
+          class="grid place-items-center min-w-14 max-w-40 h-10 border-r border-gray-400 px-4 hover:cursor-pointer text-gray-400 hover:bg-slate-100 "
+        >
+          Favorite
+        </div>
+        <div
+          class="grid place-items-center min-w-14 max-w-40 h-10 border-r border-gray-400 px-4 hover:cursor-pointer text-gray-400 hover:bg-slate-100 "
+        >
+          Invite
+        </div>
+        <div
+          class="grid place-items-center min-w-14 max-w-40 h-10 border-r border-gray-400 px-4 hover:cursor-pointer text-gray-400 hover:bg-slate-100 "
+        >
+          Waiting
+        </div>
+      </nav>
+      <div
+        class="flex flex-wrap ms-2 mt-12 "
+      >
+        <a
+          href="/YeungJin University"
+        >
+          <div
+            class="border rounded-lg w-80 h-72 border-gray-300 mr-10 mb-10 hover:shadow-md active:bg-neutral-50 focus:ring focus:ring-gray-400 transform hover:scale-105 transition duration-200 ease-in-out"
+          >
+            <div
+              class="flex justify-center items-center mt-2"
+            >
+              <div
+                class="w-72 h-44 relative overflow-hidden"
+              >
+                <img
+                  alt="Card Image"
+                  class="absolute top-0 left-0 w-full h-full object-contain"
+                  data-nimg="fill"
+                  decoding="async"
+                  loading="lazy"
+                  sizes="(max-width: 288px), (max-hight:176px)"
+                  src="/_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=3840&q=75"
+                  srcset="/_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=16&q=75 16w, /_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=32&q=75 32w, /_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=48&q=75 48w, /_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=64&q=75 64w, /_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=96&q=75 96w, /_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=128&q=75 128w, /_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=256&q=75 256w, /_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=384&q=75 384w, /_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=640&q=75 640w, /_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=750&q=75 750w, /_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=828&q=75 828w, /_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=1080&q=75 1080w, /_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=1200&q=75 1200w, /_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=1920&q=75 1920w, /_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=2048&q=75 2048w, /_next/image?url=%2Fimages%2Fgroup%2Fyeungjin.png&w=3840&q=75 3840w"
+                  style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; color: transparent;"
+                />
+              </div>
+            </div>
+            <div
+              class="flex place-content-between ms-4 mt-2"
+            >
+              <h3
+                class="font-bold text-lg"
+              >
+                YeungJin University
+              </h3>
+              <img
+                alt="favoriteChecked"
+                class="items-center me-2 h-6"
+                data-nimg="1"
+                decoding="async"
+                height="24"
+                loading="lazy"
+                src="svgs/group/favorite.svg"
+                style="color: transparent;"
+                width="24"
+              />
+            </div>
+            <p
+              class="text-base ms-4 mt-2 me-2 overflow-hidden overflow-ellipsis whitespace-nowrap"
+            >
+              This is YeungJin University Group blablablabla
+            </p>
+          </div>
+        </a>
+        <a
+          href="/Seoul University"
+        >
+          <div
+            class="border rounded-lg w-80 h-72 border-gray-300 mr-10 mb-10 hover:shadow-md active:bg-neutral-50 focus:ring focus:ring-gray-400 transform hover:scale-105 transition duration-200 ease-in-out"
+          >
+            <div
+              class="flex justify-center items-center mt-2"
+            >
+              <div
+                class="w-72 h-44 relative overflow-hidden"
+              >
+                <img
+                  alt="Card Image"
+                  class="absolute top-0 left-0 w-full h-full object-contain"
+                  data-nimg="fill"
+                  decoding="async"
+                  loading="lazy"
+                  sizes="(max-width: 288px), (max-hight:176px)"
+                  src="/_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=3840&q=75"
+                  srcset="/_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=16&q=75 16w, /_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=32&q=75 32w, /_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=48&q=75 48w, /_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=64&q=75 64w, /_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=96&q=75 96w, /_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=128&q=75 128w, /_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=256&q=75 256w, /_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=384&q=75 384w, /_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=640&q=75 640w, /_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=750&q=75 750w, /_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=828&q=75 828w, /_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=1080&q=75 1080w, /_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=1200&q=75 1200w, /_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=1920&q=75 1920w, /_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=2048&q=75 2048w, /_next/image?url=%2Fimages%2Fgroup%2Fseouluni.png&w=3840&q=75 3840w"
+                  style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; color: transparent;"
+                />
+              </div>
+            </div>
+            <div
+              class="flex place-content-between ms-4 mt-2"
+            >
+              <h3
+                class="font-bold text-lg"
+              >
+                Seoul University
+              </h3>
+              <img
+                alt="noneFavoriteChecked"
+                class="items-center me-2 h-6"
+                data-nimg="1"
+                decoding="async"
+                height="24"
+                loading="lazy"
+                src="svgs/group/noneFavorite.svg"
+                style="color: transparent;"
+                width="24"
+              />
+            </div>
+            <p
+              class="text-base ms-4 mt-2 me-2 overflow-hidden overflow-ellipsis whitespace-nowrap"
+            >
+              If anyone asks you the future of your country, lift up your head and let them see the orchestra.
+            </p>
+          </div>
+        </a>
+        <a
+          href="/TwayAir"
+        >
+          <div
+            class="border rounded-lg w-80 h-72 border-gray-300 mr-10 mb-10 hover:shadow-md active:bg-neutral-50 focus:ring focus:ring-gray-400 transform hover:scale-105 transition duration-200 ease-in-out"
+          >
+            <div
+              class="flex justify-center items-center mt-2"
+            >
+              <div
+                class="w-72 h-44 relative overflow-hidden"
+              >
+                <img
+                  alt="Card Image"
+                  class="absolute top-0 left-0 w-full h-full object-contain"
+                  data-nimg="fill"
+                  decoding="async"
+                  loading="lazy"
+                  sizes="(max-width: 288px), (max-hight:176px)"
+                  src="/_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=3840&q=75"
+                  srcset="/_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=16&q=75 16w, /_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=32&q=75 32w, /_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=48&q=75 48w, /_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=64&q=75 64w, /_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=96&q=75 96w, /_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=128&q=75 128w, /_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=256&q=75 256w, /_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=384&q=75 384w, /_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=640&q=75 640w, /_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=750&q=75 750w, /_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=828&q=75 828w, /_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=1080&q=75 1080w, /_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=1200&q=75 1200w, /_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=1920&q=75 1920w, /_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=2048&q=75 2048w, /_next/image?url=%2Fimages%2Fgroup%2Ftwayair.png&w=3840&q=75 3840w"
+                  style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; color: transparent;"
+                />
+              </div>
+            </div>
+            <div
+              class="flex place-content-between ms-4 mt-2"
+            >
+              <h3
+                class="font-bold text-lg"
+              >
+                TwayAir
+              </h3>
+              <img
+                alt="noneFavoriteChecked"
+                class="items-center me-2 h-6"
+                data-nimg="1"
+                decoding="async"
+                height="24"
+                loading="lazy"
+                src="svgs/group/noneFavorite.svg"
+                style="color: transparent;"
+                width="24"
+              />
+            </div>
+            <p
+              class="text-base ms-4 mt-2 me-2 overflow-hidden overflow-ellipsis whitespace-nowrap"
+            >
+              Safe way, Tway
+            </p>
+          </div>
+        </a>
+        <a
+          href="/Yahoo Japan"
+        >
+          <div
+            class="border rounded-lg w-80 h-72 border-gray-300 mr-10 mb-10 hover:shadow-md active:bg-neutral-50 focus:ring focus:ring-gray-400 transform hover:scale-105 transition duration-200 ease-in-out"
+          >
+            <div
+              class="flex justify-center items-center mt-2"
+            >
+              <div
+                class="w-72 h-44 relative overflow-hidden"
+              >
+                <img
+                  alt="Card Image"
+                  class="absolute top-0 left-0 w-full h-full object-contain"
+                  data-nimg="fill"
+                  decoding="async"
+                  loading="lazy"
+                  sizes="(max-width: 288px), (max-hight:176px)"
+                  src="/_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=3840&q=75"
+                  srcset="/_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=16&q=75 16w, /_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=32&q=75 32w, /_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=48&q=75 48w, /_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=64&q=75 64w, /_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=96&q=75 96w, /_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=128&q=75 128w, /_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=256&q=75 256w, /_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=384&q=75 384w, /_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=640&q=75 640w, /_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=750&q=75 750w, /_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=828&q=75 828w, /_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=1080&q=75 1080w, /_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=1200&q=75 1200w, /_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=1920&q=75 1920w, /_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=2048&q=75 2048w, /_next/image?url=%2Fimages%2Fgroup%2Fyahoo.png&w=3840&q=75 3840w"
+                  style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; color: transparent;"
+                />
+              </div>
+            </div>
+            <div
+              class="flex place-content-between ms-4 mt-2"
+            >
+              <h3
+                class="font-bold text-lg"
+              >
+                Yahoo Japan
+              </h3>
+              <img
+                alt="noneFavoriteChecked"
+                class="items-center me-2 h-6"
+                data-nimg="1"
+                decoding="async"
+                height="24"
+                loading="lazy"
+                src="svgs/group/noneFavorite.svg"
+                style="color: transparent;"
+                width="24"
+              />
+            </div>
+            <p
+              class="text-base ms-4 mt-2 me-2 overflow-hidden overflow-ellipsis whitespace-nowrap"
+            >
+              To the most convenient country in the world
+            </p>
+          </div>
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 `;
