@@ -8,7 +8,8 @@ const getMaterial = async (
 ): Promise<Material[]> => {
   const response = await req(
     `/class/${classId}/materials?page=${pageNumber}&limit=${limitNumber}`,
-    'get'
+    'get',
+    'nest'
   );
 
   return response.data;
