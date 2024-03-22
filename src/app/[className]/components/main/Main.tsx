@@ -16,11 +16,11 @@ const Main = ({managerRole}: RoleProps) => {
           <div key={index}>
             <div className="flex">
               <Image
-                className="me-2"
                 src={icons.dropdownButton}
                 alt={'dropdown'}
-                width={24}
-                height={24}
+                width={0}
+                height={0}
+                className="me-2 w-auto h-auto max-w-6 max-h-6"
               />
               <div className="flex w-full justify-between">
                 <h3 className="text-xl font-bold">{section.title}</h3>
@@ -30,8 +30,9 @@ const Main = ({managerRole}: RoleProps) => {
                     <Image
                       src={icons.addButton}
                       alt={'addButton'}
-                      width={24}
-                      height={24}
+                      width={0}
+                      height={0}
+                      className="w-auto h-auto max-w-6 max-h-6"
                     />
                   )}
               </div>
