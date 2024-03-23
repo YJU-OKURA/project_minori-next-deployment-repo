@@ -1,21 +1,42 @@
 'use client';
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Favorite, Created, Joined, Invite, Waiting, Header} from '.';
 import {Dashboard, TabsMapping} from '@/src/components/dashboard';
-import {ClassCreate, ClassJoin} from './modal';
+import {ClassCreate, ClassJoin, ClassPassword} from './modal';
+import User from '@/src/model/User';
+import getClasses from '@/src/api/_class/getClasses';
 
 const Main = () => {
+  const [classes, setClasses] = useState([]);
   const tabs = ['Joined', 'Created', 'Favorite', 'Invite', 'Waiting'];
   const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [activeModalId, setActiveModalId] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const loadClasses = async () => {
+      const response = await getClasses(User.uid);
+      setClasses(response.data);
+    };
+
+    loadClasses();
+  }, []);
+
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
   const tabMapping = {
-    Joined: <Joined />,
+    Joined: <Joined classes={classes} />,
+    // {/* バックエンドAPIの修正が終わったら、四つのComponentも追加します。 */}
     Created: <Created />,
     Favorite: <Favorite />,
-    Invite: <Invite />,
+    Invite: <Invite onInvitationClick={handleModalOpen} />,
     Waiting: <Waiting />,
   };
-  const [activeModalId, setActiveModalId] = useState('');
 
   return (
     <div className="flex min-h-72 ms-10 bg-gray-200">
@@ -33,8 +54,12 @@ const Main = () => {
           <ClassCreate setActiveModalId={setActiveModalId} />
         )}
         {activeModalId === 'classJoin' && (
-          <ClassJoin setActiveModalId={setActiveModalId} />
+          <ClassJoin
+            setActiveModalId={setActiveModalId}
+            setIsModalOpen={setIsModalOpen}
+          />
         )}
+        {isModalOpen && <ClassPassword onClose={handleModalClose} />}
       </div>
     </div>
   );

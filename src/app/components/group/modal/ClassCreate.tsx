@@ -52,6 +52,20 @@ const ClassCreate = ({setActiveModalId}: ModalProps) => {
     }
   };
 
+  const handleFileChange = () => {
+    const fileInput = document.querySelector(
+      'input[type="file"]'
+    ) as HTMLInputElement;
+    const file = fileInput?.files?.[0];
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      setFileDataUrl(reader.result as string);
+    });
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div id="classCreate" className="fixed z-10 inset-0 overflow-y-auto">
       <div className="flex items-end justify-center pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -71,9 +85,7 @@ const ClassCreate = ({setActiveModalId}: ModalProps) => {
                 </h3>
                 <form action="">
                   <div className="mt-6">
-                    <p className="text-lg font-semibold">
-                      Thumbnail <span className="text-red-600">*</span>
-                    </p>
+                    <p className="text-lg font-semibold">Thumbnail</p>
                     <div
                       onDragEnter={handleDragIn}
                       onDragLeave={handleDragOut}
@@ -107,7 +119,11 @@ const ClassCreate = ({setActiveModalId}: ModalProps) => {
                           </span>
                         </div>
                       </div>
-                      <input type="file" className="h-full w-full opacity-0" />
+                      <input
+                        type="file"
+                        className="h-full w-full opacity-0"
+                        onChange={handleFileChange}
+                      />
                     </div>
                   </div>
                   <div className="mt-6">
@@ -133,10 +149,10 @@ const ClassCreate = ({setActiveModalId}: ModalProps) => {
                             required
                           >
                             <option value="">Select Capacity</option>
-                            <option value="">10</option>
-                            <option value="">20</option>
-                            <option value="">30</option>
-                            <option value="">40</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
                           </select>
                         </div>
                       </div>

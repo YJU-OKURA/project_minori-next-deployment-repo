@@ -3,9 +3,17 @@
 import Image from 'next/image';
 import {InvitationProps} from '@/src/interfaces/group';
 
-const Invitation = ({ImageSrc, ClassName, ManagerName}: InvitationProps) => {
+const Invitation = ({
+  ImageSrc,
+  ClassName,
+  ManagerName,
+  onClick,
+}: InvitationProps) => {
   return (
-    <div className="border rounded-lg w-80 h-72 overflow-hidden border-gray-300 mr-10 mb-10 hover:shadow-lg active:bg-neutral-50 focus:ring focus:ring-gray-400 transform hover:scale-105 transition duration-200 ease-in-out">
+    <div
+      className="border rounded-lg w-80 h-72 overflow-hidden border-gray-300 mr-10 mb-10 hover:shadow-lg active:bg-neutral-50 focus:ring focus:ring-gray-400 transform hover:scale-105 transition duration-200 ease-in-out"
+      onClick={onClick}
+    >
       <div className="flex justify-center items-center">
         <div className="w-72 h-44 relative overflow-hidden">
           <Image

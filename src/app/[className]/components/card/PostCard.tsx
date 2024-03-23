@@ -16,13 +16,13 @@ const PostCard = ({ImageSrc, PostName, managerRole}: PostCardProps) => {
           />
         </div>
       </div>
-      <div className="flex ms-4 mt-4">
+      <div className="flex items-center ms-4 mt-4">
         <Image
-          className="me-2"
           src={icons.post}
           alt={'post'}
-          width={20}
-          height={20}
+          width={0}
+          height={0}
+          className="me-2 w-auto h-auto max-w-5 max-h-5"
         />
         <div className="flex w-full justify-between">
           <h3 className="font-bold text-lg">{PostName}</h3>
