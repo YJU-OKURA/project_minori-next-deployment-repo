@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import {ClassWaitProps} from '@/src/interfaces/group/modal';
+import {ClassWaitProps} from '@/src/interfaces/_class/modal';
 
 const ClassWait = ({ImageSrc, ClassName, setIsModalOpen}: ClassWaitProps) => {
   const onClose = () => {

@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import {InvitationProps} from '@/src/interfaces/group';
+import {InvitationProps} from '@/src/interfaces/_class';
 
 const Invitation = ({
   ImageSrc,

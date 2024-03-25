@@ -1,5 +1,5 @@
 import {Card} from '../card';
-import logos from '@/public/images/group';
+import logos from '@/public/images/_class';
 
 const Created = () => {
   return (

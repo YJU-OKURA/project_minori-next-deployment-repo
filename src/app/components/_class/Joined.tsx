@@ -1,6 +1,6 @@
 // import {Favorite, Created} from '.';
 import {Card} from '../card';
-import {ClassProps} from '@/src/interfaces/group';
+import {ClassProps} from '@/src/interfaces/_class';
 
 const Joined = ({classes}: ClassProps) => {
   console.log(classes);

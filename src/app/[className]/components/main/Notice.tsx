@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import icons from '@/public/svgs/group';
-import {RoleProps} from '@/src/interfaces/group';
+import icons from '@/public/svgs/_class';
+import {RoleProps} from '@/src/interfaces/_class';
 
 const Notice = ({managerRole}: RoleProps) => {
   return (

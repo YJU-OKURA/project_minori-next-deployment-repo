@@ -3,7 +3,7 @@
 import {useState} from 'react';
 import {ClassWait} from './modal';
 import {Card} from '../card';
-import logos from '@/public/images/group';
+import logos from '@/public/images/_class';
 
 const Waiting = () => {
   const [modalOpen, setModalOpen] = useState(false);

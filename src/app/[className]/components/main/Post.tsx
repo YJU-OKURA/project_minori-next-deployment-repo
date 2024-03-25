@@ -1,6 +1,6 @@
 import {PostCard} from '../card';
-import {RoleProps} from '@/src/interfaces/group';
-import logos from '@/public/images/group';
+import {RoleProps} from '@/src/interfaces/_class';
+import logos from '@/public/images/_class';
 
 const Post = ({managerRole}: RoleProps) => {
   return (

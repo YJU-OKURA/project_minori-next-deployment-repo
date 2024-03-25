@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import {PostCardProps} from '@/src/interfaces/group';
-import icons from '@/public/svgs/group';
+import {PostCardProps} from '@/src/interfaces/_class';
+import icons from '@/public/svgs/_class';
 
 const PostCard = ({ImageSrc, PostName, managerRole}: PostCardProps) => {
   return (
