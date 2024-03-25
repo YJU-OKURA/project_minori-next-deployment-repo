@@ -1,9 +1,9 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import {CardProps} from '@/src/interfaces/group';
-import icons from '@/public/svgs/group';
-import logos from '@/public/images/group';
+import {CardProps} from '@/src/interfaces/_class';
+import icons from '@/public/svgs/_class';
+import logos from '@/public/images/_class';
 
 const Card = ({
   ImageSrc,

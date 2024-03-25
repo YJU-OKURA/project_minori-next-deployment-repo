@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import {Notice, Post, Schedule} from '.';
-import {RoleProps} from '@/src/interfaces/group';
-import icons from '@/public/svgs/group';
+import {RoleProps} from '@/src/interfaces/_class';
+import icons from '@/public/svgs/_class';
 
 const Main = ({managerRole}: RoleProps) => {
   const mainSections = [

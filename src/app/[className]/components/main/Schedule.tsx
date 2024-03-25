@@ -1,5 +1,5 @@
 import {ScheduleCard} from '../card';
-import {RoleProps} from '@/src/interfaces/group';
+import {RoleProps} from '@/src/interfaces/_class';
 
 const Schedule = ({managerRole}: RoleProps) => {
   const scheduleArray = [

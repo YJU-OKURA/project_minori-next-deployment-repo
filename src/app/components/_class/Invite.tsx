@@ -1,6 +1,6 @@
 import {Invitation} from '../card';
-import logos from '@/public/images/group';
-import {InviteProps} from '@/src/interfaces/group';
+import logos from '@/public/images/_class';
+import {InviteProps} from '@/src/interfaces/_class';
 
 const Invite = ({onInvitationClick}: InviteProps) => {
   return (

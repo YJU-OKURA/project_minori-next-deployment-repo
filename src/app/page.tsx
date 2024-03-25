@@ -1,4 +1,4 @@
-import {Main} from './components/group';
+import {Main} from './components/_class';
 
 const Page = () => {
   return <Main />;

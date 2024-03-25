@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import {ScheduleCardProps} from '@/src/interfaces/group';
-import icons from '@/public/svgs/group';
+import {ScheduleCardProps} from '@/src/interfaces/_class';
+import icons from '@/public/svgs/_class';
 
 const ScheduleCard = ({scheduleName, time, managerRole}: ScheduleCardProps) => {
   return (

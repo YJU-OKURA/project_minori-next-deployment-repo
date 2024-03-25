@@ -1,6 +1,6 @@
 import {Dropdown} from './dropdown';
-import {ModalProps} from '@/src/interfaces/group/modal';
-import icons from '@/public/svgs/group';
+import {ModalProps} from '@/src/interfaces/_class/modal';
+import icons from '@/public/svgs/_class';
 
 const Header = ({setActiveModalId}: ModalProps) => {
   const dropdownItems = [

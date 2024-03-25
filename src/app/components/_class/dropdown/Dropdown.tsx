@@ -2,7 +2,7 @@
 
 import {useState, useEffect} from 'react';
 import Image from 'next/image';
-import {DropdownProps} from '@/src/interfaces/group';
+import {DropdownProps} from '@/src/interfaces/_class';
 
 const Dropdown = ({
   dropdownImageSrc,

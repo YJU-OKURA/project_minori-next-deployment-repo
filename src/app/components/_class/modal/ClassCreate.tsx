@@ -2,8 +2,8 @@
 
 import {useState} from 'react';
 import Image from 'next/image';
-import {ModalProps} from '@/src/interfaces/group/modal';
-import icons from '@/public/svgs/group';
+import {ModalProps} from '@/src/interfaces/_class/modal';
+import icons from '@/public/svgs/_class';
 
 const ClassCreate = ({setActiveModalId}: ModalProps) => {
   const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);

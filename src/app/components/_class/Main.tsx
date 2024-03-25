@@ -2,8 +2,8 @@
 
 import React, {useEffect, useState} from 'react';
 import {Favorite, Created, Joined, Invite, Waiting, Header} from '.';
-import {Dashboard, TabsMapping} from '@/src/components/dashboard';
 import {ClassCreate, ClassJoin, ClassPassword} from './modal';
+import {Dashboard, TabsMapping} from '@/src/components/dashboard';
 import User from '@/src/model/User';
 import getClasses from '@/src/api/_class/getClasses';
 
