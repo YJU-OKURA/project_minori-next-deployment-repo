@@ -1,5 +1,6 @@
-import {ManageContainer, UserContainer} from './components';
-import SubContainer from './components/subComponents/SubContainer';
+// import {ManageContainer, UserContainer} from './components';
+import {UserContainer} from './components';
+import {SubContainer} from './components/subComponents';
 import User from '@/src/model/User';
 
 const Page = () => {
@@ -8,7 +9,7 @@ const Page = () => {
       {User.managerRoll === 'manager' ? (
         <div className="p-4">
           <div className="text-5xl py-4 border-b-2">SubjectName</div>
-          <ManageContainer />
+          {/* <ManageContainer /> */}
         </div>
       ) : (
         <div className="flex w-full h-screen p-3">
