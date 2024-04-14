@@ -6,6 +6,14 @@
   height: calc(100% - 36px);
 }
 
+.manageContainer {
+  height: calc(100% - 65px);
+}
+
+.manageContainer2 {
+  height: calc(100% - 40px);
+}
+
 .feedbackContainer {
   height: calc(100% - 116px);
 }
