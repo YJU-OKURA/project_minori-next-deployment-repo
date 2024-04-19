@@ -1,7 +1,19 @@
+'use client';
 import Image from 'next/image';
+import getGoogleLogin from '@/src/api/auth/getGoogleLogin';
 import svgs from '@/public/svgs/login';
 
 const Login = () => {
+  const handleClickButton = () => {
+    getGoogleLogin().then(res => {
+      if (res.url) {
+        window.location.href = res.url;
+      } else {
+        console.log(res);
+        console.error('URL not received');
+      }
+    });
+  };
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div
@@ -40,7 +52,10 @@ const Login = () => {
                 />
               </div>
               <div className="my-5">
-                <button className="block border-2 w-full flex items-center justify-between px-6 py-2 m-auto my-3 rounded-lg">
+                <button
+                  className="block border-2 w-full flex items-center justify-between px-6 py-2 m-auto my-3 rounded-lg"
+                  onClick={handleClickButton}
+                >
                   <Image
                     src={svgs.google}
                     alt="google"
