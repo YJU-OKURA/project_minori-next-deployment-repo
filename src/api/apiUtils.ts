@@ -1,12 +1,49 @@
 import axios from 'axios';
-import {HttpStatus} from './httpStatus';
-
-const BASE_URLS = {
-  gin: 'http://43.203.66.25/api/gin',
-  nest: 'http://3.38.86.236:3000/api/nest',
-};
+import BASE_URLS from './baseUrl';
+import HTTP_STATUS from './httpStatus';
 
 const api = axios.create();
+
+// api.interceptors.request.use(async config => {
+//   const token = localStorage.getItem('access_token');
+
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
+//   console.log(config);
+
+//   return config;
+// });
+
+api.interceptors.response.use(
+  response => {
+    return response;
+  },
+  async error => {
+    const originalRequest = error.config;
+    // トークンの有効期限が切れていて、トークン更新要求がない場合
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const refreshToken = localStorage.getItem('refresh_token');
+      try {
+        const res = await axios.post(`${BASE_URLS.gin}/auth/refresh-token`, {
+          refreshToken,
+        });
+        if (res.status === 200) {
+          const newToken = res.data.access_token;
+          console.log(newToken);
+          localStorage.setItem('access_token', newToken);
+          api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+          // トークンが更新された後、元のリクエストを再実行
+          return api(originalRequest);
+        }
+      } catch (error) {
+        console.error('トークンの有効期限が切れました。');
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 const req = async (
   url: string,
@@ -17,23 +54,26 @@ const req = async (
   api.defaults.baseURL = BASE_URLS[server];
   if (server === 'nest') {
     api.defaults.headers.common['Authorization'] =
-      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwiZXhwIjoxOTY5OTAxMDIyfQ.U0k1q2oTrp3JwsIpem16o2W77tpVGiwylwc5cTFaZgU';
+      process.env.NEXT_PUBLIC_NEST_TOKEN;
   }
 
   if (typeof body !== 'undefined') {
-    api.defaults.headers.common['Content-Type'] = 'application/json';
+    if (body instanceof FormData) {
+      api.defaults.headers.common['Content-Type'] = 'multipart/form-data';
+    } else if (typeof body !== 'undefined') {
+      api.defaults.headers.common['Content-Type'] = 'application/json';
+    }
   }
   try {
     const response = await api.request({
       url,
       method,
       data: body,
+      withCredentials: true,
     });
-
-    if (response.status === HttpStatus.NO_CONTENT) {
-      return response.data;
+    if (response.status === HTTP_STATUS.NO_CONTENT) {
+      return {};
     }
-
     return response.data;
   } catch (error) {
     console.error(`${method} リクエスト中にエラーが発生しました.`, error);

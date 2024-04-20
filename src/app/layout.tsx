@@ -2,7 +2,9 @@ import type {Metadata} from 'next';
 import {Inter} from 'next/font/google';
 import {Navbar} from '../components/navbar';
 import {Footer} from '../components/footer';
+import RecoilRootContainer from '../components/RecoilRootContainer';
 import './globals.css';
+import '@/src/styles/variable.css';
 
 const inter = Inter({subsets: ['latin']});
 
@@ -15,13 +17,15 @@ const RootLayout = ({children}: {children: React.ReactNode}) => {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex h-full relative">
-          <Navbar />
-          <div className="grow overflow-x-auto overflow-y-auto pl-72">
-            {children}
-            <Footer />
+        <RecoilRootContainer>
+          <div className="flex h-full relative">
+            <Navbar />
+            <div className="grow overflow-x-auto overflow-y-auto">
+              <div className="mainContainer">{children}</div>
+              <Footer />
+            </div>
           </div>
-        </div>
+        </RecoilRootContainer>
       </body>
     </html>
   );
