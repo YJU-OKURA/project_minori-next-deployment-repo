@@ -1,10 +1,10 @@
 const logos = {
-  seouluni: '/images/group/seouluni.png',
-  twayair: '/images/group/twayair.png',
-  wasedauni: '/images/group/wasedauni.png',
-  yahoo: '/images/group/yahoo.png',
-  yeungjin: '/images/group/yeungjin.png',
-  github: '/images/group/github.png',
+  seouluni: '/images/_class/seouluni.png',
+  twayair: '/images/_class/twayair.png',
+  wasedauni: '/images/_class/wasedauni.png',
+  yahoo: '/images/_class/yahoo.png',
+  yeungjin: '/images/_class/yeungjin.png',
+  github: '/images/_class/github.png',
 };
 
 export default logos;
