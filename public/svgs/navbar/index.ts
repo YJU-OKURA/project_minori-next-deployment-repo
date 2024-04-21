@@ -6,6 +6,7 @@ const icons = {
   moreVert: '/svgs/navbar/moreVert.svg',
   mypage: '/svgs/navbar/mypage.svg',
   search: '/svgs/navbar/search.svg',
+  plus: '/svgs/navbar/plus.svg',
 };
 
 export default icons;
