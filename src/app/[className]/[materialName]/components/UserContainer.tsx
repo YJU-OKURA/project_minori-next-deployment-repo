@@ -1,14 +1,14 @@
 'use client';
 import {useState} from 'react';
 import {Dashboard, TabsMapping} from '@/src/components/dashboard';
-// import Material from './Material';
+import Material from './Material';
 import Quiz from './Quiz';
 
 const UserContainer = () => {
   const TABS = ['Material', 'Quiz'];
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const tabMapping = {
-    // Material: <Material />,
+    Material: <Material />,
     Quiz: <Quiz />,
   };
   return (
