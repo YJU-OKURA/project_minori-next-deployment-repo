@@ -1,4 +1,12 @@
-import React, {useState, useRef, useEffect} from 'react';
+'use client';
+
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  RefObject,
+  useCallback,
+} from 'react';
 import {Document, Page, pdfjs} from 'react-pdf';
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -6,21 +14,31 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const Material = () => {
-  const [file, setFile] = useState<string | null>(null);
+  const uploadedPdfUrl =
+    'https://d3sbrbqucv1146.cloudfront.net/metarials/class1/1711584517380.pdf';
+
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  const [file, setFile] = useState<string>(uploadedPdfUrl);
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [inputValue, setInputValue] = useState<string>('1');
-  const pageRefs = useRef<(React.RefObject<HTMLDivElement> | null)[]>([]);
+  const pageRefs = useRef<(RefObject<HTMLDivElement> | null)[]>([]);
+  const [scale, setScale] = useState<number>(1.0);
 
-  // PDF 파일이 로드되었을 때의 처리
+  // PDFファイルが読み込まれたときの処理
   function onDocumentLoadSuccess({numPages}: {numPages: number}) {
     setNumPages(numPages);
     pageRefs.current = Array(numPages)
       .fill(null)
-      .map(() => React.createRef());
+      .map(() => React.createRef<HTMLDivElement>());
   }
 
-  // 페이지가 표시되었을 때의 처리
+  // ページの拡大率を変更する
+  const zoomIn = useCallback(() => setScale(prevScale => prevScale + 0.1), []);
+  const zoomOut = useCallback(() => setScale(prevScale => prevScale - 0.1), []);
+  const resetZoom = useCallback(() => setScale(1.0), []);
+
+  // ページが表示されたときの処理
   const observePage = (pageIndex: number) => {
     const observer = new IntersectionObserver(
       entries => {
@@ -28,12 +46,11 @@ const Material = () => {
           setPageNumber(pageIndex + 1);
           setInputValue((pageIndex + 1).toString());
         }
-        console.log(pageNumber);
       },
       {threshold: 0.5}
     );
 
-    // 페이지가 표시되었을 때 페이지 번호를 업데이트
+    // ページが表示されたときにページ番号を更新する
     const pageElement = pageRefs.current[pageIndex]?.current;
     if (pageElement) {
       observer.observe(pageElement);
@@ -45,15 +62,16 @@ const Material = () => {
     };
   };
 
-  // 페이지 번호를 지정하여 페이지로 이동
+  // ページ番号を指定してページに移動する
   const goToPage = (page: number) => {
     const pageElement = pageRefs.current[page - 1]?.current;
     if (pageElement) {
       pageElement.scrollIntoView();
+      setPageNumber(page);
     }
   };
 
-  // 페이지 수가 변경되었을 때 페이지 표시를 감시
+  // ページ数が変わったときにページの表示を監視する
   useEffect(() => {
     const cleanupFunctions = Array(numPages || 0)
       .fill(null)
@@ -63,18 +81,13 @@ const Material = () => {
     };
   }, [numPages]);
 
-  // 파일 경로 설정
-  useEffect(() => {
-    setFile(
-      'https://d3sbrbqucv1146.cloudfront.net/metarials/class1/1711591504369.pdf'
-    );
-  }, []);
-
   return (
-    <div className="flex flex-col items-center space-y-4">
+    <div className="relative min-h-screen flex flex-col items-center justify-start">
+      {' '}
       {file && (
-        <div>
-          <div>
+        <>
+          <div className="relative top-0 left-1/2 transform -translate-x-1/2 z-20">
+            {' '}
             <label>Page: </label>
             <input
               type="text"
@@ -85,22 +98,34 @@ const Material = () => {
                   goToPage(Number(inputValue));
                 }
               }}
-              className="border rounded p-1 w-10 text-center"
+              className="border rounded p-1 w-10 text-center mr-2"
             />
-            / {numPages}
+            / {numPages ? numPages : 'Loading...'}
+            <button onClick={zoomIn} className="ml-2">
+              +
+            </button>
+            <button onClick={resetZoom} className="ml-2">
+              🔄
+            </button>
+            <button onClick={zoomOut} className="ml-2">
+              -
+            </button>
           </div>
-          <div className="h-[80vh] overflow-auto">
-            <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
-              {Array.from(new Array(numPages || 0), (el, index) => (
-                <Page
-                  key={`page_${index + 1}`}
-                  pageNumber={index + 1}
-                  inputRef={pageRefs.current[index]}
-                />
-              ))}
-            </Document>
+          <div className="mt-8">
+            <div className="h-[80vh] overflow-auto z-10">
+              <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
+                {Array.from(new Array(numPages || 0), (_, index) => (
+                  <Page
+                    key={`page_${index + 1}`}
+                    pageNumber={index + 1}
+                    scale={scale}
+                    inputRef={pageRefs.current[index]}
+                  />
+                ))}
+              </Document>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
