@@ -1,7 +1,7 @@
 import test from '@/public/images/navbar';
 
 const User = {
-  uid: 1,
+  uid: 14,
   name: 'seok',
   imgUrl: test.user,
   managerRoll: 'user',
