@@ -1,14 +1,54 @@
+import {useState} from 'react';
 import Image from 'next/image';
+import {ClassEditPost} from '../modal';
+import {Dropdown} from '@/src/app/components/_class/dropdown';
 import {PostCardProps} from '@/src/interfaces/_class';
 import icons from '@/public/svgs/_class';
 
-const PostCard = ({ImageSrc, PostName, managerRole}: PostCardProps) => {
+const PostCard = ({
+  imageSrc,
+  postName,
+  managerRole,
+  zIndex,
+  postId,
+  deletePost,
+}: PostCardProps & {zIndex: number} & {
+  deletePost: (postId: number) => void;
+}) => {
+  const dropdownItems = [
+    {
+      modalId: 'postEdit',
+      icon: icons.edit,
+      alt: 'Edit Icon',
+      text: 'Edit',
+    },
+    {
+      modalId: 'postDelete',
+      icon: icons.delete,
+      alt: 'Delete Icon',
+      text: 'Delete',
+    },
+  ];
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedModalId, setSelectedModalId] = useState<string | null>(null);
+
+  const setActiveModalId = (modalId: string) => {
+    setSelectedModalId(modalId);
+    setIsModalOpen(true);
+    if (modalId === 'postDelete') {
+      deletePost(postId);
+    }
+  };
+
   return (
-    <div className="border rounded-lg min-w-52 max-w-72 h-44 border-gray-300 mr-10 mb-10 hover:shadow-md active:bg-neutral-50 focus:ring focus:ring-gray-400 transform hover:scale-105 transition duration-200 ease-in-out">
+    <div
+      className="border rounded-lg h-44 border-gray-300 mr-2 mb-6 hover:shadow-md active:bg-neutral-50 focus:ring focus:ring-gray-400 transform hover:scale-105 transition duration-200 ease-in-out"
+      style={{zIndex}}
+    >
       <div className="flex justify-center items-center mt-2">
-        <div className="mt-2 w-72 h-24 relative overflow-hidden">
+        <div className="mt-2 w-80 h-24 relative overflow-hidden">
           <Image
-            src={ImageSrc}
+            src={imageSrc || icons.noneImage}
             alt={'Thumbnail'}
             fill={true}
             sizes="(max-width: 200px), (max-hight:78px)"
@@ -25,17 +65,22 @@ const PostCard = ({ImageSrc, PostName, managerRole}: PostCardProps) => {
           className="me-2 w-auto h-auto max-w-5 max-h-5"
         />
         <div className="flex w-full justify-between">
-          <h3 className="font-bold text-lg">{PostName}</h3>
+          <h3 className="font-bold text-lg">{postName}</h3>
           {managerRole && (
-            <Image
-              src={icons.moreVert}
-              alt={'moreVert'}
-              width={30}
-              height={30}
-            />
+            <>
+              <div style={{width: 30, height: 30}}>
+                <Dropdown
+                  dropdownImageSrc={icons.moreVert}
+                  items={dropdownItems}
+                  setActiveModalId={setActiveModalId}
+                  zIndex={zIndex}
+                />
+              </div>
+            </>
           )}
         </div>
       </div>
+      {isModalOpen && selectedModalId === 'postEdit' && <ClassEditPost />}
     </div>
   );
 };
