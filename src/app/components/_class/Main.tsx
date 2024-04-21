@@ -1,27 +1,61 @@
 'use client';
 
 import React, {useEffect, useState} from 'react';
-import {Favorite, Created, Joined, Invite, Waiting, Header} from '.';
+import {Invite, Waiting, Header} from '.';
 import {ClassCreate, ClassJoin, ClassPassword} from './modal';
+import {CardList} from '../card';
 import {Dashboard, TabsMapping} from '@/src/components/dashboard';
 import User from '@/src/model/User';
-import getClasses from '@/src/api/_class/getClasses';
+import classAPI from '@/src/api/_class';
 
 const Main = () => {
-  const [classes, setClasses] = useState([]);
   const tabs = ['Joined', 'Created', 'Favorite', 'Invite', 'Waiting'];
+  const [classes, setClasses] = useState([]);
+  const [createdClasses, setCreatedClasses] = useState([]);
+  const [inviteClasses, setInviteClasses] = useState([]);
+  const [favoriteClasses, setFavoriteClasses] = useState([]);
+  const [waitingClasses, setWaitingClasses] = useState([]);
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [activeModalId, setActiveModalId] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const getClassAfterCreate = async () => {
+    const allRes = await classAPI.getClasses(User.uid);
+    setClasses(allRes.data);
+  };
+
   useEffect(() => {
     const loadClasses = async () => {
-      const response = await getClasses(User.uid);
-      setClasses(response.data);
+      switch (activeTab) {
+        case 'Created': {
+          const createdRes = await classAPI.getClassesRole(User.uid, 2);
+          setCreatedClasses(createdRes.data);
+          break;
+        }
+        case 'Invite': {
+          const inviteRes = await classAPI.getClassesRole(User.uid, 6);
+          setInviteClasses(inviteRes.data);
+          break;
+        }
+        case 'Waiting': {
+          const waitingRes = await classAPI.getClassesRole(User.uid, 4);
+          setWaitingClasses(waitingRes.data);
+          break;
+        }
+        case 'Favorite': {
+          const favoriteRes = await classAPI.getFavoriteClasses(User.uid);
+          setFavoriteClasses(favoriteRes.data);
+          break;
+        }
+        default: {
+          const allRes = await classAPI.getClasses(User.uid);
+          setClasses(allRes.data);
+          break;
+        }
+      }
     };
-
     loadClasses();
-  }, []);
+  }, [activeTab]);
 
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -29,13 +63,15 @@ const Main = () => {
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
+
   const tabMapping = {
-    Joined: <Joined classes={classes} />,
-    // {/* バックエンドAPIの修正が終わったら、四つのComponentも追加します。 */}
-    Created: <Created />,
-    Favorite: <Favorite />,
-    Invite: <Invite onInvitationClick={handleModalOpen} />,
-    Waiting: <Waiting />,
+    Joined: <CardList classes={classes} />,
+    Created: <CardList classes={createdClasses} />,
+    Favorite: <CardList classes={favoriteClasses} />,
+    Invite: (
+      <Invite onInvitationClick={handleModalOpen} classes={inviteClasses} />
+    ),
+    Waiting: <Waiting classes={waitingClasses} />,
   };
 
   return (
@@ -51,7 +87,10 @@ const Main = () => {
           <TabsMapping activeTab={activeTab} tabMapping={tabMapping} />
         </div>
         {activeModalId === 'classCreate' && (
-          <ClassCreate setActiveModalId={setActiveModalId} />
+          <ClassCreate
+            setActiveModalId={setActiveModalId}
+            getClassAfterCreate={getClassAfterCreate}
+          />
         )}
         {activeModalId === 'classJoin' && (
           <ClassJoin

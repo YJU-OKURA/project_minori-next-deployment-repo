@@ -2,24 +2,23 @@
 
 import {useState} from 'react';
 import {ClassWait} from './modal';
-import {Card} from '../card';
+import {ClassProps} from '@/src/interfaces/_class';
 import logos from '@/public/images/_class';
 
-const Waiting = () => {
+const Waiting = ({classes}: ClassProps) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const handleModalOpen = () => {
-    setModalOpen(true);
-  };
   return (
     <>
-      <div onClick={handleModalOpen}>
-        <Card
-          ImageSrc={logos.wasedauni}
-          ClassName={'Waseda University'}
-          ClassContent={'Independence of Learning'}
-          disableLink={true}
-        />
-      </div>
+      {classes &&
+        classes.map(classItem => (
+          <div key={classItem.id}>
+            <ClassWait
+              ImageSrc={classItem.image}
+              ClassName={classItem.name}
+              setIsModalOpen={setModalOpen}
+            />
+          </div>
+        ))}
       {modalOpen && (
         <ClassWait
           ImageSrc={logos.wasedauni}

@@ -1,4 +1,5 @@
 import Card from './Card';
+import CardList from './CardList';
 import Invitation from './Invitation';
 
-export {Card, Invitation};
+export {Card, CardList, Invitation};
