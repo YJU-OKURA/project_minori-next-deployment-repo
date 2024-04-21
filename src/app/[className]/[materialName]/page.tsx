@@ -6,7 +6,7 @@ const Page = () => {
   return (
     <div className="w-full box-border ">
       {User.managerRoll === 'manager' ? (
-        <div className="h-screen p-4">
+        <div className="p-4">
           <div className="text-5xl py-4 border-b-2">SubjectName</div>
           <ManageContainer />
         </div>
