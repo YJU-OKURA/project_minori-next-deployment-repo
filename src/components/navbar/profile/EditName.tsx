@@ -1,7 +1,7 @@
-import {errorProps} from '@/src/interfaces/error';
+import {editProps} from '@/src/interfaces/navbar';
 import {useState} from 'react';
 
-const EditName = ({setIsOpen, func}: errorProps) => {
+const EditName = ({setIsOpen, func}: editProps) => {
   const [rename, setRename] = useState<string>('');
 
   const handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {

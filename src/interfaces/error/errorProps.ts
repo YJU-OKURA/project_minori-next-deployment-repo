@@ -1,6 +1,6 @@
 interface errorProps {
   purpose: 'delete' | 'leave';
-  func: (name: string) => void;
+  func: () => void;
   setIsOpen: (isOpen: boolean) => void;
 }
 

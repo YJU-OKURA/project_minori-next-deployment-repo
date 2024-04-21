@@ -103,11 +103,7 @@ const Profile = ({user, params}: {user: User; params: ParamsProps}) => {
         />
       ) : null}
       {isEditOpen ? (
-        <EditName
-          purpose="delete"
-          setIsOpen={setIsEditOpen}
-          func={handleEditName}
-        />
+        <EditName setIsOpen={setIsEditOpen} func={handleEditName} />
       ) : null}
     </div>
   );
