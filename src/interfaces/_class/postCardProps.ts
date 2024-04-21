@@ -1,9 +1,10 @@
 import {RoleProps} from '.';
 
 interface PostCardProps extends RoleProps {
-  ImageSrc: string;
-  PostName: string;
+  imageSrc: string;
+  postName: string;
   managerRole: boolean;
+  postId: number;
 }
 
 export default PostCardProps;

@@ -21,8 +21,8 @@ const Navbar = () => {
   }
 
   return (
-    <div className="absolute left-0 w-72 h-full bg-gray-50">
-      <div className="relative w-full px-6 pt-5 navbar flex flex-col">
+    <div className="w-72 h-full bg-gray-50">
+      <div className="relative w-72 px-6 pt-5 navbar flex flex-col">
         {/* Profile */}
         <Profile {...User} />
         <div className="h-px bg-zinc-300"></div>

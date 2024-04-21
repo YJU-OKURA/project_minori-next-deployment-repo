@@ -8,12 +8,17 @@ const Dropdown = ({
   dropdownImageSrc,
   items,
   setActiveModalId,
-}: DropdownProps) => {
+  zIndex,
+}: DropdownProps & {zIndex: number}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const toggleDropdown = () => {
+  const toggleDropdown = (event: React.MouseEvent) => {
+    console.log('toggleDropdown');
+    event.stopPropagation();
     setIsOpen(!isOpen);
   };
   const handleClick = (event: React.MouseEvent, modalId: string) => {
+    console.log('dropdown handle click');
+    event.stopPropagation();
     event.preventDefault();
     setActiveModalId(modalId);
   };
@@ -33,7 +38,7 @@ const Dropdown = ({
   }, []);
 
   return (
-    <div className="relative" onClick={() => setIsOpen(!isOpen)}>
+    <div className="relative" onClick={toggleDropdown} style={{zIndex}}>
       <Image
         id="dropdownImage"
         src={dropdownImageSrc}
@@ -50,8 +55,8 @@ const Dropdown = ({
           <ul className="text-sm text-gray-700" aria-labelledby="dropdownImage">
             {items.map((item, index) => (
               <li key={index}>
-                <button
-                  className="block px-4 py-2 hover:bg-gray-200"
+                <div
+                  className="block w-full flex justify-start px-4 py-2 hover:bg-gray-200"
                   onClick={event => handleClick(event, item.modalId)}
                 >
                   <Image
@@ -62,7 +67,7 @@ const Dropdown = ({
                     className="inline-block me-2"
                   />
                   {item.text}
-                </button>
+                </div>
               </li>
             ))}
           </ul>

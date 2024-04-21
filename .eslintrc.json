@@ -5,10 +5,14 @@
     "prettier/prettier": ["error", {"endOfLine": "auto"}],
     "node/no-unsupported-features/es-syntax": [
       "error",
-      {"ignores": ["modules"]}
+      {
+        "version": "18.17.0",
+        "ignores": ["modules"]
+      }
     ],
     "node/no-unpublished-import": "off",
-    "node/no-missing-import": "off"
+    "node/no-missing-import": "off",
+    "node/no-unsupported-features/node-builtins": "off"
   },
   "env": {
     "browser": true,

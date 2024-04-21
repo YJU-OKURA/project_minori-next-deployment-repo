@@ -25,6 +25,7 @@ const Header = ({setActiveModalId}: ModalProps) => {
           dropdownImageSrc={icons.folder}
           items={dropdownItems}
           setActiveModalId={setActiveModalId}
+          zIndex={10}
         />
       </div>
       <div className="border border-gray-200 w-11/12 mt-4"></div>

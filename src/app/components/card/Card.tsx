@@ -1,24 +1,18 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import {CardProps} from '@/src/interfaces/_class';
+import {CardItemProps} from '@/src/interfaces/_class';
 import icons from '@/public/svgs/_class';
 import logos from '@/public/images/_class';
 
-const Card = ({
-  ImageSrc,
-  ClassName,
-  ClassContent,
-  FavoriteChecked,
-  disableLink,
-}: CardProps) => {
+const Card: React.FC<CardItemProps> = ({classData}) => {
   const cardContent = (
     <>
       <div className="border rounded-lg w-80 h-72 border-gray-300 mr-10 mb-10 hover:shadow-md active:bg-neutral-50 focus:ring focus:ring-gray-400 transform hover:scale-105 transition duration-200 ease-in-out">
         <div className="flex justify-center items-center mt-2">
           <div className="w-72 h-44 relative overflow-hidden">
             <Image
-              src={logos.yeungjin || ImageSrc}
+              src={classData.ImageSrc || logos.yeungjin}
               alt={'Card Image'}
               fill={true}
               sizes="(max-width: 288px), (max-hight:176px)"
@@ -27,10 +21,10 @@ const Card = ({
           </div>
         </div>
         <div className="flex place-content-between ms-4 mt-2">
-          <h3 className="font-bold text-lg">{ClassName}</h3>
-          {disableLink ? null : (
+          <h3 className="font-bold text-lg">{classData.ClassName}</h3>
+          {classData.disableLink ? null : (
             <>
-              {FavoriteChecked ? (
+              {classData.FavoriteChecked ? (
                 <Image
                   src={icons.favorite}
                   alt="favoriteChecked"
@@ -51,17 +45,25 @@ const Card = ({
           )}
         </div>
         <p className="text-base ms-4 mt-2 me-2 overflow-hidden overflow-ellipsis whitespace-nowrap">
-          {ClassContent}
+          {classData.ClassContent}
         </p>
       </div>
     </>
   );
+
   return (
     <>
-      {disableLink ? (
+      {classData.disableLink ? (
         cardContent
       ) : (
-        <Link href={`/${ClassName}`}>{cardContent}</Link>
+        <Link
+          href={{
+            pathname: `/${classData.ClassName}`,
+            query: {id: `${classData.ClassId}`},
+          }}
+        >
+          {cardContent}
+        </Link>
       )}
     </>
   );

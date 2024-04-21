@@ -2,22 +2,35 @@
 
 import {useState} from 'react';
 import Image from 'next/image';
+import postCreateClass from '@/src/api/_class/postCreateClass';
+import User from '@/src/model/User';
 import {ModalProps} from '@/src/interfaces/_class/modal';
 import icons from '@/public/svgs/_class';
 
-const ClassCreate = ({setActiveModalId}: ModalProps) => {
+const ClassCreate = ({setActiveModalId, getClassAfterCreate}: ModalProps) => {
+  const [fileDataUrl, setFileDataUrl] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>('');
   const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);
-  const [fileDataUrl, setFileDataUrl] = useState<string | null>(null);
-  const handleCheckboxChange = () => {
-    setIsPasswordEnabled(!isPasswordEnabled);
-  };
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [capacity, setCapacity] = useState(0);
+  const [dragging, setDragging] = useState(false);
+
   const handleClose = () => {
     setActiveModalId('');
   };
-  const passwordPlaceholder = isPasswordEnabled
-    ? 'Input password'
-    : 'Check the Password box!';
-  const [dragging, setDragging] = useState(false);
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setTitle(e.target.value);
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
+    setContent(e.target.value);
+  const handleCapacityChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
+    setCapacity(Number(e.target.value));
+
+  const handleCheckboxChange = () => {
+    setIsPasswordEnabled(!isPasswordEnabled);
+  };
+
   const handleDragIn = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -42,29 +55,42 @@ const ClassCreate = ({setActiveModalId}: ModalProps) => {
     e.stopPropagation();
     setDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      const file = e.dataTransfer.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFileDataUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setFileDataUrl(e.dataTransfer.files[0]);
+      setPreview(URL.createObjectURL(e.dataTransfer.files[0]));
       e.dataTransfer.clearData();
     }
   };
 
-  const handleFileChange = () => {
-    const fileInput = document.querySelector(
-      'input[type="file"]'
-    ) as HTMLInputElement;
-    const file = fileInput?.files?.[0];
-    const reader = new FileReader();
-    reader.addEventListener('load', () => {
-      setFileDataUrl(reader.result as string);
-    });
-    if (file) {
-      reader.readAsDataURL(file);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFileDataUrl(e.target.files[0]);
+      setPreview(URL.createObjectURL(e.target.files[0]));
     }
   };
+
+  const handlePostRequest = async () => {
+    const userId = User.uid;
+    const postData = {
+      name: title,
+      limitation: capacity,
+      description: content,
+      userId: userId,
+      image: fileDataUrl,
+    };
+    try {
+      await postCreateClass(postData);
+      alert('Class created successfully!');
+      handleClose();
+      getClassAfterCreate && getClassAfterCreate();
+    } catch (error) {
+      console.error(error);
+      alert('Failed to create class.');
+    }
+  };
+
+  const passwordPlaceholder = isPasswordEnabled
+    ? 'Input password'
+    : 'Check the Password box!';
 
   return (
     <div id="classCreate" className="fixed z-10 inset-0 overflow-y-auto">
@@ -83,124 +109,125 @@ const ClassCreate = ({setActiveModalId}: ModalProps) => {
                 <h3 className="text-3xl leading-6 font-bold text-gray-900">
                   Create Class
                 </h3>
-                <form action="">
-                  <div className="mt-6">
-                    <p className="text-lg font-semibold">Thumbnail</p>
-                    <div
-                      onDragEnter={handleDragIn}
-                      onDragLeave={handleDragOut}
-                      onDragOver={handleDrag}
-                      onDrop={handleDrop}
-                      className={`border-dotted h-48 rounded-lg border-dashed border-2 border-blue-700 bg-gray-100 flex justify-center items-center ${
-                        dragging ? 'bg-red-200' : ''
-                      }`}
-                    >
-                      <div className="absolute">
-                        <div className="flex flex-col items-center">
-                          {fileDataUrl ? (
-                            <Image
-                              src={fileDataUrl}
-                              alt={'thumbnail'}
-                              width={200}
-                              height={200}
-                              className="w-auto h-auto max-w-52 max-h-40 mt-4"
-                            />
-                          ) : (
-                            <Image
-                              className="opacity-30"
-                              src={icons.thumbnail}
-                              alt={'thumbnail'}
-                              width={72}
-                              height={72}
-                            />
-                          )}
-                          <span className="block text-gray-400 font-normal mb-2">
-                            Attach you files here
-                          </span>
-                        </div>
-                      </div>
-                      <input
-                        type="file"
-                        className="h-full w-full opacity-0"
-                        onChange={handleFileChange}
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-6">
-                    <div className="flex justify-between px-1">
-                      <div className="items-start">
-                        <p className="text-lg font-semibold">
-                          Class Name <span className="text-red-600">*</span>
-                        </p>
-                        <input
-                          type="text"
-                          className="ps-2 border border-gray-400 rounded h-8"
-                          required
-                        />
-                      </div>
-                      <div className="items-start">
-                        <p className="text-lg font-semibold">
-                          User Capacity <span className="text-red-600">*</span>
-                        </p>
-                        <div className="relative inline-block text-left">
-                          <select
-                            className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                            id="menu-button"
-                            required
-                          >
-                            <option value="">Select Capacity</option>
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="30">30</option>
-                            <option value="40">40</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-6">
-                    <div className="items-start">
-                      <p className="text-lg font-semibold">Class Password</p>
-                      <div className="flex justify-between items-center pe-2">
-                        <input
-                          type="password"
-                          className="ps-2 border border-gray-400 rounded h-8 w-3/5"
-                          placeholder={passwordPlaceholder}
-                          disabled={!isPasswordEnabled}
-                        />
-                        <span className="text-lg">
-                          <input
-                            type="checkbox"
-                            className="me-1 size-4"
-                            onChange={handleCheckboxChange}
+                <div className="mt-6">
+                  <p className="text-lg font-semibold">Thumbnail</p>
+                  <div
+                    onDragEnter={handleDragIn}
+                    onDragLeave={handleDragOut}
+                    onDragOver={handleDrag}
+                    onDrop={handleDrop}
+                    className={`border-dotted h-48 rounded-lg border-dashed border-2 border-blue-700 bg-gray-100 flex justify-center items-center ${
+                      dragging ? 'bg-red-200' : ''
+                    }`}
+                  >
+                    <div className="absolute">
+                      <div className="flex flex-col items-center">
+                        {fileDataUrl ? (
+                          <Image
+                            src={preview || icons.thumbnail}
+                            alt={'thumbnail'}
+                            width={200}
+                            height={200}
+                            className="w-auto h-auto max-w-52 max-h-40 mt-4"
                           />
-                          Password
+                        ) : (
+                          <Image
+                            className="opacity-30"
+                            src={icons.thumbnail}
+                            alt={'thumbnail'}
+                            width={72}
+                            height={72}
+                          />
+                        )}
+                        <span className="block text-gray-400 font-normal mb-2">
+                          Attach you files here
                         </span>
                       </div>
                     </div>
+                    <input
+                      type="file"
+                      className="h-full w-full opacity-0"
+                      onChange={handleFileChange}
+                    />
                   </div>
-                  <div className="mt-6">
+                </div>
+                <div className="mt-6">
+                  <div className="flex justify-between px-1">
                     <div className="items-start">
                       <p className="text-lg font-semibold">
-                        Class Introduction{' '}
-                        <span className="text-red-600">*</span>
+                        Class Name <span className="text-red-600">*</span>
                       </p>
-                      <div className="flex justify-between items-center pe-2">
-                        <textarea
-                          className="ps-2 pt-2 border border-gray-400 rounded h-28 w-full"
-                          placeholder="Please input class introduction"
+                      <input
+                        type="text"
+                        onChange={handleTitleChange}
+                        className="ps-2 border border-gray-400 rounded h-8"
+                        required
+                      />
+                    </div>
+                    <div className="items-start">
+                      <p className="text-lg font-semibold">
+                        User Capacity <span className="text-red-600">*</span>
+                      </p>
+                      <div className="relative inline-block text-left">
+                        <select
+                          onChange={handleCapacityChange}
+                          className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                          id="menu-button"
                           required
-                        />
+                        >
+                          <option value="">Select Capacity</option>
+                          <option value="10">10</option>
+                          <option value="20">20</option>
+                          <option value="30">30</option>
+                          <option value="40">40</option>
+                        </select>
                       </div>
                     </div>
                   </div>
-                </form>
+                </div>
+                <div className="mt-6">
+                  <div className="items-start">
+                    <p className="text-lg font-semibold">Class Password</p>
+                    <div className="flex justify-between items-center pe-2">
+                      <input
+                        type="password"
+                        className="ps-2 border border-gray-400 rounded h-8 w-3/5"
+                        placeholder={passwordPlaceholder}
+                        disabled={!isPasswordEnabled}
+                      />
+                      <span className="text-lg">
+                        <input
+                          type="checkbox"
+                          className="me-1 size-4"
+                          onChange={handleCheckboxChange}
+                        />
+                        Password
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-6">
+                  <div className="items-start">
+                    <p className="text-lg font-semibold">
+                      Class Introduction <span className="text-red-600">*</span>
+                    </p>
+                    <div className="flex justify-between items-center pe-2">
+                      <textarea
+                        onChange={handleContentChange}
+                        className="ps-2 pt-2 border border-gray-400 rounded h-28 w-full"
+                        placeholder="Please input class introduction"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
           <div className="bg-white px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button
-              type="submit"
+              type="button"
+              onClick={handlePostRequest}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
               Create

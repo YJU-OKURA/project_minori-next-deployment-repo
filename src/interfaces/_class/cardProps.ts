@@ -4,6 +4,11 @@ interface CardProps {
   ClassContent: string;
   FavoriteChecked?: boolean;
   disableLink?: boolean;
+  ClassId?: number;
 }
 
-export default CardProps;
+interface CardItemProps {
+  classData: CardProps;
+}
+
+export default CardItemProps;

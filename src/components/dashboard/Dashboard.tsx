@@ -7,7 +7,7 @@ const Dashboard = ({tabs, activeTab, setActiveTab}: DashboardProps) => {
     setActiveTab(tab);
   };
   return (
-    <nav className="mt-4 flex">
+    <nav className="flex">
       {tabs.map(tab => (
         <div
           key={tab}

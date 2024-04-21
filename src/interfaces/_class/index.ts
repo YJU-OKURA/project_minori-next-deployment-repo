@@ -1,5 +1,5 @@
 import InvitationProps from './invitationProps';
-import CardProps from './cardProps';
+import CardItemProps from './cardProps';
 import DropdownProps from './dropdownProps';
 import ScheduleCardProps from './scheduleCardProps';
 import PostCardProps from './postCardProps';
@@ -9,7 +9,7 @@ import ClassProps from './classProps';
 
 export type {
   InvitationProps,
-  CardProps,
+  CardItemProps,
   DropdownProps,
   ScheduleCardProps,
   PostCardProps,
