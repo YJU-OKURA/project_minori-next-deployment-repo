@@ -1,9 +1,9 @@
 'use client';
 
 import React, {useState} from 'react';
-import {AxiosError} from 'axios';
 import Image from 'next/image';
-import getCheckClassSecret from '@/src/api/_class/getCheckClassSecret';
+import {AxiosError} from 'axios';
+import getCheckClassSecret from '@/src/api/classCode/getCheckClassSecret';
 import {ModalProps} from '@/src/interfaces/_class/modal';
 import icons from '@/public/svgs/_class';
 
@@ -27,6 +27,7 @@ const ClassJoin = ({setActiveModalId, setIsModalOpen}: ModalProps) => {
     }
     try {
       const res = await getCheckClassSecret(inputValue);
+      console.log(res);
       if (!res.secretExists) {
         alert('This Class does not have a secret key.');
         return;
