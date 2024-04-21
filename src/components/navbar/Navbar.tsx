@@ -2,7 +2,7 @@
 import {useState} from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import {useParams, usePathname} from 'next/navigation';
+import {useParams, usePathname, useRouter} from 'next/navigation';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {userState} from '@/src/recoil/atoms/userState';
 import isLogInState from '@/src/recoil/atoms/isLoginState';
@@ -15,6 +15,7 @@ const Navbar = () => {
   const isLogin = useRecoilValue(isLogInState);
   const user = useRecoilState(userState)[0];
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const routerTest = useRouter();
 
   const pages = [
     {name: 'Class', icon: icons.group},
@@ -31,7 +32,7 @@ const Navbar = () => {
   }
 
   if (!isLogin || !user) {
-    return (window.location.href = '/intro');
+    return routerTest.push('/intro');
   }
 
   return (
