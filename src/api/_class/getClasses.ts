@@ -1,7 +1,7 @@
-import apiUtils from '@/src/api/apiUtils';
+import req from '@/src/api/apiUtils';
 
 const getClasses = async (uid: number) => {
-  const response = await apiUtils(`/cu/${uid}/classes`, 'get', 'gin');
+  const response = await req(`/cu/${uid}/classes`, 'get', 'gin');
 
   return response;
 };
