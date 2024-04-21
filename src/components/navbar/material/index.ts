@@ -1,3 +1,4 @@
 import MaterialContainer from './MaterialContainer';
+import MaterialForm from './MaterialForm';
 
-export default MaterialContainer;
+export {MaterialContainer, MaterialForm};

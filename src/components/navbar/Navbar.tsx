@@ -1,30 +1,44 @@
 'use client';
+import {useState} from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import {usePathname} from 'next/navigation';
-import MaterialContainer from './material';
+import {useParams, usePathname} from 'next/navigation';
+import {useRecoilState, useRecoilValue} from 'recoil';
+import {userState} from '@/src/recoil/atoms/userState';
+import isLogInState from '@/src/recoil/atoms/isLoginState';
+import {MaterialContainer, MaterialForm} from './material';
 import Profile from './profile';
-import User from '@/src/model/User';
 import icons from '@/public/svgs/navbar';
 import '@/src/styles/variable.css';
 
 const Navbar = () => {
+  const isLogin = useRecoilValue(isLogInState);
+  const user = useRecoilState(userState)[0];
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const pages = [
     {name: 'Class', icon: icons.group},
     {name: 'MyPage', icon: icons.mypage},
+    {name: 'QuizBank', icon: icons.mypage},
     /* Billing Page - 保留 */
   ];
-  const router = usePathname();
 
-  if (router === '/intro') {
+  const router = usePathname();
+  const params = useParams<{className: string; materialName: string}>();
+
+  if (router === '/intro' || router === '/intro/googleLogin') {
     return null;
+  }
+
+  if (!isLogin || !user) {
+    return (window.location.href = '/intro');
   }
 
   return (
     <div className="w-72 h-full bg-gray-50">
       <div className="relative w-72 px-6 pt-5 navbar flex flex-col">
         {/* Profile */}
-        <Profile {...User} />
+        <Profile user={user} params={params} />
         <div className="h-px bg-zinc-300"></div>
         <div className="h-8"></div>
 
@@ -40,7 +54,7 @@ const Navbar = () => {
                     alt="icon"
                     width={30}
                     height={30}
-                    className="w-6 h-6 mr-3"
+                    className="w-8 h-8 mr-3"
                   ></Image>
                   <Link href="/" className="">
                     {page.name}
@@ -51,24 +65,49 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="h-8"></div>
-        {/* Subject*/}
-        <div className="w-full flex-1">
-          <div className="text-zinc-400 mb-4">Subject</div>
-          <MaterialContainer />
-        </div>
-        <div className="h-8"></div>
 
-        {/* class exit */}
-        <div className="flex py-2">
-          <Image
-            src={icons.door}
-            alt="icon"
-            width={30}
-            height={30}
-            className="w-6 h-6 mr-2"
-          ></Image>
-          <Link href="/">Leave Class</Link>
-        </div>
+        {/* Subject*/}
+        {params.className ? (
+          <>
+            <div className="w-full flex-1">
+              <div className="flex justify-between items-center mb-4">
+                <div className="text-zinc-400">Material</div>
+                {/* <MaterialForm /> */}
+                <div
+                  onClick={() => setIsOpen(true)}
+                  className="bg-blue-500 w-6 h-6 flex justify-center items-center rounded-lg "
+                >
+                  <Image
+                    src={icons.plus}
+                    width={0}
+                    height={0}
+                    alt="plus"
+                    className="m-auto w-auto h-auto max-w-5 max-h-5"
+                  />
+                </div>
+                {isOpen ? <MaterialForm setIsOpen={setIsOpen} /> : null}
+              </div>
+              <MaterialContainer params={params} />
+            </div>
+            <div className="h-16"></div>
+
+            {/* class exit */}
+            <div className="flex py-2">
+              <Image
+                src={icons.door}
+                alt="icon"
+                width={30}
+                height={30}
+                className="w-6 h-6 mr-2"
+              ></Image>
+              {params.materialName ? (
+                <Link href={`/${params.className}`}>Leave Prompt</Link>
+              ) : (
+                <Link href="/">Leave Class</Link>
+              )}
+            </div>
+          </>
+        ) : null}
       </div>
     </div>
   );
