@@ -13,8 +13,6 @@ const searchMaterial = async (
     'nest'
   );
 
-  console.log(response);
-
   return response.data;
 };
 

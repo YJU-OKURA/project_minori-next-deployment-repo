@@ -6,7 +6,7 @@ const putUserName = async (uId: number, cId: number, name: string) => {
   };
   const response = await req(`/cu/${uId}/${cId}/rename`, 'put', 'gin', body);
 
-  console.log(response);
+  return response;
 };
 
 export default putUserName;

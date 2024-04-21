@@ -15,8 +15,6 @@ const postMaterial = async (cId: number, name: string, file: File) => {
     formData
   );
 
-  console.log(response);
-
   return response;
 };
 
