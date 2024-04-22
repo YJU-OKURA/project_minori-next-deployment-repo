@@ -3,21 +3,18 @@ import {useEffect} from 'react';
 import Image from 'next/image';
 import {useRouter, useSearchParams} from 'next/navigation';
 import {useSetRecoilState} from 'recoil';
-import {userState} from '@/src/recoil/atoms/userState';
+import userState from '@/src/recoil/atoms/userState';
 import accessTokenState from '@/src/recoil/atoms/accessTokenState';
 import refreshTokenState from '@/src/recoil/atoms/refreshTokenState';
-import isLoginState from '@/src/recoil/atoms/isLoginState';
-import useRecoilStateWithLocalStorage from '@/src/hooks/useRecoilStateWithLocalStorage';
 import postGoogleLogin from '@/src/api/auth/postGoogleLogin';
 import gifs from '@/public/gif';
 import '@/src/styles/variable.css';
 
 const Page = () => {
   const code: string | null = useSearchParams().get('code');
-  const [, setUser] = useRecoilStateWithLocalStorage(userState);
+  const setUser = useSetRecoilState(userState);
   const setAccessToken = useSetRecoilState(accessTokenState);
   const setRefreshToken = useSetRecoilState(refreshTokenState);
-  const setIsLogin = useSetRecoilState(isLoginState);
   const router = useRouter();
   useEffect(() => {
     console.log(code);
@@ -31,7 +28,6 @@ const Page = () => {
           setRefreshToken({refresh_token: res.refresh_token});
           window.localStorage.setItem('access_token', res.access_token);
           window.localStorage.setItem('refresh_token', res.refresh_token);
-          setIsLogin(true);
         }
         router.push('/');
       });
