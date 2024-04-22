@@ -21,9 +21,9 @@ const FeedbackList = ({feedbacks}: {feedbacks: feedback[]}) => {
     <div className="flex justify-center relative">
       <div className="w-[650px]">
         <Swiper
-          slidesPerView={1} // 보여질 슬라이스 수
+          slidesPerView={1} // 表示されるスライス数
           navigation={true} // prev, next button
-          centeredSlides={true} // 중앙 정렬
+          centeredSlides={true} // 中央揃え
         >
           {feedbacks.map(feedback => (
             <SwiperSlide key={feedback.id}>

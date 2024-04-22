@@ -29,7 +29,6 @@ const PromptChat = () => {
   };
 
   const chat = async (reader: ReadableStreamDefaultReader) => {
-    console.log('chat 함수 실행');
     let feedback = '';
     try {
       while (reader) {
@@ -43,13 +42,11 @@ const PromptChat = () => {
           feedback = '';
         }
         if (done) {
-          // console.log('스트림이 완료되었습니다.');
-          // console.log(feedback);
           break;
         }
       }
     } catch (error) {
-      console.error('스트림 읽기 중 오류가 발생했습니다:', error);
+      console.error('ストリームの読み込み中にエラーが発生しました:', error);
     } finally {
       reader.releaseLock();
       setReload(!reload);

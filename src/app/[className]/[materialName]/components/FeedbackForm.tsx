@@ -10,17 +10,18 @@ const FeedbackForm = () => {
   const handleClickFeedback = () => {
     if (feedback !== '') setFeedback('');
     getFeedback(1, 1, chat);
+    setFeedback(feedback.replace(/AI|:|"/g, ''));
   };
 
   const handleClickSave = () => {
-    postFeedback(1, 1, feedback).then(res => {
+    const data = feedback.replace(/AI|:|"/g, '');
+    postFeedback(1, 1, data).then(res => {
       console.log(res);
       setIsOpen(false);
     });
   };
 
   const chat = async (reader: ReadableStreamDefaultReader) => {
-    console.log('chat 함수 실행');
     let feedbackData = '';
     try {
       while (reader) {
@@ -38,7 +39,7 @@ const FeedbackForm = () => {
         }
       }
     } catch (error) {
-      console.error('스트림 읽기 중 오류가 발생했습니다:', error);
+      console.error('ストリームの読み込み中にエラーが発生しました:', error);
     } finally {
       reader.releaseLock();
     }
@@ -83,7 +84,8 @@ const FeedbackForm = () => {
               </div>
               <div className="py-3">
                 <div className="w-full h-[260px] rounded-md p-4 bg-gray-100 overflow-scroll">
-                  {feedback.replace(/AI|"/g, '')}
+                  {feedback.replace(/AI|:|"/g, '')}
+                  {/* {feedback} */}
                 </div>
               </div>
               <div className="w-2/3 m-auto flex justify-between">

@@ -22,12 +22,12 @@ const getFeedback = async (
     console.log('res:', response);
     const reader = response.body?.getReader();
     if (!reader) {
-      console.error('응답 스트림이 없습니다.');
+      console.error('応答ストリームがありません。');
       return;
     }
-    await chat(reader); // chat 함수에 reader를 전달합니다.
+    await chat(reader);
   } catch (error) {
-    console.error('스트림 처리 중 오류가 발생했습니다:', error);
+    console.error('ストリーム処理中にエラーが発生しました:', error);
   }
 };
 
