@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import {Inter} from 'next/font/google';
 import {Navbar} from '../components/navbar';
 import {Footer} from '../components/footer';
+import Protect from '../components/protect';
 import RecoilRootContainer from '../components/RecoilRootContainer';
 import './globals.css';
 import '@/src/styles/variable.css';
@@ -18,13 +19,15 @@ const RootLayout = ({children}: {children: React.ReactNode}) => {
     <html lang="en">
       <body className={inter.className}>
         <RecoilRootContainer>
-          <div className="flex h-full relative">
-            <Navbar />
-            <div className="grow overflow-x-auto overflow-y-auto">
-              <div className="mainContainer">{children}</div>
-              <Footer />
+          <Protect>
+            <div className="flex h-full relative">
+              <Navbar />
+              <div className="grow overflow-x-auto overflow-y-auto">
+                <div className="mainContainer">{children}</div>
+                <Footer />
+              </div>
             </div>
-          </div>
+          </Protect>
         </RecoilRootContainer>
       </body>
     </html>
