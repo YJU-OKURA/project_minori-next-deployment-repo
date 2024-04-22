@@ -3,7 +3,7 @@ import {useState} from 'react';
 import {Dashboard, TabsMapping} from '@/src/components/dashboard';
 import ManageMaterialContainer from './ManageMaterialContainer';
 // import QuizContainer from './QuizContainer';
-// import FeedbackContainer from './FeedbackContainer';
+import FeedbackContainer from './FeedbackContainer';
 // import AttendanceContainer from './AttendanceContainer';
 import '@/src/styles/variable.css';
 
@@ -13,12 +13,12 @@ const UserContainer = () => {
   const tabMapping = {
     Material: <ManageMaterialContainer />,
     // Quiz: <QuizContainer />,
-    // Feedback: <FeedbackContainer />,
+    Feedback: <FeedbackContainer />,
     // Attendance: <AttendanceContainer />,
   };
   return (
     // 퀴즈
-    <div className="w-full manageContainer">
+    <div className="w-full">
       <Dashboard
         activeTab={activeTab}
         setActiveTab={setActiveTab}

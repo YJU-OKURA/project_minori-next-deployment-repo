@@ -1,5 +1,6 @@
 'use client';
 import {useEffect, useState} from 'react';
+import ReactMarkdown from 'react-markdown';
 import Image from 'next/image';
 import getMessage from '@/src/api/prompts/getMessage';
 import patchMessage from '@/src/api/prompts/patchMessage';
@@ -9,6 +10,7 @@ import icons from '@/public/svgs/prompt';
 const Storage = () => {
   const [isOpen, setIsOpen] = useState<boolean[]>([]);
   const [messages, setMsg] = useState<StorageMessage[]>();
+  const [reload, setReload] = useState<boolean>(false);
 
   useEffect(() => {
     // コメントを取得する処理
@@ -17,12 +19,13 @@ const Storage = () => {
       setMsg(res);
       setIsOpen(new Array(res.length).fill(false)); // コメントの開閉状態を初期化
     });
-  }, []);
+  }, [reload]);
 
   const handleClickDelete = (messageId: number) => {
     // コメントを削除する処理
     patchMessage(1, 1, messageId, false).then(res => {
       console.log(res);
+      setReload(!reload);
     });
   };
 
@@ -31,15 +34,14 @@ const Storage = () => {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full py-5">
       {messages?.map((message, index) => {
         return (
           <div key={index} className="pb-2">
-            <div
-              className="w-full border-2 p-4 rounded-lg flex justify-between items-center cursor-pointer"
-              onClick={() => toggleDropdown(index)}
-            >
-              <div className="w-full">{message.question}</div>
+            <div className="w-full border-2 p-4 rounded-lg flex justify-between items-center cursor-pointer">
+              <div className="w-full" onClick={() => toggleDropdown(index)}>
+                {message.question}
+              </div>
               <div
                 onClick={() => {
                   handleClickDelete(parseInt(message.id));
@@ -50,7 +52,7 @@ const Storage = () => {
             </div>
             {isOpen[index] ? (
               <div className="w-full border-2 p-4 rounded-lg bg-gray-100">
-                {message.answer}
+                <ReactMarkdown>{message.answer}</ReactMarkdown>
               </div>
             ) : null}
           </div>

@@ -15,7 +15,7 @@ const getMessage = async (
 
   console.log(response);
 
-  return response.data.messages;
+  return response.data;
 };
 
 export default getMessage;

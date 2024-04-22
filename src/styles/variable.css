@@ -11,7 +11,7 @@
 }
 
 .manageContainer2 {
-  height: calc(100% - 40px);
+  height: calc(100% - 56px);
 }
 
 .feedbackContainer {
@@ -19,5 +19,9 @@
 }
 
 .subContainer {
-  height: calc(100% - 120px);
+  height: calc(100% - 40px);
+}
+
+.promptContainer {
+  height: calc(100% - 80px);
 }
