@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import Image from 'next/image';
 import {useSetRecoilState} from 'recoil';
-import isLogInState from '@/src/recoil/atoms/isLoginState';
+import userState from '@/src/recoil/atoms/userState';
 import EditName from './EditName';
 import Warning from '../../warning/Warning';
 import putUserName from '@/src/api/classUser/putUserName';
@@ -11,7 +11,7 @@ import ClassUser from '@/src/model/User';
 import icons from '@/public/svgs/navbar';
 
 const Profile = ({user, params}: {user: User; params: ParamsProps}) => {
-  const setIsLogin = useSetRecoilState(isLogInState);
+  const setUser = useSetRecoilState(userState);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -32,7 +32,7 @@ const Profile = ({user, params}: {user: User; params: ParamsProps}) => {
   };
 
   const handleClickLogout = () => {
-    setIsLogin(false);
+    setUser(null);
     localStorage.clear();
     console.log('logout');
   };

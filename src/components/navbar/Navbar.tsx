@@ -2,20 +2,18 @@
 import {useState} from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import {useParams, usePathname, useRouter} from 'next/navigation';
-import {useRecoilState, useRecoilValue} from 'recoil';
-import {userState} from '@/src/recoil/atoms/userState';
-import isLogInState from '@/src/recoil/atoms/isLoginState';
+import {useParams, usePathname} from 'next/navigation';
+import {useRecoilValue} from 'recoil';
+import userState from '@/src/recoil/atoms/userState';
 import {MaterialContainer, MaterialForm} from './material';
 import Profile from './profile';
+import {User} from '@/src/interfaces/user';
 import icons from '@/public/svgs/navbar';
 import '@/src/styles/variable.css';
 
 const Navbar = () => {
-  const isLogin = useRecoilValue(isLogInState);
-  const user = useRecoilState(userState)[0];
+  const user = useRecoilValue(userState) as User;
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const routerTest = useRouter();
 
   const pages = [
     {name: 'Class', icon: icons.group},
@@ -29,10 +27,6 @@ const Navbar = () => {
 
   if (router === '/intro' || router === '/intro/googleLogin') {
     return null;
-  }
-
-  if (!isLogin || !user) {
-    return routerTest.push('/intro');
   }
 
   return (
