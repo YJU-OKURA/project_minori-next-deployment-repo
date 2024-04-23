@@ -1,11 +1,15 @@
+'use client';
+import {useRecoilValue} from 'recoil';
 import {ManageContainer, UserContainer} from './components';
 import {SubContainer} from './components/subComponents';
-import User from '@/src/model/User';
+import classUserState from '@/src/recoil/atoms/classUserState';
+import ROLES from '@/src/constants/roles';
 
 const Page = () => {
+  const classUser = useRecoilValue(classUserState);
   return (
     <div className="w-full box-border ">
-      {User.managerRoll === 'manager' ? (
+      {classUser && ROLES[classUser?.role_id] === 'ADMIN' ? (
         <div className="p-4">
           <div className="text-5xl py-4 border-b-2">SubjectName</div>
           <ManageContainer />

@@ -6,6 +6,8 @@ import deleteMaterial from '@/src/api/material/deleteMaterial';
 import postPromptAccess from '@/src/api/prompts/postPromptAccess';
 import {Material, ParamsProps} from '@/src/interfaces/navbar';
 import icons from '@/public/svgs/navbar';
+import {useSetRecoilState} from 'recoil';
+import materialState from '@/src/recoil/atoms/materialState';
 
 const MaterialList = ({
   materials,
@@ -19,6 +21,7 @@ const MaterialList = ({
   const [isToggleOpen, setIsToggleOpen] = useState<boolean[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [editData, setEditData] = useState<Material>();
+  const setMaterialState = useSetRecoilState(materialState);
 
   const handleClickSubject = (mId: number) => {
     if (materials[mId] && materials[mId].prompts.length === 0 && cId) {
@@ -57,7 +60,10 @@ const MaterialList = ({
                 className="flex w-full items-center justify-between"
                 onClick={() => handleClickSubject(parseInt(material.id))}
               >
-                <Link href={`/${params.className}/${material.name}`}>
+                <Link
+                  href={`/${params.className}/${material.name}`}
+                  onClick={() => setMaterialState(material)}
+                >
                   {material.name}
                 </Link>
                 <Image

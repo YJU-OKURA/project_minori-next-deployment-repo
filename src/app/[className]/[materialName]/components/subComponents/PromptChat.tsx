@@ -9,21 +9,21 @@ import {PromptMessagesProps} from '@/src/interfaces/prompt';
 import icons from '@/public/svgs/prompt';
 import '@/src/styles/variable.css';
 
-const PromptChat = () => {
+const PromptChat = ({pId}: {pId: number}) => {
   const [messages, setMsg] = useState<PromptMessagesProps[]>();
   const [inputMsg, setInputMsg] = useState<string>('');
   const [promptRes, setPromptRes] = useState<string>('');
   const [reload, setReload] = useState<boolean>(false);
 
   useEffect(() => {
-    getPrompt(4, 126, 1, 6).then(res => {
+    getPrompt(4, pId, 1, 6).then(res => {
       res.messages.reverse();
       setMsg(res.messages);
     });
   }, [reload]);
 
   const handleClickIcon = (mId: number) => {
-    patchMessage(4, 126, mId, true).then(res => {
+    patchMessage(4, pId, mId, true).then(res => {
       console.log(res);
     });
   };
@@ -56,7 +56,7 @@ const PromptChat = () => {
 
   useEffect(() => {
     if (inputMsg === '') return;
-    postPrompt(4, 126, inputMsg, chat).then(() => {
+    postPrompt(4, pId, inputMsg, chat).then(() => {
       setInputMsg('');
     });
   }, [inputMsg]);
