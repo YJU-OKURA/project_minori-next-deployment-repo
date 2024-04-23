@@ -12,7 +12,7 @@ const FeedbackList = ({feedbacks}: {feedbacks: feedback[]}) => {
   SwiperCore.use([Navigation, Scrollbar, Autoplay]);
 
   const handleClickDelete = (fId: number) => {
-    deleteFeedback(1, fId).then(res => {
+    deleteFeedback(4, fId).then(res => {
       console.log(res);
     });
   };

@@ -1,15 +1,19 @@
 import {useEffect, useState} from 'react';
+import {useRecoilValue} from 'recoil';
 import FeedbackForm from './FeedbackForm';
 import FeedbackList from './FeedbackList';
 import FeedbackKeywordList from './FeedbackKeywordList';
 import getFeedbacks from '@/src/api/feedback/getFeedbacks';
+import materialState from '@/src/recoil/atoms/materialState';
 import {feedback} from '@/src/interfaces/feedback';
 import '@/src/styles/variable.css';
 
 const FeedbackContainer = () => {
+  const material = useRecoilValue(materialState);
   const [feedbacks, setFeedbacks] = useState<feedback[]>([]);
   useEffect(() => {
-    getFeedbacks(1, 1, 1, 5).then(res => {
+    if (!material) return;
+    getFeedbacks(4, parseInt(material.id), 1, 5).then(res => {
       console.log(res);
       setFeedbacks(res);
     });
@@ -19,7 +23,7 @@ const FeedbackContainer = () => {
     <div className="">
       <div className="flex justify-between items-center p-4">
         <div className="text-gray-500 text-lg">Request feedback</div>
-        <FeedbackForm />
+        {material ? <FeedbackForm mId={parseInt(material?.id)} /> : null}
       </div>
       <div className="text-center w-full feedbackContainer box-border">
         {/* 資料のFeedback */}
@@ -49,7 +53,7 @@ const FeedbackContainer = () => {
           <div className="text-2xl font-semibold p-5">
             ✅ Pages most relevant to the question users were asking
           </div>
-          <FeedbackKeywordList />
+          {material ? <FeedbackKeywordList mId={material?.id} /> : null}
         </div>
       </div>
     </div>

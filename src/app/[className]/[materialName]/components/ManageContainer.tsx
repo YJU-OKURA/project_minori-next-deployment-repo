@@ -7,7 +7,7 @@ import FeedbackContainer from './FeedbackContainer';
 // import AttendanceContainer from './AttendanceContainer';
 import '@/src/styles/variable.css';
 
-const UserContainer = () => {
+const ManageContainer = () => {
   const tabs = ['Material', 'Quiz', 'Feedback', 'Attendance'];
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const tabMapping = {
@@ -29,4 +29,4 @@ const UserContainer = () => {
   );
 };
 
-export default UserContainer;
+export default ManageContainer;
