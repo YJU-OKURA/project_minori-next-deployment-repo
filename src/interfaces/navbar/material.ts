@@ -4,7 +4,9 @@ interface Material {
   file: {
     m_path: string;
   };
-  prompts: [];
+  prompts: {
+    id: number;
+  }[];
 }
 
 export default Material;
