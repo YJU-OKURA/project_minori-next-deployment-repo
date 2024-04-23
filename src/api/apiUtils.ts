@@ -40,6 +40,7 @@ api.interceptors.response.use(
         }
       } catch (error) {
         console.error('トークンの有効期限が切れました。');
+        window.location.href = '/intro';
       }
     }
     return Promise.reject(error);

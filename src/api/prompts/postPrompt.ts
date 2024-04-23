@@ -4,18 +4,19 @@ const postPrompt = async (
   message: string,
   chat: (reader: ReadableStreamDefaultReader) => void
 ) => {
+  const token = localStorage.getItem('access_token');
+  console.log('token:', token);
   const body = {
     message: message,
   };
+  console.log('body:', body);
   try {
     const response = await fetch(
       `http://3.38.86.236:3000/api/nest/class/${cId}/prompts/${id}`,
       {
         method: 'POST',
         headers: {
-          Authorization:
-            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwiZXhwIjoxOTY5OTAxMDIyfQ.U0k1q2oTrp3JwsIpem16o2W77tpVGiwylwc5cTFaZgU',
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(body),
       }

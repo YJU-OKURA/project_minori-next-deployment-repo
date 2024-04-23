@@ -16,14 +16,14 @@ const PromptChat = () => {
   const [reload, setReload] = useState<boolean>(false);
 
   useEffect(() => {
-    getPrompt(1, 1, 1, 6).then(res => {
+    getPrompt(4, 126, 1, 6).then(res => {
       res.messages.reverse();
       setMsg(res.messages);
     });
   }, [reload]);
 
   const handleClickIcon = (mId: number) => {
-    patchMessage(1, 1, mId, true).then(res => {
+    patchMessage(4, 126, mId, true).then(res => {
       console.log(res);
     });
   };
@@ -56,8 +56,7 @@ const PromptChat = () => {
 
   useEffect(() => {
     if (inputMsg === '') return;
-    postPrompt(1, 1, inputMsg, chat).then(res => {
-      console.log(res);
+    postPrompt(4, 126, inputMsg, chat).then(() => {
       setInputMsg('');
     });
   }, [inputMsg]);
