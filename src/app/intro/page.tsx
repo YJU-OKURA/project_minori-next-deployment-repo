@@ -3,8 +3,11 @@ import {useEffect, useState} from 'react';
 import Image from 'next/image';
 import {Login} from './components/login';
 import intro from '@/public/svgs/intro';
+import {useSetRecoilState} from 'recoil';
+import userState from '@/src/recoil/atoms/userState';
 
 const Page = () => {
+  const setUser = useSetRecoilState(userState);
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
@@ -24,6 +27,10 @@ const Page = () => {
 
   useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick);
+
+    setUser(null);
+    localStorage.clear();
+
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick);
     };
