@@ -4,11 +4,11 @@ import Image from 'next/image';
 import getKeywords from '@/src/api/feedback/getKeywords';
 import {keyword} from '@/src/interfaces/feedback';
 
-const FeedbackKeywordList = () => {
+const FeedbackKeywordList = ({mId}: {mId: string}) => {
   const [keywords, setKeywords] = useState<keyword[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    getKeywords(1, 1).then(res => {
+    getKeywords(4, parseInt(mId)).then(res => {
       console.log(res);
       setKeywords(res);
       setLoading(false);

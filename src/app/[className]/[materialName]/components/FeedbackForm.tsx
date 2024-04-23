@@ -3,36 +3,35 @@ import {useState} from 'react';
 import getFeedback from '@/src/api/feedback/getFeedback';
 import postFeedback from '@/src/api/feedback/postFeedback';
 
-const FeedbackForm = () => {
+const FeedbackForm = ({mId}: {mId: number}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [feedback, setFeedback] = useState('');
 
   const handleClickFeedback = () => {
     if (feedback !== '') setFeedback('');
-    getFeedback(1, 1, chat);
+    getFeedback(4, mId, chat);
     setFeedback(feedback.replace(/AI|:|"/g, ''));
   };
 
   const handleClickSave = () => {
     const data = feedback.replace(/AI|:|"/g, '');
-    postFeedback(1, 1, data).then(res => {
+    postFeedback(4, mId, data).then(res => {
       console.log(res);
       setIsOpen(false);
     });
   };
 
   const chat = async (reader: ReadableStreamDefaultReader) => {
-    let feedbackData = '';
+    // let feedbackData = '';
     try {
       while (reader) {
         const {done, value} = await reader.read();
         const decodedValue = new TextDecoder().decode(value);
-        feedbackData += decodedValue;
-        console.log(feedbackData);
+        // feedbackData += decodedValue;
         setFeedback(promptRes => promptRes + decodedValue);
 
         if (feedback.includes(' ')) {
-          feedbackData = '';
+          // feedbackData = '';
         }
         if (done) {
           break;

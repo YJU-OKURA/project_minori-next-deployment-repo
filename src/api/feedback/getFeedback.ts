@@ -1,8 +1,9 @@
+import BASE_URLS from '../baseUrl';
+
+const token = localStorage.getItem('access_token');
+
 const myHeaders = new Headers();
-myHeaders.append(
-  'Authorization',
-  'Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwiZXhwIjoxOTY5OTAxMDIyfQ.U0k1q2oTrp3JwsIpem16o2W77tpVGiwylwc5cTFaZgU'
-);
+if (token) myHeaders.append('Authorization', token);
 
 const requestOptions = {
   method: 'GET',
@@ -16,7 +17,7 @@ const getFeedback = async (
 ) => {
   try {
     const response = await fetch(
-      `http://3.38.86.236:3000/api/nest/class/${cId}/feedback/materials/${mId}/get-feedback`,
+      `${BASE_URLS.nest}/class/${cId}/feedback/materials/${mId}/get-feedback`,
       requestOptions
     );
     console.log('res:', response);
