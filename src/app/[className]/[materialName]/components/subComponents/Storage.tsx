@@ -14,7 +14,7 @@ const Storage = () => {
 
   useEffect(() => {
     // コメントを取得する処理
-    getMessage(1, 1, 1, 5).then(res => {
+    getMessage(4, 126, 1, 5).then(res => {
       console.log(res);
       setMsg(res);
       setIsOpen(new Array(res.length).fill(false)); // コメントの開閉状態を初期化

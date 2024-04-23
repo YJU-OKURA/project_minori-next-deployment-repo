@@ -10,16 +10,19 @@ import icons from '@/public/svgs/navbar';
 const MaterialList = ({
   materials,
   params,
+  cId,
 }: {
   materials: Material[];
   params: ParamsProps;
+  cId: string | null;
 }) => {
   const [isToggleOpen, setIsToggleOpen] = useState<boolean[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [editData, setEditData] = useState<Material>();
 
   const handleClickSubject = (mId: number) => {
-    if (materials[mId] && materials[mId].prompts.length === 0) {
-      postPromptAccess(1, mId);
+    if (materials[mId] && materials[mId].prompts.length === 0 && cId) {
+      postPromptAccess(parseInt(cId), mId);
     }
   };
 
@@ -70,6 +73,7 @@ const MaterialList = ({
                   <div
                     className="p-2 hover:bg-gray-200"
                     onClick={() => {
+                      setEditData(material);
                       setIsOpen(true);
                       setIsToggleOpen(prev => prev.map(() => false));
                     }}
@@ -89,7 +93,9 @@ const MaterialList = ({
             </li>
           );
         })}
-        {isOpen ? <MaterialForm setIsOpen={setIsOpen} /> : null}
+        {isOpen ? (
+          <MaterialForm setIsOpen={setIsOpen} editData={editData} />
+        ) : null}
       </ul>
     </div>
   );

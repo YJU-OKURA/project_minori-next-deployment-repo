@@ -7,7 +7,13 @@ import searchMaterial from '@/src/api/material/searchMaterial';
 import {Material, ParamsProps} from '@/src/interfaces/navbar';
 import icons from '@/public/svgs/navbar';
 
-const MaterialContainer = ({params}: {params: ParamsProps}) => {
+const MaterialContainer = ({
+  params,
+  cId,
+}: {
+  params: ParamsProps;
+  cId: string | null;
+}) => {
   const [materials, setMaterials] = useState<Material[]>([]);
   const [searchMaterials, setSearchMaterials] = useState<Material[]>([]);
   const [keyWord, setKeyWord] = useState<string>('');
@@ -16,7 +22,7 @@ const MaterialContainer = ({params}: {params: ParamsProps}) => {
 
   const onLoadMore = () => {
     setHasMore(false);
-    getMaterial(1, boardPage, 8).then(res => {
+    getMaterial(4, boardPage, 8).then(res => {
       if (res.length === 0) {
         setHasMore(false);
       } else {
@@ -85,9 +91,13 @@ const MaterialContainer = ({params}: {params: ParamsProps}) => {
         >
           {materials ? (
             keyWord ? (
-              <MaterialList materials={searchMaterials} params={params} />
+              <MaterialList
+                materials={searchMaterials}
+                params={params}
+                cId={cId}
+              />
             ) : (
-              <MaterialList materials={materials} params={params} />
+              <MaterialList materials={materials} params={params} cId={cId} />
             )
           ) : null}
         </InfiniteScroll>

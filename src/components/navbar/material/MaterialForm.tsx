@@ -1,13 +1,19 @@
-import {ChangeEvent, useRef, useState} from 'react';
+import {ChangeEvent, useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
 import postMaterial from '@/src/api/material/postMaterial';
 import {FormProps} from '@/src/interfaces/navbar';
 import icons from '@/public/svgs/navbar/prompt';
 
-const MaterialForm = ({setIsOpen}: FormProps) => {
+const MaterialForm = ({setIsOpen, editData}: FormProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [materialName, setMaterialName] = useState<string>('');
   const [material, setMaterial] = useState<File>();
+
+  useEffect(() => {
+    if (editData) {
+      console.log(editData);
+    }
+  }, []);
 
   const handleEnterName = (e: ChangeEvent<HTMLInputElement>) => {
     setMaterialName(e.target.value);
@@ -28,7 +34,7 @@ const MaterialForm = ({setIsOpen}: FormProps) => {
   const handleClickButton = () => {
     console.log(material, materialName);
     if (material && materialName) {
-      postMaterial(1, materialName, material);
+      postMaterial(4, materialName, material);
     }
   };
 
