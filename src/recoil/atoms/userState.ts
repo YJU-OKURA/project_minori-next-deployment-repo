@@ -4,9 +4,13 @@ import {recoilPersist} from 'recoil-persist';
 
 const {persistAtom} = recoilPersist();
 
-const userState = atom<User | null>({
+const userState = atom<User>({
   key: 'userState',
-  default: null,
+  default: {
+    id: 0,
+    name: '',
+    image: '',
+  },
   effects_UNSTABLE: [persistAtom],
 });
 

@@ -17,7 +17,6 @@ const Page = () => {
   const setRefreshToken = useSetRecoilState(refreshTokenState);
   const router = useRouter();
   useEffect(() => {
-    console.log(code);
     if (code) {
       postGoogleLogin(code).then(res => {
         if (res.user) {

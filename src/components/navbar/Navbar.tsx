@@ -2,17 +2,13 @@
 import {useState} from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import {useParams, usePathname} from 'next/navigation';
-import {useRecoilValue} from 'recoil';
-import userState from '@/src/recoil/atoms/userState';
+import {useParams, usePathname, useSearchParams} from 'next/navigation';
 import {MaterialContainer, MaterialForm} from './material';
 import Profile from './profile';
-import {User} from '@/src/interfaces/user';
 import icons from '@/public/svgs/navbar';
 import '@/src/styles/variable.css';
 
 const Navbar = () => {
-  const user = useRecoilValue(userState) as User;
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const pages = [
@@ -24,6 +20,8 @@ const Navbar = () => {
 
   const router = usePathname();
   const params = useParams<{className: string; materialName: string}>();
+  const searchParams = useSearchParams();
+  const search = searchParams.get('id');
 
   if (router === '/intro' || router === '/intro/googleLogin') {
     return null;
@@ -33,7 +31,7 @@ const Navbar = () => {
     <div className="w-72 h-full bg-gray-50">
       <div className="relative w-72 px-6 pt-5 navbar flex flex-col">
         {/* Profile */}
-        <Profile user={user} params={params} />
+        <Profile params={params} cId={search} />
         <div className="h-px bg-zinc-300"></div>
         <div className="h-8"></div>
 
@@ -82,7 +80,7 @@ const Navbar = () => {
                 </div>
                 {isOpen ? <MaterialForm setIsOpen={setIsOpen} /> : null}
               </div>
-              <MaterialContainer params={params} />
+              <MaterialContainer params={params} cId={search} />
             </div>
             <div className="h-16"></div>
 
