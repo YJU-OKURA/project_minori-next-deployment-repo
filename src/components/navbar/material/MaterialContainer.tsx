@@ -79,13 +79,7 @@ const MaterialContainer = ({
           pageStart={0}
           loadMore={onLoadMore}
           hasMore={hasMore}
-          loader={
-            <div key="unique" className="flex justify-center items-center">
-              <div className="w-[80px] h-[80px] border border-4 border-dashed border-gray-500 rounded-full text-sm flex justify-center items-center">
-                Loading
-              </div>
-            </div>
-          }
+          loader={<div key="unique"> loading...</div>}
           useWindow={false}
           threshold={20}
         >

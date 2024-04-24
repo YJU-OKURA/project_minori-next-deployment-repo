@@ -6,8 +6,10 @@ import deleteMaterial from '@/src/api/material/deleteMaterial';
 import postPromptAccess from '@/src/api/prompts/postPromptAccess';
 import {Material, ParamsProps} from '@/src/interfaces/navbar';
 import icons from '@/public/svgs/navbar';
-import {useSetRecoilState} from 'recoil';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 import materialState from '@/src/recoil/atoms/materialState';
+import classUserState from '@/src/recoil/atoms/classUserState';
+import ROLES from '@/src/constants/roles';
 
 const MaterialList = ({
   materials,
@@ -22,9 +24,11 @@ const MaterialList = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [editData, setEditData] = useState<Material>();
   const setMaterialState = useSetRecoilState(materialState);
+  const classUser = useRecoilValue(classUserState);
 
   const handleClickSubject = (mId: number) => {
-    if (materials[mId] && materials[mId].prompts.length === 0 && cId) {
+    const material = materials.find(material => material.id === String(mId));
+    if (material?.prompts.length === 0 && cId) {
       postPromptAccess(parseInt(cId), mId);
     }
   };
@@ -40,7 +44,7 @@ const MaterialList = ({
   }, [materials]);
 
   const handleMaterialDelete = (mId: number) => {
-    deleteMaterial(1, mId);
+    if (cId) deleteMaterial(parseInt(cId), mId);
   };
 
   return (
@@ -52,27 +56,31 @@ const MaterialList = ({
               <Image
                 src={icons.book}
                 alt="prompt"
-                width={15}
-                height={15}
-                className="w-6 h-6 mr-3"
+                width={30}
+                height={30}
+                className="mr-3"
               ></Image>
               <div
                 className="flex w-full items-center justify-between"
                 onClick={() => handleClickSubject(parseInt(material.id))}
               >
-                <Link
-                  href={`/${params.className}/${material.name}`}
-                  onClick={() => setMaterialState(material)}
-                >
-                  {material.name}
+                <Link href={`/${params.className}/${material.name}`}>
+                  <div
+                    className="min-h-[30px]"
+                    onClick={() => setMaterialState(material)}
+                  >
+                    {material.name}
+                  </div>
                 </Link>
-                <Image
-                  src={icons.moreHoriz}
-                  alt="icon"
-                  width={30}
-                  height={30}
-                  onClick={() => toggleDropdown(index)}
-                ></Image>
+                {classUser && ROLES[classUser?.role_id] === 'ADMIN' ? (
+                  <Image
+                    src={icons.moreHoriz}
+                    alt="icon"
+                    width={30}
+                    height={30}
+                    onClick={() => toggleDropdown(index)}
+                  ></Image>
+                ) : null}
               </div>
               {isToggleOpen[index] ? (
                 <div className="absolute top-[32px] right-0 z-20 bg-white rounded-lg overflow-hidden drop-shadow-lg">
@@ -99,8 +107,8 @@ const MaterialList = ({
             </li>
           );
         })}
-        {isOpen ? (
-          <MaterialForm setIsOpen={setIsOpen} editData={editData} />
+        {isOpen && cId ? (
+          <MaterialForm setIsOpen={setIsOpen} editData={editData} cId={cId} />
         ) : null}
       </ul>
     </div>

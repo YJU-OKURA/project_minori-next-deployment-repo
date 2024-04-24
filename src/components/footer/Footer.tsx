@@ -9,7 +9,7 @@ const Footer = () => {
       'https://yuminn-k.notion.site/25484dca19294ff8ba2ffc24e5548e8c?pvs=4',
   };
   return (
-    <div className="py-7 flex justify-center">
+    <div className="py-7 flex justify-center border-t-2 block">
       <div className="w-max flex justify-center items-center">
         {/* <div>
           <Image src={svgs.logo} width={50} height={50} alt="logo" />

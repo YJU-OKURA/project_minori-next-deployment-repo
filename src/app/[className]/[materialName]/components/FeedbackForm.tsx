@@ -3,42 +3,60 @@ import {useState} from 'react';
 import getFeedback from '@/src/api/feedback/getFeedback';
 import postFeedback from '@/src/api/feedback/postFeedback';
 
-const FeedbackForm = ({mId}: {mId: number}) => {
+const FeedbackForm = ({
+  mId,
+  setReload,
+}: {
+  mId: number;
+  setReload: (value: boolean) => void;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [feedback, setFeedback] = useState('');
+  const [type, setType] = useState('all');
+
+  const handleChangeType = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log(e.target.value);
+    setType(e.target.value);
+  };
 
   const handleClickFeedback = () => {
-    if (feedback !== '') setFeedback('');
-    getFeedback(4, mId, chat);
-    setFeedback(feedback.replace(/AI|:|"/g, ''));
+    if (feedback) {
+      console.log('feedback:', feedback);
+      setFeedback('');
+    }
+    getFeedback(4, mId, type, chat);
   };
 
   const handleClickSave = () => {
     const data = feedback.replace(/AI|:|"/g, '');
-    postFeedback(4, mId, data).then(res => {
-      console.log(res);
+    postFeedback(4, mId, data).then(() => {
+      setFeedback('');
+      setReload(true);
       setIsOpen(false);
     });
   };
 
   const chat = async (reader: ReadableStreamDefaultReader) => {
-    // let feedbackData = '';
+    let feedbackData = '';
     try {
       while (reader) {
         const {done, value} = await reader.read();
         const decodedValue = new TextDecoder().decode(value);
-        // feedbackData += decodedValue;
-        setFeedback(promptRes => promptRes + decodedValue);
+        feedbackData += decodedValue;
+        setFeedback(feedback => feedback + decodedValue);
 
         if (feedback.includes(' ')) {
-          // feedbackData = '';
+          console.log(feedbackData);
+          feedbackData = '';
         }
         if (done) {
+          // console.log('스트림이 완료되었습니다.');
+          // console.log(feedback);
           break;
         }
       }
     } catch (error) {
-      console.error('ストリームの読み込み中にエラーが発生しました:', error);
+      console.error('스트림 읽기 중 오류가 발생했습니다:', error);
     } finally {
       reader.releaseLock();
     }
@@ -67,9 +85,12 @@ const FeedbackForm = ({mId}: {mId: number}) => {
               </div>
               <div className="w-full m-auto flex text-left py-2">
                 <div className="w-1/2 flex items-center">
-                  <select name="" id="" className="border p-2 rounded-lg">
-                    <option value="">All Feedback</option>
-                    <option value="">Partial feedback</option>
+                  <select
+                    className="border p-2 rounded-lg"
+                    onChange={handleChangeType}
+                  >
+                    <option value="all">All Feedback</option>
+                    <option value="part">Partial feedback</option>
                   </select>
                   <div className="px-2">
                     <button

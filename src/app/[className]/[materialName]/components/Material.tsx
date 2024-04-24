@@ -6,24 +6,30 @@ import React, {
   useEffect,
   RefObject,
   useCallback,
+  Suspense,
 } from 'react';
 import {Document, Page, pdfjs} from 'react-pdf';
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
+import {useRecoilValue} from 'recoil';
+import materialState from '@/src/recoil/atoms/materialState';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const Material = () => {
-  const uploadedPdfUrl =
-    'https://d3sbrbqucv1146.cloudfront.net/metarials/class1/1711584517380.pdf';
+  const material = useRecoilValue(materialState);
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
-  const [file, setFile] = useState<string>(uploadedPdfUrl);
+  const [file, setFile] = useState<string>();
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [inputValue, setInputValue] = useState<string>('1');
   const pageRefs = useRef<(RefObject<HTMLDivElement> | null)[]>([]);
   const [scale, setScale] = useState<number>(1.0);
+
+  useEffect(() => {
+    if (material) setFile(material?.file.m_path);
+  }, [material]);
 
   // PDFファイルが読み込まれたときの処理
   function onDocumentLoadSuccess({numPages}: {numPages: number}) {
@@ -83,50 +89,52 @@ const Material = () => {
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-start">
-      {' '}
-      {file && (
-        <>
-          <div className="relative top-0 left-1/2 transform -translate-x-1/2 z-20">
-            {' '}
-            <label>Page: </label>
-            <input
-              type="text"
-              value={inputValue}
-              onChange={e => setInputValue(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Enter') {
-                  goToPage(Number(inputValue));
-                }
-              }}
-              className="border rounded p-1 w-10 text-center mr-2"
-            />
-            / {numPages ? numPages : 'Loading...'}
-            <button onClick={zoomIn} className="ml-2">
-              +
-            </button>
-            <button onClick={resetZoom} className="ml-2">
-              🔄
-            </button>
-            <button onClick={zoomOut} className="ml-2">
-              -
-            </button>
-          </div>
-          <div className="mt-8">
-            <div className="h-[80vh] overflow-auto z-10">
-              <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
-                {Array.from(new Array(numPages || 0), (_, index) => (
-                  <Page
-                    key={`page_${index + 1}`}
-                    pageNumber={index + 1}
-                    scale={scale}
-                    inputRef={pageRefs.current[index]}
-                  />
-                ))}
-              </Document>
+      <Suspense fallback={<div>Loading...</div>}>
+        {' '}
+        {file && (
+          <>
+            <div className="relative top-0 left-1/2 transform -translate-x-1/2 z-20">
+              {' '}
+              <label>Page: </label>
+              <input
+                type="text"
+                value={inputValue}
+                onChange={e => setInputValue(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    goToPage(Number(inputValue));
+                  }
+                }}
+                className="border rounded p-1 w-10 text-center mr-2"
+              />
+              / {numPages ? numPages : 'Loading...'}
+              <button onClick={zoomIn} className="ml-2">
+                +
+              </button>
+              <button onClick={resetZoom} className="ml-2">
+                🔄
+              </button>
+              <button onClick={zoomOut} className="ml-2">
+                -
+              </button>
             </div>
-          </div>
-        </>
-      )}
+            <div className="mt-8">
+              <div className="h-[80vh] overflow-auto z-10">
+                <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
+                  {Array.from(new Array(numPages || 0), (_, index) => (
+                    <Page
+                      key={`page_${index + 1}`}
+                      pageNumber={index + 1}
+                      scale={scale}
+                      inputRef={pageRefs.current[index]}
+                    />
+                  ))}
+                </Document>
+              </div>
+            </div>
+          </>
+        )}
+      </Suspense>
     </div>
   );
 };

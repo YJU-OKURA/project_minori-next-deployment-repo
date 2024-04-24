@@ -12,8 +12,8 @@ const SubContainer = () => {
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const material = useRecoilValue(materialState);
   const tabMapping = {
-    PromptChat: <PromptChat pId={material ? material?.prompts[0].id : 0} />,
-    Storage: <Storage pId={material ? material?.prompts[0].id : 0} />,
+    PromptChat: <PromptChat pId={material ? material.prompts[0]?.id : 0} />,
+    Storage: <Storage pId={material ? material.prompts[0]?.id : 0} />,
   };
 
   return (

@@ -1,17 +1,18 @@
 import {ChangeEvent, useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
 import postMaterial from '@/src/api/material/postMaterial';
+import patchMaterial from '@/src/api/material/patchMaterial';
 import {FormProps} from '@/src/interfaces/navbar';
 import icons from '@/public/svgs/navbar/prompt';
 
-const MaterialForm = ({setIsOpen, editData}: FormProps) => {
+const MaterialForm = ({setIsOpen, editData, cId}: FormProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [materialName, setMaterialName] = useState<string>('');
   const [material, setMaterial] = useState<File>();
 
   useEffect(() => {
     if (editData) {
-      console.log(editData);
+      setMaterialName(editData.name);
     }
   }, []);
 
@@ -27,15 +28,31 @@ const MaterialForm = ({setIsOpen, editData}: FormProps) => {
     const file = e.target.files;
     if (file) {
       setMaterial(file[0]);
-      // postMaterial(1, materialName, file[0]);
     }
   };
 
   const handleClickButton = () => {
     console.log(material, materialName);
     if (material && materialName) {
-      postMaterial(4, materialName, material);
+      postMaterial(4, materialName, material).then(() => {
+        setIsOpen(false);
+      });
+    } else {
+      alert('Please enter the file and name');
     }
+  };
+
+  const handleClickEdit = () => {
+    console.log('edit');
+    if (editData)
+      patchMaterial(
+        parseInt(cId),
+        parseInt(editData.id),
+        material,
+        materialName
+      ).then(() => {
+        setIsOpen(false);
+      });
   };
 
   return (
@@ -57,6 +74,7 @@ const MaterialForm = ({setIsOpen, editData}: FormProps) => {
                   type="text"
                   className="w-full border-2 p-2 rounded"
                   placeholder="prompt name"
+                  value={materialName}
                   onChange={handleEnterName}
                 />
               </div>
@@ -98,12 +116,21 @@ const MaterialForm = ({setIsOpen, editData}: FormProps) => {
                 >
                   {'< '}Back
                 </button>
-                <button
-                  className="bg-indigo-600 text-white py-2 px-3 rounded"
-                  onClick={handleClickButton}
-                >
-                  Make Prompt
-                </button>
+                {editData ? (
+                  <button
+                    className="bg-indigo-600 text-white py-2 px-3 rounded"
+                    onClick={handleClickEdit}
+                  >
+                    Edit Prompt
+                  </button>
+                ) : (
+                  <button
+                    className="bg-indigo-600 text-white py-2 px-3 rounded"
+                    onClick={handleClickButton}
+                  >
+                    Make Prompt
+                  </button>
+                )}
               </div>
             </div>
           </div>

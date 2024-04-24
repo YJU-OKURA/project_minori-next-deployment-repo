@@ -1,24 +1,21 @@
 import BASE_URLS from '../baseUrl';
 
-const token = localStorage.getItem('access_token');
-
-const myHeaders = new Headers();
-if (token) myHeaders.append('Authorization', token);
-
-const requestOptions = {
-  method: 'GET',
-  headers: myHeaders,
-};
-
 const getFeedback = async (
   cId: number,
   mId: number,
+  type: string,
   chat: (reader: ReadableStreamDefaultReader) => void
 ) => {
+  const token = localStorage.getItem('access_token');
   try {
     const response = await fetch(
-      `${BASE_URLS.nest}/class/${cId}/feedback/materials/${mId}/get-feedback`,
-      requestOptions
+      `${BASE_URLS.nest}/class/${cId}/feedback/materials/${mId}/get-feedback?type=${type}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
     console.log('res:', response);
     const reader = response.body?.getReader();
