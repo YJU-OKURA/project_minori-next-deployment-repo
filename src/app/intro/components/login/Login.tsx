@@ -25,10 +25,10 @@ const Login = () => {
           <div className="w-3/5 h-full text-center flex flex-col justify-between ">
             <div>
               <div className="text-4xl font-semibold pt-4">
-                Welcome to Minori
+                미노리에서 학습을 시작하세요!
               </div>
               <div className="text-sm text-neutral-400 my-2">
-                Get started - it free. No credit card needed.
+                소셜 로그인으로 간편하게 즐길 수 있습니다.
               </div>
             </div>
             <Image
@@ -63,13 +63,13 @@ const Login = () => {
                     height={25}
                   />
                   <div className="ml-2 text-center w-full">
-                    Continue with Google
+                    구글 계정으로 로그인
                   </div>
                 </button>
                 <button className="block border-2 w-full flex items-center justify-between px-6 py-2 m-auto my-3 rounded-lg">
                   <Image src={svgs.line} alt="google" width={25} height={25} />
                   <div className="ml-2 text-center w-full">
-                    Continue with Line
+                    라인 계정으로 로그인
                   </div>
                 </button>
               </div>

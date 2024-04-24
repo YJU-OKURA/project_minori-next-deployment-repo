@@ -2,12 +2,15 @@
 
 import {useState} from 'react';
 import Image from 'next/image';
+import {useRecoilValue} from 'recoil';
+import userState from '@/src/recoil/atoms/userState';
 import postCreateClass from '@/src/api/_class/postCreateClass';
-import User from '@/src/model/User';
 import {ModalProps} from '@/src/interfaces/_class/modal';
+import {User} from '@/src/interfaces/user';
 import icons from '@/public/svgs/_class';
 
 const ClassCreate = ({setActiveModalId, getClassAfterCreate}: ModalProps) => {
+  const user = useRecoilValue(userState) as User;
   const [fileDataUrl, setFileDataUrl] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>('');
   const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);
@@ -69,7 +72,7 @@ const ClassCreate = ({setActiveModalId, getClassAfterCreate}: ModalProps) => {
   };
 
   const handlePostRequest = async () => {
-    const userId = User.uid;
+    const userId = user.id;
     const postData = {
       name: title,
       limitation: capacity,
@@ -89,8 +92,8 @@ const ClassCreate = ({setActiveModalId, getClassAfterCreate}: ModalProps) => {
   };
 
   const passwordPlaceholder = isPasswordEnabled
-    ? 'Input password'
-    : 'Check the Password box!';
+    ? '비밀번호를 입력해주세요'
+    : '비밀번호 박스를 먼저 체크해주세요!';
 
   return (
     <div id="classCreate" className="fixed z-10 inset-0 overflow-y-auto">
@@ -107,10 +110,10 @@ const ClassCreate = ({setActiveModalId, getClassAfterCreate}: ModalProps) => {
             <div>
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                 <h3 className="text-3xl leading-6 font-bold text-gray-900">
-                  Create Class
+                  클래스 생성하기
                 </h3>
                 <div className="mt-6">
-                  <p className="text-lg font-semibold">Thumbnail</p>
+                  <p className="text-lg font-semibold">대표 이미지</p>
                   <div
                     onDragEnter={handleDragIn}
                     onDragLeave={handleDragOut}
@@ -140,7 +143,7 @@ const ClassCreate = ({setActiveModalId, getClassAfterCreate}: ModalProps) => {
                           />
                         )}
                         <span className="block text-gray-400 font-normal mb-2">
-                          Attach you files here
+                          파일을 드래그하여 업로드
                         </span>
                       </div>
                     </div>
@@ -155,7 +158,7 @@ const ClassCreate = ({setActiveModalId, getClassAfterCreate}: ModalProps) => {
                   <div className="flex justify-between px-1">
                     <div className="items-start">
                       <p className="text-lg font-semibold">
-                        Class Name <span className="text-red-600">*</span>
+                        클래스 명 <span className="text-red-600">*</span>
                       </p>
                       <input
                         type="text"
@@ -166,7 +169,7 @@ const ClassCreate = ({setActiveModalId, getClassAfterCreate}: ModalProps) => {
                     </div>
                     <div className="items-start">
                       <p className="text-lg font-semibold">
-                        User Capacity <span className="text-red-600">*</span>
+                        최대 정원수 <span className="text-red-600">*</span>
                       </p>
                       <div className="relative inline-block text-left">
                         <select
@@ -175,7 +178,7 @@ const ClassCreate = ({setActiveModalId, getClassAfterCreate}: ModalProps) => {
                           id="menu-button"
                           required
                         >
-                          <option value="">Select Capacity</option>
+                          <option value="">정원 수 선택</option>
                           <option value="10">10</option>
                           <option value="20">20</option>
                           <option value="30">30</option>
@@ -187,7 +190,7 @@ const ClassCreate = ({setActiveModalId, getClassAfterCreate}: ModalProps) => {
                 </div>
                 <div className="mt-6">
                   <div className="items-start">
-                    <p className="text-lg font-semibold">Class Password</p>
+                    <p className="text-lg font-semibold">클래스 비밀번호</p>
                     <div className="flex justify-between items-center pe-2">
                       <input
                         type="password"
@@ -201,7 +204,7 @@ const ClassCreate = ({setActiveModalId, getClassAfterCreate}: ModalProps) => {
                           className="me-1 size-4"
                           onChange={handleCheckboxChange}
                         />
-                        Password
+                        비밀번호
                       </span>
                     </div>
                   </div>
@@ -209,13 +212,13 @@ const ClassCreate = ({setActiveModalId, getClassAfterCreate}: ModalProps) => {
                 <div className="mt-6">
                   <div className="items-start">
                     <p className="text-lg font-semibold">
-                      Class Introduction <span className="text-red-600">*</span>
+                      클래스 소개 <span className="text-red-600">*</span>
                     </p>
                     <div className="flex justify-between items-center pe-2">
                       <textarea
                         onChange={handleContentChange}
                         className="ps-2 pt-2 border border-gray-400 rounded h-28 w-full"
-                        placeholder="Please input class introduction"
+                        placeholder="클래스 소개문을 작성해주세요"
                         required
                       />
                     </div>
@@ -230,14 +233,14 @@ const ClassCreate = ({setActiveModalId, getClassAfterCreate}: ModalProps) => {
               onClick={handlePostRequest}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              Create
+              생성
             </button>
             <button
               type="button"
               onClick={handleClose}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              Close
+              닫기
             </button>
           </div>
         </div>

@@ -95,7 +95,7 @@ const ClassCreateSchedule = ({
             <div>
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                 <h3 className="text-center text-3xl leading-6 font-bold text-gray-900">
-                  Create Class Schedule
+                  클래스 일정 생성
                 </h3>
               </div>
               <div className="mt-6">
@@ -103,7 +103,7 @@ const ClassCreateSchedule = ({
                   <input
                     type="text"
                     className="border-b border-slate-400 text-center text-3xl py-2"
-                    placeholder="title"
+                    placeholder="제목"
                     value={title}
                     onChange={e => setTitle(e.target.value)}
                     required
@@ -128,14 +128,14 @@ const ClassCreateSchedule = ({
                       checked={checkboxChecked}
                       onChange={handleCheckboxChange}
                     />
-                    Live Stream Schedule
+                    실시간 수업 여부
                   </label>
                 </div>
                 <div className="flex justify-center">
                   <div className="w-2/3 flex justify-between mt-2">
                     <div className="">
                       <p className="text-center text-lg font-semibold">
-                        start time
+                        시작 시간
                       </p>
                       <TimePicker
                         value={times[0]}
@@ -144,7 +144,7 @@ const ClassCreateSchedule = ({
                     </div>
                     <div>
                       <p className="text-center text-lg font-semibold">
-                        end time
+                        종료 시간
                       </p>
                       <TimePicker
                         value={times[1]}
@@ -158,7 +158,7 @@ const ClassCreateSchedule = ({
                     className="border w-32 h-10 rounded-lg bg-gray-300"
                     onClick={resetDates}
                   >
-                    Reset Dates
+                    일정 초기화
                   </button>
                 </div>
               </div>
@@ -170,14 +170,14 @@ const ClassCreateSchedule = ({
               onClick={handleCreate}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              Create
+              생성
             </button>
             <button
               type="button"
               onClick={handleClose}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              Close
+              닫기
             </button>
           </div>
         </div>

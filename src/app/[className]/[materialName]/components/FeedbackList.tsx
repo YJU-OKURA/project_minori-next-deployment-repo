@@ -42,7 +42,7 @@ const FeedbackList = ({feedbacks}: {feedbacks: feedback[]}) => {
                     className="bg-red-400 p-2 text-white"
                     onClick={() => handleClickDelete(feedback.id)}
                   >
-                    Delete
+                    삭제
                   </button>
                 </div>
               </div>

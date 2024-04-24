@@ -17,7 +17,7 @@ const Schedule = ({
   const deleteSchedule = async (scheduleId: number) => {
     if (classId !== undefined) {
       try {
-        if (confirm('Are you sure you want to delete this schedule?')) {
+        if (confirm('정말로 일정을 삭제하시겠습니까?')) {
           await DeleteClassSchedule(scheduleId, classId, User.uid);
           alert('Schedule deleted successfully!');
           const schedules = await getClassScheduleList(classId);
@@ -82,7 +82,9 @@ const Schedule = ({
       {classSchedules.length === 0 && (
         <div className="flex justify-center mt-2 w-full">
           <div className="flex w-1/2 border-4 justify-center items-center h-20">
-            <h1 className="text-3xl font-semibold">No Schedule in class</h1>
+            <h1 className="text-3xl font-semibold">
+              현재 일정이 존재하지 않습니다...
+            </h1>
           </div>
         </div>
       )}

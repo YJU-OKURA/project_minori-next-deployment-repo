@@ -89,13 +89,13 @@ const Material = () => {
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-start">
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div>로딩중...</div>}>
         {' '}
         {file && (
           <>
             <div className="relative top-0 left-1/2 transform -translate-x-1/2 z-20">
               {' '}
-              <label>Page: </label>
+              <label>페이지: </label>
               <input
                 type="text"
                 value={inputValue}

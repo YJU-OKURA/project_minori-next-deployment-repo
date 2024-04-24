@@ -92,7 +92,7 @@ const MaterialList = ({
                       setIsToggleOpen(prev => prev.map(() => false));
                     }}
                   >
-                    Edit Material
+                    수정
                   </div>
                   <div
                     className="p-2 hover:bg-gray-200"
@@ -100,7 +100,7 @@ const MaterialList = ({
                       handleMaterialDelete(parseInt(material.id));
                     }}
                   >
-                    Delete
+                    삭제
                   </div>
                 </div>
               ) : null}

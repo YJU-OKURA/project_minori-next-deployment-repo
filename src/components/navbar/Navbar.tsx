@@ -16,9 +16,9 @@ const Navbar = () => {
   const classUser = useRecoilValue(classUserState);
 
   const pages = [
-    {name: 'Class', icon: icons.group},
-    {name: 'MyPage', icon: icons.mypage},
-    {name: 'QuizBank', icon: icons.mypage},
+    {name: '클래스', icon: icons.group},
+    {name: '마이페이지', icon: icons.mypage},
+    {name: '문제은행', icon: icons.mypage},
     /* Billing Page - 保留 */
   ];
 
@@ -42,7 +42,7 @@ const Navbar = () => {
 
         {/* Pages */}
         <div className="w-full">
-          <div className="text-zinc-400 mb-4">Pages</div>
+          <div className="text-zinc-400 mb-4">페이지</div>
           <ul className="w-full">
             {pages.map((page, index) => {
               return (
@@ -69,7 +69,7 @@ const Navbar = () => {
           <>
             <div className="w-full flex-1">
               <div className="flex justify-between items-center mb-4">
-                <div className="text-zinc-400">Material</div>
+                <div className="text-zinc-400">자료</div>
                 {/* <MaterialForm /> */}
                 {classUser && ROLES[classUser?.role_id] === 'ADMIN' ? (
                   <div
@@ -103,9 +103,9 @@ const Navbar = () => {
                 className="w-6 h-6 mr-2"
               ></Image>
               {params.materialName ? (
-                <Link href={`/${params.className}`}>Leave Prompt</Link>
+                <Link href={`/${params.className}`}>프롬프트창 떠나기</Link>
               ) : (
-                <Link href="/">Leave Class</Link>
+                <Link href="/">클래스 떠나기</Link>
               )}
             </div>
           </>

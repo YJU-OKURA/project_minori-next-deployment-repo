@@ -21,13 +21,13 @@ const EditName = ({setIsOpen, func}: editProps) => {
       >
         <div className="w-full h-[160px]">
           <div className="h-[60px] flex justify-center items-center text-3xl">
-            EditName
+            이름 변경
           </div>
           <div className="h-[50px]">
             <input
               type="text"
               className="p-[10px] border"
-              placeholder="Nickname"
+              placeholder="닉네임을 입력해주세요"
               onChange={handleChangeName}
             />
           </div>
@@ -36,7 +36,7 @@ const EditName = ({setIsOpen, func}: editProps) => {
               className="bg-blue-500 text-white py-2 px-3 rounded text-sm font-medium mx-2"
               onClick={handleClickSave}
             >
-              Save
+              저장
             </button>
             <button
               className="bg-red-500 text-white py-2 px-3 rounded text-sm font-medium mx-2"
@@ -44,7 +44,7 @@ const EditName = ({setIsOpen, func}: editProps) => {
                 setIsOpen(false);
               }}
             >
-              Cancel
+              취소
             </button>
           </div>
         </div>

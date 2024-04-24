@@ -102,7 +102,7 @@ const ClassCreatePost = ({setShowPostModal}: ClassPostCreateProps) => {
             <div>
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                 <h3 className="text-3xl leading-6 font-bold text-gray-900">
-                  Create Class Post
+                  클래스 게시글 생성
                 </h3>
               </div>
               <div className="mt-4">
@@ -111,14 +111,16 @@ const ClassCreatePost = ({setShowPostModal}: ClassPostCreateProps) => {
                     id="title"
                     type="text"
                     className="border-b border-slate-400 text-center text-3xl py-2"
-                    placeholder="Post Title"
+                    placeholder="게시글 제목"
                     value={title}
                     onChange={e => setTitle(e.target.value)}
                     required
                   />
                 </div>
                 <div className="flex justify-center mt-6">
-                  <p className="text-xl font-semibold me-2">Announce Post</p>
+                  <p className="text-xl font-semibold me-2">
+                    공지사항 게시글로 전환
+                  </p>
                   <input type="checkbox" onChange={handleCheckAnnounced} />
                 </div>
                 <div className="mt-6">
@@ -151,7 +153,7 @@ const ClassCreatePost = ({setShowPostModal}: ClassPostCreateProps) => {
                           />
                         )}
                         <span className="block text-gray-400 font-normal mb-2">
-                          Attach you files here
+                          드래그하여 이미지 업로드
                         </span>
                       </div>
                     </div>
@@ -167,7 +169,7 @@ const ClassCreatePost = ({setShowPostModal}: ClassPostCreateProps) => {
                 <textarea
                   id="content"
                   className="ps-2 pt-2 border border-gray-400 rounded h-28 w-full"
-                  placeholder="Please input post content here"
+                  placeholder="게시글 내용을 입력해주세요."
                   value={content}
                   onChange={e => setContent(e.target.value)}
                   required
@@ -181,14 +183,14 @@ const ClassCreatePost = ({setShowPostModal}: ClassPostCreateProps) => {
               onClick={handleCreate}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              Create
+              생성
             </button>
             <button
               type="button"
               onClick={handleClose}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              Close
+              닫기
             </button>
           </div>
         </div>

@@ -13,7 +13,7 @@ const Page = () => {
 
   return (
     <div className="w-full box-border ">
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div>로딩중...</div>}>
         {classUser && ROLES[classUser?.role_id] === 'ADMIN' ? (
           <div className="p-4">
             <div className="text-5xl py-4 border-b-2">{material?.name}</div>

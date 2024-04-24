@@ -12,9 +12,9 @@ import icons from '@/public/svgs/_class';
 
 const Main = ({managerRole, classId}: RoleProps) => {
   const [showDropdown, setShowDropdown] = useState<Record<string, boolean>>({
-    Notice: false,
-    Schedule: false,
-    Posts: false,
+    공지사항: false,
+    일정: false,
+    게시글: false,
   });
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
@@ -28,20 +28,20 @@ const Main = ({managerRole, classId}: RoleProps) => {
   };
 
   const handleOpenScheduleModal = () => {
-    setShowDropdown(prevState => ({...prevState, Schedule: true}));
+    setShowDropdown(prevState => ({...prevState, 일정: true}));
     setShowScheduleModal(true);
   };
 
   const handleCloseScheduleModal = () => {
-    setShowDropdown(prevState => ({...prevState, Schedule: false}));
+    setShowDropdown(prevState => ({...prevState, 일정: false}));
     setShowScheduleModal(false);
   };
 
   const handleOpenPostModal = () => {
     setShowDropdown(prevState => ({
       ...prevState,
-      Posts: true,
-      Notice: !prevState['Notice'],
+      게시글: true,
+      일정: !prevState['일정'],
     }));
     setShowPostModal(true);
   };
@@ -49,31 +49,31 @@ const Main = ({managerRole, classId}: RoleProps) => {
   const handleClosePostModal = () => {
     setShowDropdown(prevState => ({
       ...prevState,
-      Posts: false,
-      Notice: !prevState['Notice'],
+      게시글: false,
+      공지사항: !prevState['공지사항'],
     }));
     setShowPostModal(false);
   };
 
   const mainSections = [
     {
-      title: 'Notice',
+      title: '공지사항',
       component: (
         <Notice
           managerRole={managerRole}
           classId={classId}
-          isOpen={showDropdown['Notice']}
+          isOpen={showDropdown['공지사항']}
         />
       ),
     },
     {
-      title: 'Schedule',
+      title: '일정',
       component: (
         <>
           <Schedule
             managerRole={managerRole}
             classId={classId}
-            isOpen={showDropdown['Schedule']}
+            isOpen={showDropdown['일정']}
           />
           {showScheduleModal && (
             <ClassCreateSchedule
@@ -85,13 +85,13 @@ const Main = ({managerRole, classId}: RoleProps) => {
       openModal: handleOpenScheduleModal,
     },
     {
-      title: 'Posts',
+      title: '게시글',
       component: (
         <>
           <Post
             managerRole={managerRole}
             classId={classId}
-            isOpen={showDropdown['Posts']}
+            isOpen={showDropdown['게시글']}
           />
           {showPostModal && (
             <ClassCreatePost setShowPostModal={handleClosePostModal} />
@@ -125,8 +125,7 @@ const Main = ({managerRole, classId}: RoleProps) => {
                   {section.title}
                 </h3>
                 {managerRole &&
-                  (section.title === 'Schedule' ||
-                    section.title === 'Posts') && (
+                  (section.title === '일정' || section.title === '게시글') && (
                     <div onClick={section.openModal}>
                       <Image
                         src={icons.addButton}

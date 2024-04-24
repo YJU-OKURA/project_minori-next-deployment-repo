@@ -38,7 +38,7 @@ const MaterialForm = ({setIsOpen, editData, cId}: FormProps) => {
         setIsOpen(false);
       });
     } else {
-      alert('Please enter the file and name');
+      alert('모든 항목을 입력해주세요');
     }
   };
 
@@ -62,24 +62,24 @@ const MaterialForm = ({setIsOpen, editData, cId}: FormProps) => {
           <div className="w-full h-full flex box-border px-10">
             <div className="flex flex-col space-y-4 h-full w-full">
               <div>
-                <div className="text-3xl font-bold">Make Prompt</div>
+                <div className="text-3xl font-bold">프롬프트 생성</div>
                 <div className="text-gray-500 py-1">
-                  After you put in the file, you will get a prompt that says you
-                  have learned the file.
+                  파일을 추가하면 다음과 같은 메시지가 표시됩니다. 파일이
+                  추가되었습니다.
                 </div>
               </div>
               <div className="py-1">
-                <div className="pb-2 font-semibold">Enter Prompt Name</div>
+                <div className="pb-2 font-semibold">프롬프트명</div>
                 <input
                   type="text"
                   className="w-full border-2 p-2 rounded"
-                  placeholder="prompt name"
+                  placeholder="프롬프트 명을 입력해주세요"
                   value={materialName}
                   onChange={handleEnterName}
                 />
               </div>
               <div className="flex flex-col h-2/3">
-                <div className="pb-2 font-semibold">Enter Your File</div>
+                <div className="pb-2 font-semibold">파일 추가</div>
                 <div
                   className="w-full h-2/3 flex items-center justify-center bg-gray-50 text-center p-8 border-dashed border-2 border-gray-300"
                   onClick={handleClickInput}
@@ -95,10 +95,10 @@ const MaterialForm = ({setIsOpen, editData, cId}: FormProps) => {
                       />
                     </div>
                     <div className="font-medium">
-                      Drag & drop files or Browse
+                      파일이나 링크를 추가해주세요
                     </div>
                     <div className="text-xs text-gray-400">
-                      Supported formates: PDF, Word, PPT
+                      지원하는 파일 형식: PDF, Word, PPT
                     </div>
                     <input
                       type="file"
@@ -114,21 +114,21 @@ const MaterialForm = ({setIsOpen, editData, cId}: FormProps) => {
                   className="bg-gray-100 py-2 px-4  rounded"
                   onClick={() => setIsOpen(false)}
                 >
-                  {'< '}Back
+                  {'< '}뒤로가기
                 </button>
                 {editData ? (
                   <button
                     className="bg-indigo-600 text-white py-2 px-3 rounded"
                     onClick={handleClickEdit}
                   >
-                    Edit Prompt
+                    프롬프트 수정
                   </button>
                 ) : (
                   <button
                     className="bg-indigo-600 text-white py-2 px-3 rounded"
                     onClick={handleClickButton}
                   >
-                    Make Prompt
+                    프롬프트 생성
                   </button>
                 )}
               </div>

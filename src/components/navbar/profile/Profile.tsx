@@ -93,7 +93,7 @@ const Profile = ({cId, params}: {cId: string | null; params: ParamsProps}) => {
                     setDropdownOpen(false);
                   }}
                 >
-                  Edit Name
+                  이름 변경
                 </li>,
                 ROLES[classUser.role_id] === 'ADMIN' ? (
                   <li
@@ -104,7 +104,7 @@ const Profile = ({cId, params}: {cId: string | null; params: ParamsProps}) => {
                       setDropdownOpen(false);
                     }}
                   >
-                    Edit group
+                    그룹 수정
                   </li>
                 ) : null,
                 <li
@@ -122,7 +122,7 @@ const Profile = ({cId, params}: {cId: string | null; params: ParamsProps}) => {
               ]
             : null}
           <li className="p-2 hover:bg-gray-200" onClick={handleClickLogout}>
-            Logout
+            로그아웃
           </li>
         </ul>
       )}
