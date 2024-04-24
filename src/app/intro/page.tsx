@@ -38,10 +38,10 @@ const Page = () => {
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
       <div className="text-5xl font-semibold text-center">
-        Make your collateral more efficient, <br /> more accessible.
+        미노리에서, <br /> <p className="mt-4">학습을 더욱 즐겁고 편리하게</p>
       </div>
       <div className="m-4 font-semibold text-gray-500">
-        Minori makes it easier and more efficient to analyze data with LLM.
+        학습의 편의성을 향상시키고 즐겁게 학습하는 경험을 만끽해 보세요!
       </div>
       <div>
         <Image src={intro.introImg} width={500} height={500} alt="mainImg" />
@@ -50,7 +50,7 @@ const Page = () => {
         onClick={openModal}
         className="bg-indigo-600 text-white py-2 px-7 rounded-3xl"
       >
-        Get Start
+        시작하기
       </button>
       {isOpen && <Login />}
     </main>

@@ -78,10 +78,10 @@ const FeedbackForm = ({
           >
             <div className="w-[550px] h-full text-center box-border">
               <div className="text-4xl font-semibold pt-4">
-                The Assistant’s Analysis
+                어시스턴트의 분석 결과
               </div>
               <div className="text-sm text-neutral-400 my-2">
-                Collaborate with your team to get the most out of monday.com
+                팀과 협업하여 미노리를 최대한 활용하세요.
               </div>
               <div className="w-full m-auto flex text-left py-2">
                 <div className="w-1/2 flex items-center">
@@ -89,8 +89,8 @@ const FeedbackForm = ({
                     className="border p-2 rounded-lg"
                     onChange={handleChangeType}
                   >
-                    <option value="all">All Feedback</option>
-                    <option value="part">Partial feedback</option>
+                    <option value="all">모든 피드백</option>
+                    <option value="part">일부 피드백</option>
                   </select>
                   <div className="px-2">
                     <button
@@ -113,13 +113,13 @@ const FeedbackForm = ({
                   className="border border-gray-500 rounded-full px-6 py-2"
                   onClick={() => setIsOpen(false)}
                 >
-                  {'< '}Close
+                  {'< '}뒤로가기
                 </button>
                 <button
                   className="bg-blue-500 text-white rounded-full px-6 py-2"
                   onClick={handleClickSave}
                 >
-                  Save
+                  저장
                 </button>
               </div>
             </div>

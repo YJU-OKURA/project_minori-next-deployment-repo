@@ -5,11 +5,14 @@ import {Invite, Waiting, Header} from '.';
 import {ClassCreate, ClassJoin, ClassPassword} from './modal';
 import {CardList} from '../card';
 import {Dashboard, TabsMapping} from '@/src/components/dashboard';
-import User from '@/src/model/User';
+import {useRecoilValue} from 'recoil';
+import userState from '@/src/recoil/atoms/userState';
+import {User} from '@/src/interfaces/user';
 import classAPI from '@/src/api/_class';
 
 const Main = () => {
-  const tabs = ['Joined', 'Created', 'Favorite', 'Invite', 'Waiting'];
+  const user = useRecoilValue(userState) as User;
+  const tabs = ['전체보기', '생성목록', '즐겨찾기', '초대목록', '신청목록'];
   const [classes, setClasses] = useState([]);
   const [createdClasses, setCreatedClasses] = useState([]);
   const [inviteClasses, setInviteClasses] = useState([]);
@@ -20,35 +23,35 @@ const Main = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getClassAfterCreate = async () => {
-    const allRes = await classAPI.getClasses(User.uid);
+    const allRes = await classAPI.getClasses(user.id);
     setClasses(allRes.data);
   };
 
   useEffect(() => {
     const loadClasses = async () => {
       switch (activeTab) {
-        case 'Created': {
-          const createdRes = await classAPI.getClassesRole(User.uid, 2);
+        case '생성목록': {
+          const createdRes = await classAPI.getClassesRole(user.id, 2);
           setCreatedClasses(createdRes.data);
           break;
         }
-        case 'Invite': {
-          const inviteRes = await classAPI.getClassesRole(User.uid, 6);
+        case '초대목록': {
+          const inviteRes = await classAPI.getClassesRole(user.id, 6);
           setInviteClasses(inviteRes.data);
           break;
         }
-        case 'Waiting': {
-          const waitingRes = await classAPI.getClassesRole(User.uid, 4);
+        case '신청목록': {
+          const waitingRes = await classAPI.getClassesRole(user.id, 4);
           setWaitingClasses(waitingRes.data);
           break;
         }
-        case 'Favorite': {
-          const favoriteRes = await classAPI.getFavoriteClasses(User.uid);
+        case '즐겨찾기': {
+          const favoriteRes = await classAPI.getFavoriteClasses(user.id);
           setFavoriteClasses(favoriteRes.data);
           break;
         }
         default: {
-          const allRes = await classAPI.getClasses(User.uid);
+          const allRes = await classAPI.getClasses(user.id);
           setClasses(allRes.data);
           break;
         }
@@ -65,13 +68,13 @@ const Main = () => {
   };
 
   const tabMapping = {
-    Joined: <CardList classes={classes} />,
-    Created: <CardList classes={createdClasses} />,
-    Favorite: <CardList classes={favoriteClasses} />,
-    Invite: (
+    전체보기: <CardList classes={classes} />,
+    생성목록: <CardList classes={createdClasses} />,
+    즐겨찾기: <CardList classes={favoriteClasses} />,
+    초대목록: (
       <Invite onInvitationClick={handleModalOpen} classes={inviteClasses} />
     ),
-    Waiting: <Waiting classes={waitingClasses} />,
+    신청목록: <Waiting classes={waitingClasses} />,
   };
 
   return (

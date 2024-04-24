@@ -59,7 +59,7 @@ const Post = ({
   const deletePost = async (postId: number) => {
     if (classId !== undefined) {
       try {
-        if (confirm('Are you sure you want to delete this post?')) {
+        if (confirm('정말로 게시글을 삭제하시겠습니까?')) {
           await DeleteClassBoard(postId, classId, User.uid);
           alert('Post deleted successfully!');
           const posts = await getClassBoardList(classId, pageNum, 6);
@@ -102,7 +102,9 @@ const Post = ({
       return (
         <div className="flex justify-center mt-2 w-full">
           <div className="flex w-1/2 border-4 justify-center items-center h-20">
-            <h1 className="text-3xl font-semibold">No Post in class</h1>
+            <h1 className="text-3xl font-semibold">
+              현재 게시글이 존재하지 않습니다...
+            </h1>
           </div>
         </div>
       );
@@ -153,7 +155,7 @@ const Post = ({
             className="border w-20 rounded-lg me-4 "
             onClick={handlePrevPage}
           >
-            Previous
+            이전
           </button>
         )}
         {pages.map(page => (
@@ -172,7 +174,7 @@ const Post = ({
             className="border w-20 rounded-lg ms-2 "
             onClick={handleNextPage}
           >
-            Next
+            다음
           </button>
         )}
       </div>

@@ -5,11 +5,11 @@ import Material from './Material';
 import Quiz from './Quiz';
 
 const UserContainer = () => {
-  const TABS = ['Material', 'Quiz'];
+  const TABS = ['학습자료', '퀴즈'];
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const tabMapping = {
-    Material: <Material />,
-    Quiz: <Quiz />,
+    학습자료: <Material />,
+    퀴즈: <Quiz />,
   };
   return (
     <div className="w-full">

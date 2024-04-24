@@ -17,16 +17,16 @@ const PostCard = ({
 }) => {
   const dropdownItems = [
     {
-      modalId: 'postEdit',
+      modalId: '게시글 수정',
       icon: icons.edit,
       alt: 'Edit Icon',
-      text: 'Edit',
+      text: '수정',
     },
     {
-      modalId: 'postDelete',
+      modalId: '게시글 삭제',
       icon: icons.delete,
       alt: 'Delete Icon',
-      text: 'Delete',
+      text: '삭제',
     },
   ];
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,7 +35,7 @@ const PostCard = ({
   const setActiveModalId = (modalId: string) => {
     setSelectedModalId(modalId);
     setIsModalOpen(true);
-    if (modalId === 'postDelete') {
+    if (modalId === '게시글 삭제') {
       deletePost(postId);
     }
   };
@@ -80,7 +80,7 @@ const PostCard = ({
           )}
         </div>
       </div>
-      {isModalOpen && selectedModalId === 'postEdit' && <ClassEditPost />}
+      {isModalOpen && selectedModalId === '게시글 수정' && <ClassEditPost />}
     </div>
   );
 };

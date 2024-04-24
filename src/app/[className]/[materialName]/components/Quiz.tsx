@@ -10,26 +10,26 @@ const Quiz = () => {
   return (
     <>
       <div className="py-4">
-        <div className="text-lg font-medium p-1">Question</div>
-        <div className="border-2 p-5 rounded-lg leading-8">Question</div>
+        <div className="text-lg font-medium p-1">질문</div>
+        <div className="border-2 p-5 rounded-lg leading-8">질문</div>
       </div>
       <div className="h-4"></div>
       <div className="">
         <div className="flex justify-between items-center relative py-1">
-          <div className="font-medium px-1">Answer</div>
+          <div className="font-medium px-1">정답</div>
           <div className="">
             <button
               className="border-2 p-2 rounded-lg bg-gray-100 text-sm"
               onClick={toggleDropdown}
             >
-              View commentary
+              해설 보기
             </button>
             {isOpen ? (
               <div className="absolute top-12 right-0 bg-gray-100 w-full p-5 border-2  rounded-lg leading-8 drop-shadow-md">
                 <div className="font-semibold">
-                  Correct Answer: <span className="text-red-500 ">A</span>
+                  정답: <span className="text-red-500 ">A</span>
                 </div>
-                <div className="font-medium pt-2">haesul</div>
+                <div className="font-medium pt-2">해설</div>
               </div>
             ) : null}
           </div>

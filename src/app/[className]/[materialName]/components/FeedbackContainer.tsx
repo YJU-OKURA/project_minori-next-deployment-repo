@@ -23,7 +23,7 @@ const FeedbackContainer = () => {
   return (
     <div className="">
       <div className="flex justify-between items-center p-4">
-        <div className="text-gray-500 text-lg">Request feedback</div>
+        <div className="text-gray-500 text-lg">피드백 요청</div>
         {material ? (
           <FeedbackForm mId={parseInt(material?.id)} setReload={setReload} />
         ) : null}
@@ -33,19 +33,18 @@ const FeedbackContainer = () => {
         {feedbacks.length === 0 ? (
           <div>
             <div className="text-4xl p-6 font-bold">
-              There are no feedback currently generated.
+              아직 피드백이 없습니다.
             </div>
 
             <div className="text-3xl p-3 font-semibold">
-              Please wait for the feedback to be generated or contact <br />{' '}
-              your administrator.
+              피드백이 생성될 때까지 기다리거나 <br /> 관리자에게 문의하세요.
             </div>
             <div className="h-20"></div>
           </div>
         ) : (
           <div>
             <div className="text-3xl p-3 font-semibold">
-              Feedback on this resource
+              이 자료에 대한 피드백
             </div>
             <div>
               <FeedbackList feedbacks={feedbacks} />
@@ -54,7 +53,7 @@ const FeedbackContainer = () => {
         )}
         <div>
           <div className="text-2xl font-semibold p-5">
-            ✅ Pages most relevant to the question users were asking
+            ✅ 사용자가 질문한 내용과 가장 관련성이 높은 페이지
           </div>
           {material ? <FeedbackKeywordList mId={material?.id} /> : null}
         </div>

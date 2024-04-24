@@ -9,8 +9,8 @@ import {Alarm} from './components/alarm';
 
 const ClassMain = () => {
   const managerRole = true;
-  const classTab = managerRole ? 'Member' : 'Alarm';
-  const tabs = ['Main', classTab];
+  const classTab = managerRole ? '맴버목록' : '알람';
+  const tabs = ['메인', classTab];
 
   const searchParams = useSearchParams();
   const classId = Number(searchParams.get('id'));
@@ -19,9 +19,9 @@ const ClassMain = () => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
 
   const tabMapping = {
-    Main: <Main managerRole={managerRole} classId={classId} />,
-    Member: <Member />,
-    Alarm: <Alarm />,
+    메인: <Main managerRole={managerRole} classId={classId} />,
+    맴버목록: <Member />,
+    알람: <Alarm />,
   };
   return (
     <>
@@ -33,9 +33,9 @@ const ClassMain = () => {
             </h1>
           </div>
           {managerRole ? (
-            <p className="mt-4 text-gray-400">You have Manager Role!</p>
+            <p className="mt-4 text-gray-400">교수자로 접속했습니다</p>
           ) : (
-            <p className="mt-4 text-black">Now, You have Member Role</p>
+            <p className="mt-4 text-black">학생으로 접속했습니다</p>
           )}
           <div className="border border-gray-200 w-11/12 mt-4 "></div>
         </div>

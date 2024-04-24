@@ -68,7 +68,7 @@ const MaterialContainer = ({
         <input
           type="text"
           className="w-full p-1 border-0 outline-none"
-          placeholder="Search"
+          placeholder="검색"
           onChange={handleInputText}
           onKeyDown={handleKeyEnter}
         />
