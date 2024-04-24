@@ -89,38 +89,42 @@ const Material = () => {
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-start">
-      <Suspense fallback={<div>로딩중...</div>}>
-        {' '}
+      <Suspense fallback={<div>Loading...</div>}>
         {file && (
           <>
-            <div className="relative top-0 left-1/2 transform -translate-x-1/2 z-20">
-              {' '}
-              <label>페이지: </label>
-              <input
-                type="text"
-                value={inputValue}
-                onChange={e => setInputValue(e.target.value)}
-                onKeyDown={e => {
-                  if (e.key === 'Enter') {
-                    goToPage(Number(inputValue));
-                  }
-                }}
-                className="border rounded p-1 w-10 text-center mr-2"
-              />
-              / {numPages ? numPages : 'Loading...'}
-              <button onClick={zoomIn} className="ml-2">
-                +
-              </button>
-              <button onClick={resetZoom} className="ml-2">
-                🔄
-              </button>
-              <button onClick={zoomOut} className="ml-2">
-                -
-              </button>
+            <div className="relative top-20 md:top-5 left-1/2 transform -translate-x-1/2 z-20 bg-white shadow-md p-4 rounded-lg">
+              <div className="flex items-center space-x-2">
+                <label>Page:</label>
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={e => setInputValue(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      goToPage(Number(inputValue));
+                    }
+                  }}
+                  className="border rounded p-1 w-16 text-center"
+                />
+                <span>/ {numPages ? numPages : 'Loading...'}</span>
+                <button onClick={zoomIn} className="p-1">
+                  +
+                </button>
+                <button onClick={resetZoom} className="p-1">
+                  🔄
+                </button>
+                <button onClick={zoomOut} className="p-1">
+                  -
+                </button>
+              </div>
             </div>
-            <div className="mt-8">
-              <div className="h-[80vh] overflow-auto z-10">
-                <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
+            <div className="mt-8 w-full flex justify-center">
+              <div className="h-[60vh] md:h-[80vh] overflow-auto">
+                <Document
+                  file={file}
+                  onLoadSuccess={onDocumentLoadSuccess}
+                  className="w-full"
+                >
                   {Array.from(new Array(numPages || 0), (_, index) => (
                     <Page
                       key={`page_${index + 1}`}
