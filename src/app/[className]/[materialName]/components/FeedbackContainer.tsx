@@ -10,6 +10,7 @@ import '@/src/styles/variable.css';
 
 const FeedbackContainer = () => {
   const material = useRecoilValue(materialState);
+  const [reload, setReload] = useState<boolean>(false);
   const [feedbacks, setFeedbacks] = useState<feedback[]>([]);
   useEffect(() => {
     if (!material) return;
@@ -17,13 +18,15 @@ const FeedbackContainer = () => {
       console.log(res);
       setFeedbacks(res);
     });
-  }, []);
+  }, [reload]);
 
   return (
     <div className="">
       <div className="flex justify-between items-center p-4">
         <div className="text-gray-500 text-lg">Request feedback</div>
-        {material ? <FeedbackForm mId={parseInt(material?.id)} /> : null}
+        {material ? (
+          <FeedbackForm mId={parseInt(material?.id)} setReload={setReload} />
+        ) : null}
       </div>
       <div className="text-center w-full feedbackContainer box-border">
         {/* 資料のFeedback */}

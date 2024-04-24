@@ -5,6 +5,8 @@ import {Footer} from '../components/footer';
 import RecoilRootContainer from '../components/RecoilRootContainer';
 import './globals.css';
 import '@/src/styles/variable.css';
+import {Suspense} from 'react';
+import Loading from './Loading';
 
 const inter = Inter({subsets: ['latin']});
 
@@ -19,11 +21,13 @@ const RootLayout = ({children}: {children: React.ReactNode}) => {
       <body className={inter.className}>
         <RecoilRootContainer>
           <div className="flex h-full relative">
-            <Navbar />
-            <div className="grow overflow-x-auto overflow-y-auto">
-              <div className="mainContainer">{children}</div>
-              <Footer />
-            </div>
+            <Suspense fallback={<Loading />}>
+              <Navbar />
+              <div className="grow overflow-x-auto overflow-y-auto">
+                <div className="mainContainer">{children}</div>
+                <Footer />
+              </div>
+            </Suspense>
           </div>
         </RecoilRootContainer>
       </body>

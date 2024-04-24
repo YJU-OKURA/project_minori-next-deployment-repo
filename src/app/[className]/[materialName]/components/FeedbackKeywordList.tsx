@@ -8,11 +8,17 @@ const FeedbackKeywordList = ({mId}: {mId: string}) => {
   const [keywords, setKeywords] = useState<keyword[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    getKeywords(4, parseInt(mId)).then(res => {
-      console.log(res);
-      setKeywords(res);
-      setLoading(false);
-    });
+    console.log(mId);
+    getKeywords(4, parseInt(mId))
+      .then(res => {
+        console.log(res);
+        setKeywords(res);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.log(err);
+        setLoading(false);
+      });
   }, []);
   return (
     <div className="flex justify-center">
