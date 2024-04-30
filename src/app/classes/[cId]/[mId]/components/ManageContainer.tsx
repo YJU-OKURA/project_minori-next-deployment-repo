@@ -8,12 +8,12 @@ import FeedbackContainer from './FeedbackContainer';
 import '@/src/styles/variable.css';
 
 const ManageContainer = () => {
-  const tabs = ['Material', 'Quiz', 'Feedback', 'Attendance'];
+  const tabs = ['자료', '퀴즈', '피드백', '출석'];
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const tabMapping = {
-    Material: <ManageMaterialContainer />,
+    자료: <ManageMaterialContainer />,
     // Quiz: <QuizContainer />,
-    Feedback: <FeedbackContainer />,
+    피드백: <FeedbackContainer />,
     // Attendance: <AttendanceContainer />,
   };
   return (

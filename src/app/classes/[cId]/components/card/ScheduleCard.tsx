@@ -2,7 +2,7 @@
 
 import React, {useState} from 'react';
 import {ClassEditSchedule} from '../modal';
-import {Dropdown} from '@/src/app/components/_class/dropdown';
+import {Dropdown} from '@/src/app/classes/components/_class/dropdown';
 import {ScheduleCardProps} from '@/src/interfaces/_class';
 import icons from '@/public/svgs/_class';
 

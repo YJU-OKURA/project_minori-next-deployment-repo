@@ -4,7 +4,7 @@ import Link from 'next/link';
 import MaterialForm from './MaterialForm';
 import deleteMaterial from '@/src/api/material/deleteMaterial';
 import postPromptAccess from '@/src/api/prompts/postPromptAccess';
-import {Material, ParamsProps} from '@/src/interfaces/navbar';
+import {Material} from '@/src/interfaces/navbar';
 import icons from '@/public/svgs/navbar';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 import materialState from '@/src/recoil/atoms/materialState';
@@ -13,11 +13,9 @@ import ROLES from '@/src/constants/roles';
 
 const MaterialList = ({
   materials,
-  params,
   cId,
 }: {
   materials: Material[];
-  params: ParamsProps;
   cId: string | null;
 }) => {
   const [isToggleOpen, setIsToggleOpen] = useState<boolean[]>([]);
@@ -29,7 +27,13 @@ const MaterialList = ({
   const handleClickSubject = (mId: number) => {
     const material = materials.find(material => material.id === String(mId));
     if (material?.prompts.length === 0 && cId) {
-      postPromptAccess(parseInt(cId), mId);
+      postPromptAccess(parseInt(cId), mId).then(res => {
+        console.log(res);
+        setMaterialState({
+          ...material,
+          prompts: [...(material?.prompts || []), {id: res.data.id}],
+        });
+      });
     }
   };
 
@@ -64,7 +68,7 @@ const MaterialList = ({
                 className="flex w-full items-center justify-between"
                 onClick={() => handleClickSubject(parseInt(material.id))}
               >
-                <Link href={`/${params.className}/${material.name}`}>
+                <Link href={`/classes/${cId}/${material.name}`}>
                   <div
                     className="min-h-[30px]"
                     onClick={() => setMaterialState(material)}
@@ -92,7 +96,7 @@ const MaterialList = ({
                       setIsToggleOpen(prev => prev.map(() => false));
                     }}
                   >
-                    수정
+                    Edit Material
                   </div>
                   <div
                     className="p-2 hover:bg-gray-200"
@@ -100,7 +104,7 @@ const MaterialList = ({
                       handleMaterialDelete(parseInt(material.id));
                     }}
                   >
-                    삭제
+                    Delete
                   </div>
                 </div>
               ) : null}

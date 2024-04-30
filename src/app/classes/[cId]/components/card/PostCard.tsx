@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import Image from 'next/image';
 import {ClassEditPost} from '../modal';
-import {Dropdown} from '@/src/app/components/_class/dropdown';
+import {Dropdown} from '@/src/app/classes/components/_class/dropdown';
 import {PostCardProps} from '@/src/interfaces/_class';
 import icons from '@/public/svgs/_class';
 

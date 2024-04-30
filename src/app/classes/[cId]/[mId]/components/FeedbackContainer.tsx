@@ -7,16 +7,22 @@ import getFeedbacks from '@/src/api/feedback/getFeedbacks';
 import materialState from '@/src/recoil/atoms/materialState';
 import {feedback} from '@/src/interfaces/feedback';
 import '@/src/styles/variable.css';
+import getCheckRefer from '@/src/api/feedback/getCheckRefer';
 
 const FeedbackContainer = () => {
   const material = useRecoilValue(materialState);
   const [reload, setReload] = useState<boolean>(false);
+  const [references, setReferences] = useState<boolean>(false);
   const [feedbacks, setFeedbacks] = useState<feedback[]>([]);
   useEffect(() => {
     if (!material) return;
     getFeedbacks(4, parseInt(material.id), 1, 5).then(res => {
       console.log(res);
       setFeedbacks(res);
+    });
+    getCheckRefer(4, parseInt(material.id)).then(res => {
+      console.log(res);
+      setReferences(res);
     });
   }, [reload]);
 
@@ -55,7 +61,9 @@ const FeedbackContainer = () => {
           <div className="text-2xl font-semibold p-5">
             ✅ 사용자가 질문한 내용과 가장 관련성이 높은 페이지
           </div>
-          {material ? <FeedbackKeywordList mId={material?.id} /> : null}
+          {material ? (
+            <FeedbackKeywordList mId={material?.id} references={references} />
+          ) : null}
         </div>
       </div>
     </div>

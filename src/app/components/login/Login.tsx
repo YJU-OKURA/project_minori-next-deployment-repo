@@ -17,7 +17,7 @@ const Login = () => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div
-        className=" bg-white rounded-lg w-1/2 h-4/6 py-10 box-border"
+        className=" bg-white rounded-lg w-[800px] h-[530px] py-10 box-border"
         id="modal-container"
       >
         <div className="w-full h-full flex items-center box-border py-8">

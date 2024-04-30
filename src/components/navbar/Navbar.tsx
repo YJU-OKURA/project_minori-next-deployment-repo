@@ -2,7 +2,7 @@
 import {useState} from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import {useParams, usePathname} from 'next/navigation';
+import {useParams} from 'next/navigation';
 import {MaterialContainer, MaterialForm} from './material';
 import Profile from './profile';
 import icons from '@/public/svgs/navbar';
@@ -22,15 +22,10 @@ const Navbar = () => {
     /* Billing Page - 保留 */
   ];
 
-  const router = usePathname();
   const params = useParams<{className: string; materialName: string}>();
   // const searchParams = useSearchParams();
   // const search = searchParams.get('id');
   const search = '4';
-
-  if (router === '/intro' || router === '/intro/googleLogin') {
-    return null;
-  }
 
   return (
     <div className="w-72 h-full bg-gray-50">
@@ -65,7 +60,7 @@ const Navbar = () => {
         <div className="h-8"></div>
 
         {/* Subject*/}
-        {params.className ? (
+        {search ? (
           <>
             <div className="w-full flex-1">
               <div className="flex justify-between items-center mb-4">
@@ -103,9 +98,9 @@ const Navbar = () => {
                 className="w-6 h-6 mr-2"
               ></Image>
               {params.materialName ? (
-                <Link href={`/${params.className}`}>프롬프트창 떠나기</Link>
+                <Link href={`/classes/${search}`}>프롬프트창 떠나기</Link>
               ) : (
-                <Link href="/">클래스 떠나기</Link>
+                <Link href="/classes">클래스 떠나기</Link>
               )}
             </div>
           </>

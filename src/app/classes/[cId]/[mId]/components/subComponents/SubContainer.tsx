@@ -8,12 +8,12 @@ import materialState from '@/src/recoil/atoms/materialState';
 import '@/src/styles/variable.css';
 
 const SubContainer = () => {
-  const TABS = ['PromptChat', 'Storage'];
+  const TABS = ['프롬프트창', '저장목록'];
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const material = useRecoilValue(materialState);
   const tabMapping = {
-    PromptChat: <PromptChat pId={material ? material.prompts[0]?.id : 0} />,
-    Storage: <Storage pId={material ? material.prompts[0]?.id : 0} />,
+    프롬프트창: <PromptChat pId={material ? material.prompts[0]?.id : 0} />,
+    저장목록: <Storage pId={material ? material.prompts[0]?.id : 0} />,
   };
 
   return (

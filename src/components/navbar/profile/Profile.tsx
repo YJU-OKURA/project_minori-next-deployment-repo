@@ -31,7 +31,7 @@ const Profile = ({cId, params}: {cId: string | null; params: ParamsProps}) => {
       setClassUser(null);
     }
     setLoad(true);
-  }, [cId, classUser, params]);
+  }, []);
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -49,7 +49,7 @@ const Profile = ({cId, params}: {cId: string | null; params: ParamsProps}) => {
   };
 
   const handleClickLogout = () => {
-    router.push('/intro');
+    router.push('/');
   };
 
   return (

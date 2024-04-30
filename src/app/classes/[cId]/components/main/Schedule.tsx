@@ -5,7 +5,7 @@ import {ScheduleCard} from '../card';
 import getClassScheduleList from '@/src/api/classSchedule/getClassScheduleList';
 import getClassSchedule from '@/src/api/classSchedule/getClassSchedule';
 import DeleteClassSchedule from '@/src/api/classSchedule/deleteClassSchedule';
-import {ClassSchedule} from '@/src/app/[className]/components/modal';
+import {ClassSchedule} from '@/src/app/classes/[cId]/components/modal';
 import {RoleProps} from '@/src/interfaces/_class';
 import User from '@/src/model/User';
 
