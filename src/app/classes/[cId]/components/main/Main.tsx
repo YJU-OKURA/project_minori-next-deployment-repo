@@ -6,7 +6,7 @@ import {Notice, Post, Schedule} from '.';
 import {
   ClassCreatePost,
   ClassCreateSchedule,
-} from '@/src/app/[className]/components/modal';
+} from '@/src/app/classes/[cId]/components/modal';
 import {RoleProps} from '@/src/interfaces/_class';
 import icons from '@/public/svgs/_class';
 

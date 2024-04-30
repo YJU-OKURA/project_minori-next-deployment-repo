@@ -58,8 +58,7 @@ const Card: React.FC<CardItemProps> = ({classData}) => {
       ) : (
         <Link
           href={{
-            pathname: `/${classData.ClassName}`,
-            query: {id: `${classData.ClassId}`},
+            pathname: `/classes/${classData.ClassId}`,
           }}
         >
           {cardContent}

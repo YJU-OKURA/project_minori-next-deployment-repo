@@ -3,7 +3,7 @@
 import {useEffect, useState} from 'react';
 import Image from 'next/image';
 import {ClassEditPost} from '../modal';
-import {Dropdown} from '@/src/app/components/_class/dropdown';
+import {Dropdown} from '@/src/app/classes/components/_class/dropdown';
 import getClassAnnounced from '@/src/api/classBoard/getClassAnnounced';
 import DeleteClassBoard from '@/src/api/classBoard/deleteClassBoard';
 import User from '@/src/model/User';

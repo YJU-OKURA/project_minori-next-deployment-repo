@@ -4,25 +4,29 @@ import Image from 'next/image';
 import getKeywords from '@/src/api/feedback/getKeywords';
 import {keyword} from '@/src/interfaces/feedback';
 
-const FeedbackKeywordList = ({mId}: {mId: string}) => {
+const FeedbackKeywordList = ({
+  mId,
+  references,
+}: {
+  mId: string;
+  references: boolean;
+}) => {
   const [keywords, setKeywords] = useState<keyword[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    console.log(mId);
-    getKeywords(4, parseInt(mId))
-      .then(res => {
+    if (references) {
+      getKeywords(4, parseInt(mId)).then(res => {
         console.log(res);
         setKeywords(res);
         setLoading(false);
-      })
-      .catch(err => {
-        console.log(err);
-        setLoading(false);
       });
+    }
   }, []);
   return (
     <div className="flex justify-center">
-      {loading ? (
+      {!references ? (
+        <div>not found</div>
+      ) : loading ? (
         <div className="text-3xl p-3 font-semibold">
           <Image
             src="/gif/loading.gif"

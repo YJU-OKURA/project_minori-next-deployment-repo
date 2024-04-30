@@ -1,7 +1,9 @@
 'use client';
 import {useState} from 'react';
+import Image from 'next/image';
 import getFeedback from '@/src/api/feedback/getFeedback';
 import postFeedback from '@/src/api/feedback/postFeedback';
+import gifs from '@/public/gif';
 
 const FeedbackForm = ({
   mId,
@@ -11,6 +13,7 @@ const FeedbackForm = ({
   setReload: (value: boolean) => void;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [type, setType] = useState('all');
 
@@ -24,6 +27,7 @@ const FeedbackForm = ({
       console.log('feedback:', feedback);
       setFeedback('');
     }
+    setIsLoading(true);
     getFeedback(4, mId, type, chat);
   };
 
@@ -37,6 +41,7 @@ const FeedbackForm = ({
   };
 
   const chat = async (reader: ReadableStreamDefaultReader) => {
+    setIsLoading(false);
     let feedbackData = '';
     try {
       while (reader) {
@@ -46,12 +51,10 @@ const FeedbackForm = ({
         setFeedback(feedback => feedback + decodedValue);
 
         if (feedback.includes(' ')) {
-          console.log(feedbackData);
           feedbackData = '';
         }
         if (done) {
-          // console.log('스트림이 완료되었습니다.');
-          // console.log(feedback);
+          console.log(feedbackData);
           break;
         }
       }
@@ -78,10 +81,10 @@ const FeedbackForm = ({
           >
             <div className="w-[550px] h-full text-center box-border">
               <div className="text-4xl font-semibold pt-4">
-                어시스턴트의 분석 결과
+                The Assistant’s Analysis
               </div>
               <div className="text-sm text-neutral-400 my-2">
-                팀과 협업하여 미노리를 최대한 활용하세요.
+                Collaborate with your team to get the most out of monday.com
               </div>
               <div className="w-full m-auto flex text-left py-2">
                 <div className="w-1/2 flex items-center">
@@ -89,8 +92,8 @@ const FeedbackForm = ({
                     className="border p-2 rounded-lg"
                     onChange={handleChangeType}
                   >
-                    <option value="all">모든 피드백</option>
-                    <option value="part">일부 피드백</option>
+                    <option value="all">All Feedback</option>
+                    <option value="part">Partial feedback</option>
                   </select>
                   <div className="px-2">
                     <button
@@ -104,8 +107,18 @@ const FeedbackForm = ({
               </div>
               <div className="py-3">
                 <div className="w-full h-[260px] rounded-md p-4 bg-gray-100 overflow-scroll">
-                  {feedback.replace(/AI|:|"/g, '')}
-                  {/* {feedback} */}
+                  {isLoading ? (
+                    <div className="h-[260px] flex justify-center items-center">
+                      <Image
+                        src={gifs.eclipse}
+                        width={100}
+                        height={100}
+                        alt="gif"
+                      />
+                    </div>
+                  ) : (
+                    feedback.replace(/AI|:|"/g, '')
+                  )}
                 </div>
               </div>
               <div className="w-2/3 m-auto flex justify-between">
@@ -113,13 +126,13 @@ const FeedbackForm = ({
                   className="border border-gray-500 rounded-full px-6 py-2"
                   onClick={() => setIsOpen(false)}
                 >
-                  {'< '}뒤로가기
+                  {'< '}Close
                 </button>
                 <button
                   className="bg-blue-500 text-white rounded-full px-6 py-2"
                   onClick={handleClickSave}
                 >
-                  저장
+                  Save
                 </button>
               </div>
             </div>

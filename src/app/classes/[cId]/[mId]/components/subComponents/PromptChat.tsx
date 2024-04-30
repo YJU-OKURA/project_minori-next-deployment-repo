@@ -20,7 +20,7 @@ const PromptChat = ({pId}: {pId: number}) => {
       res.messages.reverse();
       setMsg(res.messages);
     });
-  }, [reload]);
+  }, []);
 
   const handleClickIcon = (mId: number) => {
     patchMessage(4, pId, mId, true).then(res => {

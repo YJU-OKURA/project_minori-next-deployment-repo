@@ -28,7 +28,7 @@ const Page = () => {
           window.localStorage.setItem('access_token', res.access_token);
           window.localStorage.setItem('refresh_token', res.refresh_token);
         }
-        router.push('/');
+        router.push('/classes');
       });
     }
   }, []);

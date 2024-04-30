@@ -3,7 +3,7 @@
 import React, {useState} from 'react';
 import ReactCalendar from 'react-calendar';
 import {useSearchParams} from 'next/navigation';
-import {TimePicker} from '@/src/app/[className]/components/schedule';
+import {TimePicker} from '@/src/app/classes/[cId]/components/schedule';
 import PostCreateClassSchedule from '@/src/api/classSchedule/postCreateClassSchedule';
 import {ClassScheduleShowProps} from '@/src/interfaces/_class/modal';
 import User from '@/src/model/User';
