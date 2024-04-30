@@ -5,10 +5,15 @@ module.exports = {
     return config;
   },
   images: {
-    domains: [
-      'lh3.googleusercontent.com',
-      'd3sbrbqucv1146.cloudfront.net',
-      'd1s5j3nmszux84.cloudfront.net',
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'd3sbrbqucv1146.cloudfront.net',
+      },
     ],
   },
   reactStrictMode: false,
