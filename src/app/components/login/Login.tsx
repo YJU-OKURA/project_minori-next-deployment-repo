@@ -1,4 +1,3 @@
-'use client';
 import Image from 'next/image';
 import getGoogleLogin from '@/src/api/auth/getGoogleLogin';
 import svgs from '@/public/svgs/login';
@@ -17,27 +16,24 @@ const Login = () => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div
-        className=" bg-white rounded-lg w-[800px] h-[530px] py-10 box-border"
+        className=" bg-white rounded-lg w-[750px] h-[530px] py-10 box-border"
         id="modal-container"
       >
         <div className="w-full h-full flex items-center box-border py-8">
           {/* LEFT */}
           <div className="w-3/5 h-full text-center flex flex-col justify-between ">
             <div>
-              <div className="text-4xl font-semibold pt-4">
-                미노리에서 학습을 시작하세요!
+              <div className="text-4xl font-semibold leading-tight">
+                미노리에서 학습을
+                <br /> 시작하세요!
               </div>
-              <div className="text-sm text-neutral-400 my-2">
+              <div className="text-sm text-neutral-400 py-2">
                 소셜 로그인으로 간편하게 즐길 수 있습니다.
               </div>
             </div>
-            <Image
-              src={svgs.login}
-              alt="logo"
-              width={450}
-              height={450}
-              className="w-full"
-            />
+            <div className="w-full flex justify-center items-center">
+              <Image src={svgs.login} alt="logo" width={370} height={370} />
+            </div>
           </div>
           {/* RIGHT */}
           <div className="w-2/5 h-full flex justify-center">

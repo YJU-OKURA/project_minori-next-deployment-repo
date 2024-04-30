@@ -1,8 +1,8 @@
 'use client';
 import {useEffect, useState} from 'react';
 import Image from 'next/image';
-import intro from '@/public/svgs/intro';
 import {Login} from './components/login';
+import intro from '@/public/svgs/intro';
 
 const Page = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,13 +23,15 @@ const Page = () => {
   };
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleOutsideClick);
+    if (typeof window !== 'undefined') {
+      document.addEventListener('mousedown', handleOutsideClick);
 
-    localStorage.clear();
+      localStorage.clear();
 
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
+      return () => {
+        document.removeEventListener('mousedown', handleOutsideClick);
+      };
+    }
   }, []);
   return (
     <main className="flex h-screen justify-center items-center">
