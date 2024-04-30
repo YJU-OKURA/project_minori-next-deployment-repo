@@ -23,13 +23,15 @@ const Page = () => {
   };
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleOutsideClick);
+    if (typeof window !== 'undefined') {
+      document.addEventListener('mousedown', handleOutsideClick);
 
-    localStorage.clear();
+      localStorage.clear();
 
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
+      return () => {
+        document.removeEventListener('mousedown', handleOutsideClick);
+      };
+    }
   }, []);
   return (
     <main className="flex h-screen justify-center items-center">
