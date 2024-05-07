@@ -47,12 +47,16 @@ const Profile = () => {
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
-    console.log(params);
   };
 
   const handleEditName = (name: string) => {
     setDropdownOpen(false);
-    putUserName(user.id, 4, name);
+    putUserName(user.id, parseInt(params.cId), name).then(() => {
+      setUser(prevUser => ({
+        ...prevUser,
+        name: name,
+      }));
+    });
   };
 
   const handleClickDelete = () => {
