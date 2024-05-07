@@ -1,37 +1,49 @@
+'use client';
 import {useEffect, useState} from 'react';
 import Image from 'next/image';
-import {useRouter} from 'next/navigation';
-import {useRecoilState, useRecoilValue} from 'recoil';
+import Link from 'next/link';
+import {useParams} from 'next/navigation';
+import {useRecoilState} from 'recoil';
 import EditName from './EditName';
 import Warning from '../../warning/Warning';
 import getClassInfo from '@/src/api/classUser/getClassInfo';
 import putUserName from '@/src/api/classUser/putUserName';
-import classUserState from '@/src/recoil/atoms/classUserState';
 import userState from '@/src/recoil/atoms/userState';
-import {ParamsProps} from '@/src/interfaces/navbar';
 import icons from '@/public/svgs/navbar';
-import ROLES from '@/src/constants/roles';
+import gifs from '@/public/gif';
 
-const Profile = ({cId, params}: {cId: string | null; params: ParamsProps}) => {
-  const router = useRouter();
-  const user = useRecoilValue(userState);
-  const [classUser, setClassUser] = useRecoilState(classUserState);
+const Profile = () => {
+  const params = useParams<{cId: string}>();
+  const [imageUrl, setImageUrl] = useState(gifs.eclipse);
+  const [userName, setUserName] = useState<string>('');
+  const [user, setUser] = useRecoilState(userState);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [load, setLoad] = useState<boolean>(false);
 
   useEffect(() => {
-    if (cId && !classUser) {
-      getClassInfo(user.id, parseInt(cId)).then(res => {
-        setClassUser(res);
+    setImageUrl(user.image);
+    setUserName(user.name);
+  }, [user]);
+
+  useEffect(() => {
+    if (params.cId) {
+      getClassInfo(user.id, parseInt(params.cId)).then(res => {
+        console.log(res);
+        setUser(prevUser => ({
+          ...prevUser,
+          name: res.nickname,
+          role_id: res.role,
+        }));
       });
+    } else {
+      // apiが作られる次第修正予定
+      setUser(prevUser => ({
+        ...prevUser,
+        role_id: undefined,
+      }));
     }
-    if (!params.className) {
-      setClassUser(null);
-    }
-    setLoad(true);
-  }, []);
+  }, [params]);
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -40,7 +52,7 @@ const Profile = ({cId, params}: {cId: string | null; params: ParamsProps}) => {
 
   const handleEditName = (name: string) => {
     setDropdownOpen(false);
-    if (classUser) putUserName(classUser.uid, 4, name);
+    putUserName(user.id, 4, name);
   };
 
   const handleClickDelete = () => {
@@ -48,31 +60,20 @@ const Profile = ({cId, params}: {cId: string | null; params: ParamsProps}) => {
     console.log('class削除処理api 未完成');
   };
 
-  const handleClickLogout = () => {
-    router.push('/');
-  };
-
   return (
-    <div className="relative w-full h-12 flex items-start justify-between box-content ">
+    <div className="relative w-full h-14 flex items-start justify-between box-content border-b border-gray-300">
       <div className="flex items-center">
-        {load ? (
-          <Image
-            src={user ? user.image : ''}
-            width={10}
-            height={10}
-            alt="userImage"
-            className="w-8 h-8 rounded-lg object-cover"
-          />
-        ) : null}
+        <Image
+          src={imageUrl || '/images/navbar/user.png'}
+          width={36}
+          height={36}
+          alt="userImage"
+          className=" rounded-lg object-cover"
+          loading="lazy"
+        />
 
-        <div className="mx-2">
-          {load
-            ? classUser
-              ? classUser.nickname
-              : user
-              ? user.name
-              : ''
-            : null}
+        <div className="w-full mx-2 text-ml font-semibold overflow-hidden">
+          {userName}
         </div>
       </div>
       <button
@@ -83,7 +84,7 @@ const Profile = ({cId, params}: {cId: string | null; params: ParamsProps}) => {
       </button>
       {dropdownOpen && (
         <ul className="absolute top-[32px] right-0 bg-white rounded-lg overflow-hidden drop-shadow-lg">
-          {classUser
+          {user.role_id
             ? [
                 <li
                   key="editName"
@@ -95,7 +96,7 @@ const Profile = ({cId, params}: {cId: string | null; params: ParamsProps}) => {
                 >
                   이름 변경
                 </li>,
-                ROLES[classUser.role_id] === 'ADMIN' ? (
+                user.role_id === 'ADMIN' ? (
                   <li
                     key="editGroup"
                     className="p-2 hover:bg-gray-200"
@@ -115,14 +116,12 @@ const Profile = ({cId, params}: {cId: string | null; params: ParamsProps}) => {
                     setDropdownOpen(false);
                   }}
                 >
-                  {ROLES[classUser.role_id] === 'ADMIN'
-                    ? 'Delete group'
-                    : 'Leave group'}
+                  {user.role_id === 'ADMIN' ? '그룹 삭제' : '그룹 탈퇴'}
                 </li>,
               ]
             : null}
-          <li className="p-2 hover:bg-gray-200" onClick={handleClickLogout}>
-            로그아웃
+          <li className="p-2 hover:bg-gray-200">
+            <Link href="/">로그아웃</Link>
           </li>
         </ul>
       )}

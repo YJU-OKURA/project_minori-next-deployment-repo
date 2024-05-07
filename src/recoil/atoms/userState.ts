@@ -10,6 +10,7 @@ const userState = atom<User>({
     id: 0,
     name: '',
     image: '',
+    role_id: undefined,
   },
   effects_UNSTABLE: [persistAtom],
 });

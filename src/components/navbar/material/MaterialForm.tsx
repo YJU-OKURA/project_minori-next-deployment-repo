@@ -1,5 +1,7 @@
+'use client';
 import {ChangeEvent, useEffect, useRef, useState} from 'react';
 import Image from 'next/image';
+import {useParams} from 'next/navigation';
 import postMaterial from '@/src/api/material/postMaterial';
 import patchMaterial from '@/src/api/material/patchMaterial';
 import {FormProps} from '@/src/interfaces/navbar';
@@ -7,8 +9,9 @@ import icons from '@/public/svgs/navbar/prompt';
 
 const MaterialForm = ({setIsOpen, editData, cId}: FormProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [materialName, setMaterialName] = useState<string>('');
   const [material, setMaterial] = useState<File>();
+  const [materialName, setMaterialName] = useState<string>('');
+  const params = useParams<{cId: string}>();
 
   useEffect(() => {
     if (editData) {
@@ -20,11 +23,7 @@ const MaterialForm = ({setIsOpen, editData, cId}: FormProps) => {
     setMaterialName(e.target.value);
   };
 
-  const handleClickInput = () => {
-    inputRef.current?.click();
-  };
-
-  const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files;
     if (file) {
       setMaterial(file[0]);
@@ -34,8 +33,9 @@ const MaterialForm = ({setIsOpen, editData, cId}: FormProps) => {
   const handleClickButton = () => {
     console.log(material, materialName);
     if (material && materialName) {
-      postMaterial(4, materialName, material).then(() => {
+      postMaterial(parseInt(params.cId), materialName, material).then(() => {
         setIsOpen(false);
+        location.reload();
       });
     } else {
       alert('모든 항목을 입력해주세요');
@@ -52,20 +52,20 @@ const MaterialForm = ({setIsOpen, editData, cId}: FormProps) => {
         materialName
       ).then(() => {
         setIsOpen(false);
+        location.reload();
       });
   };
 
   return (
     <div>
       <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
-        <div className=" bg-white rounded-lg w-2/5 h-3/4 py-10 box-border">
-          <div className="w-full h-full flex box-border px-10">
+        <div className=" bg-white rounded-lg w-[600px] h-[600px] p-12 box-border">
+          <div className="w-full h-full flex box-border">
             <div className="flex flex-col space-y-4 h-full w-full">
               <div>
                 <div className="text-3xl font-bold">프롬프트 생성</div>
                 <div className="text-gray-500 py-1">
-                  파일을 추가하면 다음과 같은 메시지가 표시됩니다. 파일이
-                  추가되었습니다.
+                  원하는 파일을 추가해주세요.
                 </div>
               </div>
               <div className="py-1">
@@ -81,8 +81,10 @@ const MaterialForm = ({setIsOpen, editData, cId}: FormProps) => {
               <div className="flex flex-col h-2/3">
                 <div className="pb-2 font-semibold">파일 추가</div>
                 <div
-                  className="w-full h-2/3 flex items-center justify-center bg-gray-50 text-center p-8 border-dashed border-2 border-gray-300"
-                  onClick={handleClickInput}
+                  className="w-full h-[230px] flex items-center justify-center bg-gray-50 text-center p-8 border-dashed border-2 border-gray-300"
+                  onClick={() => {
+                    inputRef.current?.click();
+                  }}
                 >
                   <div>
                     <div className="pb-4">
@@ -94,17 +96,15 @@ const MaterialForm = ({setIsOpen, editData, cId}: FormProps) => {
                         className="m-auto "
                       />
                     </div>
-                    <div className="font-medium">
-                      파일이나 링크를 추가해주세요
-                    </div>
+                    <div className="font-medium">PDF 파일을 추가해주세요</div>
                     <div className="text-xs text-gray-400">
-                      지원하는 파일 형식: PDF, Word, PPT
+                      지원하는 파일 형식: PDF
                     </div>
                     <input
                       type="file"
                       className="hidden"
                       ref={inputRef}
-                      onChange={handleChangeInput}
+                      onChange={handleChangeFile}
                     />
                   </div>
                 </div>
@@ -121,14 +121,14 @@ const MaterialForm = ({setIsOpen, editData, cId}: FormProps) => {
                     className="bg-indigo-600 text-white py-2 px-3 rounded"
                     onClick={handleClickEdit}
                   >
-                    프롬프트 수정
+                    자료 수정
                   </button>
                 ) : (
                   <button
                     className="bg-indigo-600 text-white py-2 px-3 rounded"
                     onClick={handleClickButton}
                   >
-                    프롬프트 생성
+                    자료 생성
                   </button>
                 )}
               </div>
