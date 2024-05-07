@@ -13,6 +13,7 @@ const Login = () => {
       }
     });
   };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div
@@ -32,7 +33,13 @@ const Login = () => {
               </div>
             </div>
             <div className="w-full flex justify-center items-center">
-              <Image src={svgs.login} alt="logo" width={370} height={370} />
+              <Image
+                src={svgs.login}
+                alt="logo"
+                width={370}
+                height={258}
+                style={{width: 370, height: 258}}
+              />
             </div>
           </div>
           {/* RIGHT */}

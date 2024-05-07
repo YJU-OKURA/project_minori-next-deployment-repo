@@ -43,7 +43,13 @@ const Page = () => {
           학습의 편의성을 향상시키고 즐겁게 학습하는 경험을 만끽해 보세요!
         </div>
         <div>
-          <Image src={intro.introImg} width={500} height={500} alt="mainImg" />
+          <Image
+            src={intro.introImg}
+            width={500}
+            height={500}
+            alt="mainImg"
+            priority
+          />
         </div>
         <button
           onClick={openModal}
