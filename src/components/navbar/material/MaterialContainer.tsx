@@ -1,28 +1,39 @@
-import {ChangeEvent, useState, KeyboardEvent} from 'react';
+'use client';
+import {ChangeEvent, useState, useEffect} from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
+import Link from 'next/link';
 import Image from 'next/image';
+import {useParams} from 'next/navigation';
+import MaterialForm from './MaterialForm';
 import MaterialList from './MaterialList';
 import getMaterial from '@/src/api/material/getMaterial';
 import searchMaterial from '@/src/api/material/searchMaterial';
-import {Material, ParamsProps} from '@/src/interfaces/navbar';
+import useDebounce from '@/src/hooks/useDebounce';
+import {Material} from '@/src/interfaces/navbar';
 import icons from '@/public/svgs/navbar';
 
-const MaterialContainer = ({
-  params,
-  cId,
-}: {
-  params: ParamsProps;
-  cId: string | null;
-}) => {
+const MaterialContainer = () => {
   const [materials, setMaterials] = useState<Material[]>([]);
   const [searchMaterials, setSearchMaterials] = useState<Material[]>([]);
   const [keyWord, setKeyWord] = useState<string>('');
   const [boardPage, setBoardPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const param = useParams<{cId: string; mId: string}>();
+
+  const debounceVal = useDebounce(keyWord, 500);
+
+  useEffect(() => {
+    if (debounceVal) {
+      searchMaterial(parseInt(param.cId), debounceVal, 1, 5).then(res => {
+        setSearchMaterials(res);
+      });
+    }
+  }, [debounceVal]);
 
   const onLoadMore = () => {
     setHasMore(false);
-    getMaterial(4, boardPage, 8).then(res => {
+    getMaterial(parseInt(param.cId), boardPage, 8).then(res => {
       if (res.length === 0) {
         setHasMore(false);
       } else {
@@ -46,56 +57,73 @@ const MaterialContainer = ({
     }
   };
 
-  const handleKeyEnter = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter')
-      searchMaterial(1, keyWord, 1, 5).then(res => {
-        console.log(res);
-        setSearchMaterials(res);
-      });
-  };
-
   return (
-    <div className="">
-      {/* prompt - search */}
-      <div className="w-full flex bg-white items-center mb-3 px-1">
-        <Image
-          src={icons.search}
-          alt="icon"
-          width={20}
-          height={20}
-          className="w-5 h-5 opacity-50"
-        />
-        <input
-          type="text"
-          className="w-full p-1 border-0 outline-none"
-          placeholder="검색"
-          onChange={handleInputText}
-          onKeyDown={handleKeyEnter}
-        />
-      </div>
-      {/* Prompt - list */}
-      <div className="h-[350px] overflow-auto">
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={onLoadMore}
-          hasMore={hasMore}
-          loader={<div key="unique"> loading...</div>}
-          useWindow={false}
-          threshold={20}
-        >
-          {materials ? (
-            keyWord ? (
-              <MaterialList
-                materials={searchMaterials}
-                params={params}
-                cId={cId}
+    <div className="h-full flex flex-col">
+      {param.cId && (
+        <>
+          <div className="w-full flex-1">
+            <div className="w-full flex justify-between items-center mb-4">
+              <p className="text-zinc-400">자료</p>
+              <div
+                className="text-end bg-blue-500 w-6 h-6 flex justify-center items-center rounded-lg"
+                onClick={() => setIsOpen(true)}
+              >
+                <Image src={icons.plus} width={30} height={30} alt="plus" />
+              </div>
+            </div>
+            {isOpen && <MaterialForm setIsOpen={setIsOpen} cId={param.cId} />}
+            {/* prompt - search */}
+            <div className="w-full flex bg-white items-center mb-3 px-1">
+              <Image
+                src={icons.search}
+                alt="icon"
+                width={20}
+                height={20}
+                className="w-5 h-5 opacity-50"
               />
+              <input
+                type="text"
+                className="w-full p-1 border-0 outline-none"
+                placeholder="Search"
+                onChange={handleInputText}
+              />
+            </div>
+            {/* Prompt - list */}
+            <div className="h-[calc(100%-85px)] overflow-auto">
+              <InfiniteScroll
+                pageStart={0}
+                loadMore={onLoadMore}
+                hasMore={hasMore}
+                loader={<div key="unique"> loading...</div>}
+                useWindow={false}
+                threshold={20}
+              >
+                {materials && keyWord ? (
+                  <MaterialList materials={searchMaterials} cId={param.cId} />
+                ) : (
+                  <MaterialList materials={materials} cId={param.cId} />
+                )}
+              </InfiniteScroll>
+            </div>
+          </div>
+          <div className="flex-none h-16"></div>
+          {/* Exit */}
+          <div className="flex flex-none h-[50px]">
+            <Image
+              src={icons.door}
+              alt="icon"
+              width={30}
+              height={30}
+              className="w-6 h-6 mr-2"
+            ></Image>
+            {param.mId ? (
+              <Link href={`/classes/${param.cId}`}>프롬프트 떠나기</Link>
             ) : (
-              <MaterialList materials={materials} params={params} cId={cId} />
-            )
-          ) : null}
-        </InfiniteScroll>
-      </div>
+              <Link href="/classes">클래스 떠나기</Link>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };

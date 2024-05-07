@@ -38,7 +38,7 @@ async function fetchWithInterceptors(url: string, options: RequestInit) {
       response = await fetch(url, options);
     } else {
       console.error('トークンの有効期限が切れました。');
-      window.location.href = '/intro';
+      window.location.href = '/';
     }
   }
 
@@ -53,7 +53,7 @@ const req = async (
   url: string,
   method: RequestInit['method'],
   server: 'gin' | 'nest',
-  body: BodyInit | null | undefined = undefined
+  body: BodyInit | object | undefined = undefined
 ) => {
   const headers = new Headers();
   const token = localStorage.getItem('access_token');

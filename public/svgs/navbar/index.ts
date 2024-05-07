@@ -4,7 +4,7 @@ const icons = {
   door: '/svgs/navbar/door.svg',
   moreHoriz: '/svgs/navbar/moreHoriz.svg',
   moreVert: '/svgs/navbar/moreVert.svg',
-  mypage: '/svgs/navbar/mypage.svg',
+  myPage: '/svgs/navbar/mypage.svg',
   search: '/svgs/navbar/search.svg',
   plus: '/svgs/navbar/plus.svg',
 };
