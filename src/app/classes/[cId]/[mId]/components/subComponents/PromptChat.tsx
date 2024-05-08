@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import ReactMarkdown from 'react-markdown';
 import Image from 'next/image';
+import {useParams} from 'next/navigation';
 import ChatInput from './ChatInput';
 import getPrompt from '@/src/api/prompts/getPrompt';
 import patchMessage from '@/src/api/prompts/patchMessage';
@@ -14,16 +15,17 @@ const PromptChat = ({pId}: {pId: number}) => {
   const [inputMsg, setInputMsg] = useState<string>('');
   const [promptRes, setPromptRes] = useState<string>('');
   const [reload, setReload] = useState<boolean>(false);
+  const params = useParams<{cId: string}>();
 
   useEffect(() => {
-    getPrompt(4, pId, 1, 6).then(res => {
+    getPrompt(parseInt(params.cId), pId, 1, 6).then(res => {
       res.messages.reverse();
       setMsg(res.messages);
     });
   }, []);
 
   const handleClickIcon = (mId: number) => {
-    patchMessage(4, pId, mId, true).then(res => {
+    patchMessage(parseInt(params.cId), pId, mId, true).then(res => {
       console.log(res);
     });
   };

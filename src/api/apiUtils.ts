@@ -2,15 +2,6 @@ import BASE_URLS from './baseUrl';
 import HTTP_STATUS from './httpStatus';
 
 async function fetchWithInterceptors(url: string, options: RequestInit) {
-  const token = localStorage.getItem('access_token');
-
-  if (token) {
-    options.headers = {
-      ...options.headers,
-      Authorization: `Bearer ${token}`,
-    };
-  }
-
   let response = await fetch(url, options);
 
   if (response.status === 401) {

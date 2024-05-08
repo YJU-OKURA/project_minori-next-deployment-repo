@@ -7,13 +7,13 @@ import FeedbackContainer from './FeedbackContainer';
 // import AttendanceContainer from './AttendanceContainer';
 import '@/src/styles/variable.css';
 
-const ManageContainer = () => {
+const ManageContainer = (props: {cId: string}) => {
   const tabs = ['자료', '퀴즈', '피드백', '출석'];
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const tabMapping = {
     자료: <ManageMaterialContainer />,
     // Quiz: <QuizContainer />,
-    피드백: <FeedbackContainer />,
+    피드백: <FeedbackContainer cId={parseInt(props.cId)} />,
     // Attendance: <AttendanceContainer />,
   };
   return (
