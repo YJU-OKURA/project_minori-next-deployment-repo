@@ -52,9 +52,7 @@ const req = async (
     headers.append('Authorization', `Bearer ${token}`);
   }
 
-  if (body instanceof FormData) {
-    headers.append('Content-Type', 'multipart/form-data');
-  } else if (body) {
+  if (!(body instanceof FormData) && body) {
     headers.append('Content-Type', 'application/json');
     body = JSON.stringify(body);
   }
