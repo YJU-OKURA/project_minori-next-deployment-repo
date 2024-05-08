@@ -55,7 +55,7 @@ const MaterialList = ({
       postPromptAccess(parseInt(cId), mId).then(res => {
         setMaterialState({
           ...material,
-          prompts: [...(material?.prompts || []), {id: res}],
+          prompts: [...(material?.prompts || []), {id: res.data}],
         });
       });
     }
