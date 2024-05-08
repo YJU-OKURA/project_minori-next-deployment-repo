@@ -1,30 +1,21 @@
-'use client';
-
-import {useState} from 'react';
 import {ClassWait} from './modal';
 import {ClassProps} from '@/src/interfaces/_class';
-import logos from '@/public/images/_class';
 
 const Waiting = ({classes}: ClassProps) => {
-  const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
-      {classes &&
+      {classes && classes.length > 0 ? (
         classes.map(classItem => (
           <div key={classItem.id}>
-            <ClassWait
-              ImageSrc={classItem.image}
-              ClassName={classItem.name}
-              setIsModalOpen={setModalOpen}
-            />
+            <ClassWait ImageSrc={classItem.image} ClassName={classItem.name} />
           </div>
-        ))}
-      {modalOpen && (
-        <ClassWait
-          ImageSrc={logos.wasedauni}
-          ClassName={'Waseda University'}
-          setIsModalOpen={setModalOpen}
-        />
+        ))
+      ) : (
+        <div>
+          <p className="text-center text-2xl font-bold text-gray-900">
+            현재 신청 중인 클래스가 존재하지 않습니다
+          </p>
+        </div>
       )}
     </>
   );

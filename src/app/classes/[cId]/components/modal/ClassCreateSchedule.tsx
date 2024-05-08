@@ -2,24 +2,23 @@
 
 import React, {useState} from 'react';
 import ReactCalendar from 'react-calendar';
-import {useSearchParams} from 'next/navigation';
 import {TimePicker} from '@/src/app/classes/[cId]/components/schedule';
 import PostCreateClassSchedule from '@/src/api/classSchedule/postCreateClassSchedule';
-import {ClassScheduleShowProps} from '@/src/interfaces/_class/modal';
-import User from '@/src/model/User';
+import {ClassShowProps} from '@/src/interfaces/_class/modal';
 import 'react-calendar/dist/Calendar.css';
 import '@/src/styles/calendar.css';
 
 const ClassCreateSchedule = ({
-  setShowScheduleModal,
-}: ClassScheduleShowProps) => {
+  setShowModal,
+  classId,
+  userInfo,
+}: ClassShowProps) => {
   const [dates, setDates] = useState<[Date, Date]>([new Date(), new Date()]);
   const [times, setTimes] = useState(['00:00', '00:00']);
   const [checkboxChecked, setCheckboxChecked] = useState(false);
   const [title, setTitle] = useState('');
-  const searchParams = useSearchParams();
-  const uid = User.uid;
-  const cid = Number(searchParams.get('id'));
+  const cid = classId;
+  const uid = userInfo.uid;
 
   const handleDateChange = (newDates: Date | Date[]) => {
     if (Array.isArray(newDates)) {
@@ -46,7 +45,7 @@ const ClassCreateSchedule = ({
   };
 
   const handleClose = () => {
-    setShowScheduleModal(false);
+    setShowModal(false);
   };
 
   const toKSDate = (date: Date, index: number) => {
@@ -70,10 +69,11 @@ const ClassCreateSchedule = ({
       started_at: toKSDate(new Date(dates[0]), 0),
       title: title,
     };
+
     try {
       await PostCreateClassSchedule(postData);
       alert('Schedule created successfully');
-      setShowScheduleModal(false);
+      setShowModal(false);
     } catch (error) {
       alert('Failed to create schedule');
       console.error(error);

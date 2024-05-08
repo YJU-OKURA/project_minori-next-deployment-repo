@@ -6,13 +6,13 @@ import {ClassEditPost} from '../modal';
 import {Dropdown} from '@/src/app/classes/components/_class/dropdown';
 import getClassAnnounced from '@/src/api/classBoard/getClassAnnounced';
 import DeleteClassBoard from '@/src/api/classBoard/deleteClassBoard';
-import User from '@/src/model/User';
 import {RoleProps} from '@/src/interfaces/_class';
 import icons from '@/public/svgs/_class';
 
 const Notice = ({
   managerRole,
   classId,
+  userInfo,
   isOpen,
 }: RoleProps & {isOpen: boolean}) => {
   const dropdownItems = [
@@ -36,10 +36,10 @@ const Notice = ({
   const [selectedModalId, setSelectedModalId] = useState<string | null>(null);
 
   const deleteNotice = async (postId: number) => {
-    if (classId !== undefined) {
+    if (classId !== undefined && userInfo) {
       try {
         if (confirm('정말로 공지사항을 삭제하시겠습니까?')) {
-          await DeleteClassBoard(postId, classId, User.uid);
+          await DeleteClassBoard(postId, classId, userInfo.id);
           alert('Notice deleted successfully!');
         }
         const notices = await getClassAnnounced(classId);

@@ -2,25 +2,31 @@
 
 import {useState, useEffect} from 'react';
 import {ScheduleCard} from '../card';
-import getClassScheduleList from '@/src/api/classSchedule/getClassScheduleList';
-import getClassSchedule from '@/src/api/classSchedule/getClassSchedule';
-import DeleteClassSchedule from '@/src/api/classSchedule/deleteClassSchedule';
+import {useRecoilValue} from 'recoil';
+import userState from '@/src/recoil/atoms/userState';
+import classScheduleAPI from '@/src/api/classSchedule';
 import {ClassSchedule} from '@/src/app/classes/[cId]/components/modal';
 import {RoleProps} from '@/src/interfaces/_class';
-import User from '@/src/model/User';
+import {User} from '@/src/interfaces/user';
 
 const Schedule = ({
   managerRole,
   classId,
   isOpen,
 }: RoleProps & {isOpen: boolean}) => {
+  const user = useRecoilValue(userState) as User;
   const deleteSchedule = async (scheduleId: number) => {
     if (classId !== undefined) {
       try {
         if (confirm('정말로 일정을 삭제하시겠습니까?')) {
-          await DeleteClassSchedule(scheduleId, classId, User.uid);
+          await classScheduleAPI.deleteClassSchedule(
+            scheduleId,
+            classId,
+            user.id
+          );
           alert('Schedule deleted successfully!');
-          const schedules = await getClassScheduleList(classId);
+          const schedules =
+            await classScheduleAPI.getClassScheduleList(classId);
           if (Array.isArray(schedules.data)) {
             setClassSchedules(schedules.data);
           } else {
@@ -66,7 +72,7 @@ const Schedule = ({
 
   useEffect(() => {
     if (classId !== undefined && isOpen) {
-      getClassScheduleList(classId).then(schedules => {
+      classScheduleAPI.getClassScheduleList(classId).then(schedules => {
         if (Array.isArray(schedules.data)) {
           console.log(schedules.data);
           setClassSchedules(schedules.data);
@@ -93,7 +99,9 @@ const Schedule = ({
           key={index}
           onClick={async (event: React.MouseEvent) => {
             event.stopPropagation;
-            setSelectedSchedule(await getClassSchedule(schedule.ID));
+            setSelectedSchedule(
+              await classScheduleAPI.getClassSchedule(schedule.ID)
+            );
             setIsModalOpen(true);
           }}
         >

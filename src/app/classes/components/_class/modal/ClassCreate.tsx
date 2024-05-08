@@ -2,18 +2,19 @@
 
 import {useState} from 'react';
 import Image from 'next/image';
-import {useRecoilValue} from 'recoil';
-import userState from '@/src/recoil/atoms/userState';
 import postCreateClass from '@/src/api/_class/postCreateClass';
 import {ModalProps} from '@/src/interfaces/_class/modal';
-import {User} from '@/src/interfaces/user';
 import icons from '@/public/svgs/_class';
 
-const ClassCreate = ({setActiveModalId, getClassAfterCreate}: ModalProps) => {
-  const user = useRecoilValue(userState) as User;
+const ClassCreate = ({
+  setActiveModalId,
+  getClassAfterCreate,
+  uid,
+}: ModalProps) => {
   const [fileDataUrl, setFileDataUrl] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>('');
   const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);
+  const [secret, setSecret] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [capacity, setCapacity] = useState(0);
@@ -72,22 +73,25 @@ const ClassCreate = ({setActiveModalId, getClassAfterCreate}: ModalProps) => {
   };
 
   const handlePostRequest = async () => {
-    const userId = user.id;
-    const postData = {
-      name: title,
-      limitation: capacity,
-      description: content,
-      userId: userId,
-      image: fileDataUrl,
-    };
-    try {
-      await postCreateClass(postData);
-      alert('Class created successfully!');
-      handleClose();
-      getClassAfterCreate && getClassAfterCreate();
-    } catch (error) {
-      console.error(error);
-      alert('Failed to create class.');
+    if (uid) {
+      const userId = uid;
+      const postData = {
+        name: title,
+        limitation: capacity,
+        description: content,
+        userId: userId,
+        image: fileDataUrl,
+        secret: secret,
+      };
+      try {
+        await postCreateClass(postData);
+        alert('Class created successfully!');
+        handleClose();
+        getClassAfterCreate && getClassAfterCreate();
+      } catch (error) {
+        console.error(error);
+        alert('Failed to create class.');
+      }
     }
   };
 
@@ -197,6 +201,8 @@ const ClassCreate = ({setActiveModalId, getClassAfterCreate}: ModalProps) => {
                         className="ps-2 border border-gray-400 rounded h-8 w-3/5"
                         placeholder={passwordPlaceholder}
                         disabled={!isPasswordEnabled}
+                        value={secret}
+                        onChange={e => setSecret(e.target.value)}
                       />
                       <span className="text-lg">
                         <input

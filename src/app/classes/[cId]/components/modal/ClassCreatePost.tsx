@@ -2,22 +2,19 @@
 
 import {useState} from 'react';
 import Image from 'next/image';
-import {useSearchParams} from 'next/navigation';
 import postCreateClassPost from '@/src/api/classBoard/postCreateClassPost';
-import {ClassPostCreateProps} from '@/src/interfaces/_class/modal';
-import User from '@/src/model/User';
+import {ClassShowProps} from '@/src/interfaces/_class/modal';
 import icons from '@/public/svgs/_class';
 
-const ClassCreatePost = ({setShowPostModal}: ClassPostCreateProps) => {
+const ClassCreatePost = ({setShowModal, classId, userInfo}: ClassShowProps) => {
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const [isAnnounced, setIsAnnounced] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const searchParams = useSearchParams();
-  const cid = Number(searchParams.get('id'));
-  const uid = User.uid;
+  const uid = userInfo.uid;
+  const cid = classId;
   const createData = {
     title,
     content,
@@ -28,18 +25,17 @@ const ClassCreatePost = ({setShowPostModal}: ClassPostCreateProps) => {
   };
 
   const handleClose = () => {
-    setShowPostModal(false);
+    setShowModal(false);
   };
 
   const handleCreate = async () => {
     try {
-      const response = await postCreateClassPost({
+      await postCreateClassPost({
         ...createData,
         is_announced: createData.isAnnounced,
       });
-      console.log(response);
       alert('Post created successfully');
-      setShowPostModal(false);
+      setShowModal(false);
     } catch (error) {
       alert('Failed to create post');
       console.error(error);

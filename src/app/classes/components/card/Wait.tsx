@@ -1,18 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import {InvitationProps} from '@/src/interfaces/_class';
+import {ClassWaitProps} from '@/src/interfaces/_class/modal';
 
-const Invitation = ({
-  ImageSrc,
-  ClassName,
-  ManagerName,
-  onClick,
-}: InvitationProps) => {
+const Wait = ({ImageSrc, ClassName, setModalOpen}: ClassWaitProps) => {
   return (
     <div
       className="border rounded-lg w-80 h-72 overflow-hidden border-gray-300 mr-10 mb-10 hover:shadow-lg active:bg-neutral-50 focus:ring focus:ring-gray-400 transform hover:scale-105 transition duration-200 ease-in-out"
-      onClick={onClick}
+      onClick={() => setModalOpen && setModalOpen(true)}
     >
       <div className="flex justify-center items-center mt-2">
         <div className="w-72 h-44 relative overflow-hidden">
@@ -30,12 +25,8 @@ const Invitation = ({
           {ClassName}
         </h3>
       </div>
-      <p className="text-base ms-4 me-2 overflow-hidden overflow-ellipsis whitespace-nowrap text-base text-gray-700">
-        Invited by{' '}
-        <span className="font-semibold text-rose-500">{ManagerName}</span>
-      </p>
     </div>
   );
 };
 
-export default Invitation;
+export default Wait;

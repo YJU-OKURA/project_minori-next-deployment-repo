@@ -3,15 +3,13 @@
 import {useState, useEffect} from 'react';
 import {PostCard} from '../card';
 import {ClassPost} from '../modal';
-import getClassBoardList from '@/src/api/classBoard/getClassBoardList';
-import getClassBoard from '@/src/api/classBoard/getClassBoard';
-import DeleteClassBoard from '@/src/api/classBoard/deleteClassBoard';
-import User from '@/src/model/User';
+import classBoardAPI from '@/src/api/classBoard';
 import {RoleProps} from '@/src/interfaces/_class';
 
 const Post = ({
   managerRole,
   classId,
+  userInfo,
   isOpen,
 }: RoleProps & {isOpen: boolean}) => {
   const [classPosts, setClassPosts] = useState<
@@ -33,22 +31,12 @@ const Post = ({
 
   useEffect(() => {
     if (classId !== undefined && isOpen) {
-      getClassBoardList(classId, 1, 99).then(posts => {
-        if (Array.isArray(posts.data)) {
-          setTotalPosts(posts.total);
-        } else {
-          console.error('getClassBoards did not return an array');
-        }
-      });
-    }
-  }, [classId, isOpen]);
-
-  useEffect(() => {
-    if (classId !== undefined && isOpen) {
-      getClassBoardList(classId, pageNum, 6).then(posts => {
-        console.log(posts.data);
+      classBoardAPI.getClassBoardList(classId, pageNum, 6).then(posts => {
         if (Array.isArray(posts.data)) {
           setClassPosts(posts.data);
+          if (pageNum === 1) {
+            setTotalPosts(posts.total);
+          }
         } else {
           console.error('getClassBoards did not return an array');
         }
@@ -57,12 +45,16 @@ const Post = ({
   }, [classId, isOpen, pageNum]);
 
   const deletePost = async (postId: number) => {
-    if (classId !== undefined) {
+    if (classId !== undefined && userInfo) {
       try {
         if (confirm('정말로 게시글을 삭제하시겠습니까?')) {
-          await DeleteClassBoard(postId, classId, User.uid);
+          await classBoardAPI.deleteClassBoard(postId, classId, userInfo.id);
           alert('Post deleted successfully!');
-          const posts = await getClassBoardList(classId, pageNum, 6);
+          const posts = await classBoardAPI.getClassBoardList(
+            classId,
+            pageNum,
+            6
+          );
           if (Array.isArray(posts.data)) {
             setClassPosts(posts.data);
           } else {
@@ -78,27 +70,32 @@ const Post = ({
     }
   };
 
-  const handlePageChange = (page: number) => {
-    setPageNum(page);
-    setSelectedNum(page);
+  const calculateNewPageNum = (change: number) => {
+    const newPageNum = pageNum + change;
+    if (newPageNum < 1 || newPageNum > totalPages) {
+      return pageNum;
+    }
+    return newPageNum;
   };
 
-  const handlePrevPage = () => {
-    if (pageNum > 1) {
-      setPageNum(pageNum - 1);
-      setSelectedNum(pageNum - 1);
-    }
+  const handlePageChange = (change: number) => {
+    const newPageNum = calculateNewPageNum(change);
+    setPageNum(newPageNum);
+    setSelectedNum(newPageNum);
   };
 
-  const handleNextPage = () => {
-    if (pageNum < totalPages) {
-      setPageNum(pageNum + 1);
-      setSelectedNum(pageNum + 1);
-    }
+  const renderPageButton = (label: string, handler: () => void) => {
+    return totalPages === 0 ? null : (
+      <button className="border w-20 rounded-lg me-4 " onClick={handler}>
+        {label}
+      </button>
+    );
   };
 
   const renderPosts = () => {
-    if (classPosts.length === 0) {
+    const nonAnnouncedPosts = classPosts.filter(post => !post.IsAnnounced);
+
+    if (nonAnnouncedPosts.length === 0) {
       return (
         <div className="flex justify-center mt-2 w-full">
           <div className="flex w-1/2 border-4 justify-center items-center h-20">
@@ -120,7 +117,7 @@ const Post = ({
                 key={post.ID}
                 onClick={async (event: React.MouseEvent) => {
                   event.stopPropagation();
-                  setSelectedPost(await getClassBoard(post.ID));
+                  setSelectedPost(await classBoardAPI.getClassBoard(post.ID));
                   setIsModalOpen(true);
                 }}
               >
@@ -149,34 +146,20 @@ const Post = ({
   return (
     <>
       {renderPosts()}
-      <div className="flex justify-center">
-        {totalPages === 0 ? null : (
-          <button
-            className="border w-20 rounded-lg me-4 "
-            onClick={handlePrevPage}
-          >
-            이전
-          </button>
-        )}
+      <div className="flex justify-center mt-10">
+        {renderPageButton('이전', () => handlePageChange(-1))}
         {pages.map(page => (
           <button
             className={`border w-12 h-10 rounded-full me-2 ${
               selectedNum === page ? 'bg-blue-300' : 'bg-[#DAEFFD]'
             }`}
             key={page}
-            onClick={() => handlePageChange(page)}
+            onClick={() => handlePageChange(page - pageNum)}
           >
             {page}
           </button>
         ))}
-        {totalPages === 0 ? null : (
-          <button
-            className="border w-20 rounded-lg ms-2 "
-            onClick={handleNextPage}
-          >
-            다음
-          </button>
-        )}
+        {renderPageButton('다음', () => handlePageChange(1))}
       </div>
     </>
   );

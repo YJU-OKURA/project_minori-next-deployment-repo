@@ -8,19 +8,19 @@ const Header = ({setActiveModalId}: ModalProps) => {
       modalId: 'classCreate',
       icon: icons.create,
       alt: 'Create Icon',
-      text: 'Create Class',
+      text: '클래스 생성',
     },
     {
       modalId: 'classJoin',
       icon: icons.join,
       alt: 'Join Icon',
-      text: 'Join Class',
+      text: '클래스 가입',
     },
   ];
   return (
     <div className="mt-6">
       <div className="flex items-center justify-between me-10">
-        <h1 className="text-black text-5xl font-medium">Classes</h1>
+        <p className="text-black text-5xl font-medium">클래스 목록</p>
         <Dropdown
           dropdownImageSrc={icons.folder}
           items={dropdownItems}
@@ -28,7 +28,7 @@ const Header = ({setActiveModalId}: ModalProps) => {
           zIndex={10}
         />
       </div>
-      <div className="border border-gray-200 w-11/12 mt-4"></div>
+      <div className="border border-gray-200 w-11/12 mt-4" />
     </div>
   );
 };
