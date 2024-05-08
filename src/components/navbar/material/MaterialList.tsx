@@ -53,10 +53,9 @@ const MaterialList = ({
     const material = materials.find(material => material.id === String(mId));
     if (material?.prompts.length === 0 && cId) {
       postPromptAccess(parseInt(cId), mId).then(res => {
-        console.log(res);
         setMaterialState({
           ...material,
-          prompts: [...(material?.prompts || []), {id: res.data.id}],
+          prompts: [...(material?.prompts || []), {id: res}],
         });
       });
     }

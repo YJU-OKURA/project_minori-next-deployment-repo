@@ -6,9 +6,11 @@ import postFeedback from '@/src/api/feedback/postFeedback';
 import gifs from '@/public/gif';
 
 const FeedbackForm = ({
+  cId,
   mId,
   setReload,
 }: {
+  cId: number;
   mId: number;
   setReload: (value: boolean) => void;
 }) => {
@@ -28,12 +30,13 @@ const FeedbackForm = ({
       setFeedback('');
     }
     setIsLoading(true);
-    getFeedback(4, mId, type, chat);
+    getFeedback(cId, mId, type, chat);
   };
 
   const handleClickSave = () => {
     const data = feedback.replace(/AI|:|"/g, '');
-    postFeedback(4, mId, data).then(() => {
+    console.log(data);
+    postFeedback(cId, mId, data).then(() => {
       setFeedback('');
       setReload(true);
       setIsOpen(false);

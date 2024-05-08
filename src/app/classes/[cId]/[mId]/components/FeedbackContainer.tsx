@@ -3,24 +3,24 @@ import {useRecoilValue} from 'recoil';
 import FeedbackForm from './FeedbackForm';
 import FeedbackList from './FeedbackList';
 import FeedbackKeywordList from './FeedbackKeywordList';
+import getCheckRefer from '@/src/api/feedback/getCheckRefer';
 import getFeedbacks from '@/src/api/feedback/getFeedbacks';
 import materialState from '@/src/recoil/atoms/materialState';
 import {feedback} from '@/src/interfaces/feedback';
 import '@/src/styles/variable.css';
-import getCheckRefer from '@/src/api/feedback/getCheckRefer';
 
-const FeedbackContainer = () => {
+const FeedbackContainer = (props: {cId: number}) => {
   const material = useRecoilValue(materialState);
   const [reload, setReload] = useState<boolean>(false);
   const [references, setReferences] = useState<boolean>(false);
   const [feedbacks, setFeedbacks] = useState<feedback[]>([]);
   useEffect(() => {
     if (!material) return;
-    getFeedbacks(4, parseInt(material.id), 1, 5).then(res => {
+    getFeedbacks(props.cId, parseInt(material.id), 1, 5).then(res => {
       console.log(res);
       setFeedbacks(res);
     });
-    getCheckRefer(4, parseInt(material.id)).then(res => {
+    getCheckRefer(props.cId, parseInt(material.id)).then(res => {
       console.log(res);
       setReferences(res);
     });
@@ -31,7 +31,11 @@ const FeedbackContainer = () => {
       <div className="flex justify-between items-center p-4">
         <div className="text-gray-500 text-lg">피드백 요청</div>
         {material ? (
-          <FeedbackForm mId={parseInt(material?.id)} setReload={setReload} />
+          <FeedbackForm
+            cId={props.cId}
+            mId={parseInt(material?.id)}
+            setReload={setReload}
+          />
         ) : null}
       </div>
       <div className="text-center w-full feedbackContainer box-border">
@@ -62,7 +66,11 @@ const FeedbackContainer = () => {
             ✅ 사용자가 질문한 내용과 가장 관련성이 높은 페이지
           </div>
           {material ? (
-            <FeedbackKeywordList mId={material?.id} references={references} />
+            <FeedbackKeywordList
+              cId={props.cId}
+              mId={parseInt(material?.id)}
+              references={references}
+            />
           ) : null}
         </div>
       </div>
