@@ -4,7 +4,7 @@ import HTTP_STATUS from './httpStatus';
 async function fetchWithInterceptors(url: string, options: RequestInit) {
   let response = await fetch(url, options);
 
-  if (response.status === 401) {
+  if (response.status === HTTP_STATUS.UNAUTHORIZED) {
     const refreshToken = localStorage.getItem('refresh_token');
     const refreshResponse = await fetch(
       `${BASE_URLS.gin}/auth/google/refresh-token`,
