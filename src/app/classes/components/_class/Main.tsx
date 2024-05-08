@@ -27,36 +27,46 @@ const Main = () => {
     setClasses(allRes.data);
   };
 
-  useEffect(() => {
-    const loadClasses = async () => {
-      switch (activeTab) {
-        case '생성목록': {
-          const createdRes = await classAPI.getClassesRole(user.id, 2);
-          setCreatedClasses(createdRes.data);
-          break;
-        }
-        case '초대목록': {
-          const inviteRes = await classAPI.getClassesRole(user.id, 6);
-          setInviteClasses(inviteRes.data);
-          break;
-        }
-        case '신청목록': {
-          const waitingRes = await classAPI.getClassesRole(user.id, 4);
-          setWaitingClasses(waitingRes.data);
-          break;
-        }
-        case '즐겨찾기': {
-          const favoriteRes = await classAPI.getFavoriteClasses(user.id);
-          setFavoriteClasses(favoriteRes.data);
-          break;
-        }
-        default: {
-          const allRes = await classAPI.getClasses(user.id);
-          setClasses(allRes.data);
-          break;
-        }
+  const loadClasses = async () => {
+    switch (activeTab) {
+      case '생성목록': {
+        const createdRes = await classAPI.getClassesRole(user.id, 'ADMIN');
+        const adminClasses = createdRes.data.filter(
+          (classItem: {role: string}) => classItem.role === 'ADMIN'
+        );
+        setCreatedClasses(adminClasses);
+        break;
       }
-    };
+      case '초대목록': {
+        const inviteRes = await classAPI.getClassesRole(user.id, 'INVITE');
+        const inviteClasses = inviteRes.data.filter(
+          (classItem: {role: string}) => classItem.role === 'INVITE'
+        );
+        setInviteClasses(inviteClasses);
+        break;
+      }
+      case '신청목록': {
+        const waitingRes = await classAPI.getClassesRole(user.id, 'APPLICANT');
+        const waitingClasses = waitingRes.data.filter(
+          (classItem: {role: string}) => classItem.role === 'APPLICANT'
+        );
+        setWaitingClasses(waitingClasses);
+        break;
+      }
+      case '즐겨찾기': {
+        const favoriteRes = await classAPI.getFavoriteClasses(user.id);
+        setFavoriteClasses(favoriteRes.data);
+        break;
+      }
+      default: {
+        const allRes = await classAPI.getClasses(user.id);
+        setClasses(allRes.data);
+        break;
+      }
+    }
+  };
+
+  useEffect(() => {
     loadClasses();
   }, [activeTab]);
 
@@ -93,6 +103,7 @@ const Main = () => {
           <ClassCreate
             setActiveModalId={setActiveModalId}
             getClassAfterCreate={getClassAfterCreate}
+            uid={user.id}
           />
         )}
         {activeModalId === 'classJoin' && (

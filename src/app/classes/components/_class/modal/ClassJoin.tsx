@@ -2,15 +2,11 @@
 
 import React, {useState} from 'react';
 import Image from 'next/image';
-import {AxiosError} from 'axios';
 import getCheckClassSecret from '@/src/api/classCode/getCheckClassSecret';
 import {ModalProps} from '@/src/interfaces/_class/modal';
 import icons from '@/public/svgs/_class';
 
 const ClassJoin = ({setActiveModalId, setIsModalOpen}: ModalProps) => {
-  const isAxiosError = (error: unknown): error is AxiosError => {
-    return (error as AxiosError).isAxiosError;
-  };
   const [inputValue, setInputValue] = useState('');
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,14 +18,14 @@ const ClassJoin = ({setActiveModalId, setIsModalOpen}: ModalProps) => {
   ) => {
     event.preventDefault();
     if (!inputValue) {
-      alert('Please input class code');
+      alert('클래스 코드를 입력해주세요');
       return;
     }
     try {
       const res = await getCheckClassSecret(inputValue);
       console.log(res);
       if (!res.secretExists) {
-        alert('This Class does not have a secret key.');
+        alert('이 클래스는 비밀번호가 설정되어있지 않습니다');
         return;
       }
       setActiveModalId('');
@@ -37,13 +33,7 @@ const ClassJoin = ({setActiveModalId, setIsModalOpen}: ModalProps) => {
         setIsModalOpen(true);
       }
     } catch (error: unknown) {
-      if (
-        isAxiosError(error) &&
-        error.response &&
-        error.response.status === 404
-      ) {
-        alert('Class code that does not exist');
-      }
+      alert('잘못된 요청입니다.');
     }
   };
 
@@ -68,10 +58,10 @@ const ClassJoin = ({setActiveModalId, setIsModalOpen}: ModalProps) => {
             <div className="items-center">
               <div className="mt-3">
                 <h3 className="text-3xl leading-6 font-bold text-gray-900">
-                  Join Class
+                  클래스 가입하기
                 </h3>
                 <p className="mt-4 text-sm text-gray-500">
-                  Get started - it&apos;s free. No credit card needed.
+                  클래스 코드를 입력하여 가입하세요.
                 </p>
                 <div className="mt-4 flex justify-center">
                   <Image
@@ -87,7 +77,7 @@ const ClassJoin = ({setActiveModalId, setIsModalOpen}: ModalProps) => {
                 <input
                   className="mt-3 w-full inline-flex justify-center rounded-md border ring-gray-100 shadow-sm px-4 py-2 bg-white-50 text-base font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:bg-gray-50 focus:ring-gray-100 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                   type="text"
-                  placeholder="Input Class Code"
+                  placeholder="클래스 코드를 입력해주세요"
                   value={inputValue}
                   onChange={handleInputChange}
                   required
@@ -101,14 +91,14 @@ const ClassJoin = ({setActiveModalId, setIsModalOpen}: ModalProps) => {
               onClick={handleClose}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              Close
+              닫기
             </button>
             <button
               type="submit"
               onClick={handleSubmit}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              Submit
+              제출
             </button>
           </div>
         </div>

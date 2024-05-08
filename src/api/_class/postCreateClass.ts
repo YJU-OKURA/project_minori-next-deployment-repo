@@ -10,6 +10,9 @@ const postCreateClass = async (postData: PostCreateClassData) => {
   if (postData.image) {
     formData.append('image', postData.image);
   }
+  if (postData.secret) {
+    formData.append('secret', postData.secret);
+  }
 
   const response = await req('/cl/create', 'post', 'gin', formData);
 

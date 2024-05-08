@@ -1,8 +1,9 @@
 import ReactCalendar from 'react-calendar';
-import {usePathname} from 'next/navigation';
+import {useParams} from 'next/navigation';
 import {ClassScheduleProps} from '@/src/interfaces/_class/modal';
 import 'react-calendar/dist/Calendar.css';
 import '@/src/styles/calendar.css';
+import Link from 'next/link';
 
 const ClassSchedule = ({
   setScheduleModalOpen,
@@ -25,12 +26,8 @@ const ClassSchedule = ({
     endedDate.getMonth(),
     endedDate.getDate(),
   ];
-  const pathname = usePathname().substring(1);
-  const decodedPathname = decodeURIComponent(pathname);
-  const handleEntry = () => {
-    const url = `${decodedPathname}/show?id=${scheduleData.ID}`;
-    window.location.href = url;
-  };
+  const param = useParams();
+  const getClassId = Number(param.cId);
   return (
     <div id="classSchedule" className="fixed z-10 inset-0 overflow-y-auto">
       <div className="flex items-end justify-center pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -66,19 +63,17 @@ const ClassSchedule = ({
             </div>
           </div>
           <div className="bg-white px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-            <button
-              type="button"
-              onClick={handleEntry}
-              className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-            >
-              Entry
-            </button>
+            <div className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+              <Link href={`/classes/${getClassId}/show?sid=${scheduleData.ID}`}>
+                입장
+              </Link>
+            </div>
             <button
               type="button"
               onClick={handleClose}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              Close
+              닫기
             </button>
           </div>
         </div>

@@ -8,6 +8,12 @@ const ChatInput = ({setMsg}: inputProps) => {
     setInputMsg(e.target.value);
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleClickButton();
+    }
+  };
+
   const handleClickButton = () => {
     console.log(inputMsg);
     setMsg(inputMsg);
@@ -22,6 +28,7 @@ const ChatInput = ({setMsg}: inputProps) => {
           className="w-full p-3 outline-none"
           placeholder="Please enter your question"
           onChange={handleInputMsg}
+          onKeyDown={handleKeyPress}
           value={inputMsg}
         />
         <div className="px-2" onClick={handleClickButton}>

@@ -7,7 +7,7 @@ const postPromptAccess = async (cId: number, mId: number) => {
 
   const response = await req(`/class/${cId}/prompts`, 'post', 'nest', body);
 
-  return response.data;
+  return response;
 };
 
 export default postPromptAccess;

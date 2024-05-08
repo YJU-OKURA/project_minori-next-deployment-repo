@@ -4,7 +4,6 @@ interface ScheduleCardProps extends RoleProps {
   scheduleName: string;
   startTime: string;
   endTime: string;
-  managerRole: boolean;
   isLive: boolean;
   scheduleId: number;
 }

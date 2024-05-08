@@ -4,6 +4,7 @@ interface PostCreateClassData {
   description: string;
   userId: number;
   image: File | null;
+  secret: string;
 }
 
 export default PostCreateClassData;

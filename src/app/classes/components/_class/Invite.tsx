@@ -1,11 +1,10 @@
 import {Invitation} from '../card';
-import logos from '@/public/images/_class';
 import {InviteProps} from '@/src/interfaces/_class';
 
 const Invite = ({onInvitationClick, classes = []}: InviteProps) => {
   return (
     <>
-      {classes &&
+      {classes && classes.length > 0 ? (
         classes.map(classItem => (
           <div key={classItem.id}>
             <Invitation
@@ -15,13 +14,14 @@ const Invite = ({onInvitationClick, classes = []}: InviteProps) => {
               onClick={onInvitationClick}
             />
           </div>
-        ))}
-      <Invitation
-        ImageSrc={logos.github}
-        ClassName={'Github'}
-        ManagerName={'TenJinseok'}
-        onClick={onInvitationClick}
-      />
+        ))
+      ) : (
+        <div>
+          <p className="text-center text-2xl font-bold text-gray-900">
+            현재 초대 받은 클래스가 존재하지 않습니다
+          </p>
+        </div>
+      )}
     </>
   );
 };

@@ -7,100 +7,67 @@ import {
   ClassCreatePost,
   ClassCreateSchedule,
 } from '@/src/app/classes/[cId]/components/modal';
-import {RoleProps} from '@/src/interfaces/_class';
+import {MainSectionProps, RoleProps} from '@/src/interfaces/_class';
 import icons from '@/public/svgs/_class';
 
-const Main = ({managerRole, classId}: RoleProps) => {
+const Main = ({managerRole, classId, userInfo}: RoleProps) => {
   const [showDropdown, setShowDropdown] = useState<Record<string, boolean>>({
-    공지사항: false,
-    일정: false,
-    게시글: false,
+    공지사항: true,
+    일정: true,
+    게시글: true,
   });
-  const [showScheduleModal, setShowScheduleModal] = useState(false);
-  const [showPostModal, setShowPostModal] = useState(false);
+  const [modalState, setModalState] = useState({
+    schedule: false,
+    post: false,
+  });
 
-  const handleDropdown = (sectionTitle: string) => {
-    setShowDropdown(prevState => {
-      const newState = Object.assign({}, prevState);
-      newState[sectionTitle] = !prevState[sectionTitle];
-      return newState;
-    });
+  const handleModal = (modalType: string, state: boolean) => {
+    setModalState(prevState => ({...prevState, [modalType]: state}));
+    setShowDropdown(prevState => ({...prevState, [modalType]: state}));
   };
+  const createSection = (
+    title: string,
+    Component: React.ElementType,
+    ModalComponent: React.ElementType,
+    modalType: string
+  ) => ({
+    title,
+    component: (
+      <>
+        <Component
+          managerRole={managerRole}
+          classId={classId}
+          userInfo={userInfo}
+          isOpen={showDropdown[title]}
+        />
+        {modalState[modalType as keyof typeof modalState] && (
+          <ModalComponent
+            setShowModal={(state: boolean) => handleModal(modalType, state)}
+            classId={classId}
+            userInfo={userInfo}
+          />
+        )}
+      </>
+    ),
+    openModal: () => handleModal(modalType, true),
+  });
 
-  const handleOpenScheduleModal = () => {
-    setShowDropdown(prevState => ({...prevState, 일정: true}));
-    setShowScheduleModal(true);
-  };
-
-  const handleCloseScheduleModal = () => {
-    setShowDropdown(prevState => ({...prevState, 일정: false}));
-    setShowScheduleModal(false);
-  };
-
-  const handleOpenPostModal = () => {
-    setShowDropdown(prevState => ({
-      ...prevState,
-      게시글: true,
-      일정: !prevState['일정'],
-    }));
-    setShowPostModal(true);
-  };
-
-  const handleClosePostModal = () => {
-    setShowDropdown(prevState => ({
-      ...prevState,
-      게시글: false,
-      공지사항: !prevState['공지사항'],
-    }));
-    setShowPostModal(false);
-  };
-
-  const mainSections = [
+  const mainSections: MainSectionProps[] = [
     {
       title: '공지사항',
       component: (
         <Notice
           managerRole={managerRole}
           classId={classId}
+          userInfo={userInfo}
           isOpen={showDropdown['공지사항']}
         />
       ),
     },
-    {
-      title: '일정',
-      component: (
-        <>
-          <Schedule
-            managerRole={managerRole}
-            classId={classId}
-            isOpen={showDropdown['일정']}
-          />
-          {showScheduleModal && (
-            <ClassCreateSchedule
-              setShowScheduleModal={handleCloseScheduleModal}
-            />
-          )}
-        </>
-      ),
-      openModal: handleOpenScheduleModal,
-    },
-    {
-      title: '게시글',
-      component: (
-        <>
-          <Post
-            managerRole={managerRole}
-            classId={classId}
-            isOpen={showDropdown['게시글']}
-          />
-          {showPostModal && (
-            <ClassCreatePost setShowPostModal={handleClosePostModal} />
-          )}
-        </>
-      ),
-      openModal: handleOpenPostModal,
-    },
+    createSection('일정', Schedule, ClassCreateSchedule, 'schedule'),
+    createSection('게시글', Post, ClassCreatePost, 'post'),
   ];
+
   return (
     <>
       <div className="mt-2 w-11/12">
@@ -115,12 +82,16 @@ const Main = ({managerRole, classId}: RoleProps) => {
                 className={`me-2 w-auto h-auto max-w-6 max-h-6 hover:cursor-pointer ${
                   showDropdown[section.title] ? '' : '-rotate-90'
                 }`}
-                onClick={() => handleDropdown(section.title)}
+                onClick={() =>
+                  handleModal(section.title, !showDropdown[section.title])
+                }
               />
               <div className="flex w-full mb-3 justify-between items-center">
                 <h3
                   className="text-xl font-bold hover:cursor-pointer"
-                  onClick={() => handleDropdown(section.title)}
+                  onClick={() =>
+                    handleModal(section.title, !showDropdown[section.title])
+                  }
                 >
                   {section.title}
                 </h3>

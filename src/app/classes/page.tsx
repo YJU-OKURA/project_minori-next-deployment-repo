@@ -1,7 +1,7 @@
 import {Main} from './components/_class';
 
-const Page = () => {
+const ClassPage = () => {
   return <Main />;
 };
 
-export default Page;
+export default ClassPage;
