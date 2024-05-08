@@ -1,19 +1,14 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import classAPI from '@/src/api/_class';
 import {CardItemProps} from '@/src/interfaces/_class';
 import icons from '@/public/svgs/_class';
 import logos from '@/public/images/_class';
 
 const Card: React.FC<CardItemProps> = ({classData}) => {
-  const uid = classData.uid;
   const toggleFavorite = async (event: React.MouseEvent) => {
     event.stopPropagation();
     event.preventDefault();
-    if (uid) {
-      classAPI.patchToggleFavoriteClass(uid, classData.ClassId);
-    }
   };
   const cardContent = (
     <>
