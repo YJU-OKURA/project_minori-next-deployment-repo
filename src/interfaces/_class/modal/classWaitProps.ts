@@ -1,7 +1,7 @@
 interface ClassWaitProps {
   ImageSrc: string;
   ClassName: string;
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setModalOpen?: (open: boolean) => void;
 }
 
 export default ClassWaitProps;

@@ -4,7 +4,8 @@ interface CardProps {
   ClassContent: string;
   FavoriteChecked?: boolean;
   disableLink?: boolean;
-  ClassId?: number;
+  ClassId: number;
+  uid?: number;
 }
 
 interface CardItemProps {

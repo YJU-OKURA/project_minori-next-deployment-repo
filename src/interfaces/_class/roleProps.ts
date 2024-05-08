@@ -1,6 +1,12 @@
 interface RoleProps {
-  managerRole: boolean;
+  managerRole: string;
   classId?: number;
+  userInfo?: {
+    id: number;
+    name: string;
+    image: string;
+    nickname: string;
+  };
 }
 
 export default RoleProps;
