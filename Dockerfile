@@ -3,7 +3,7 @@ FROM node:20-alpine AS base
 
 # Dependencies stage
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat python3 make g++
 WORKDIR /src/app
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
