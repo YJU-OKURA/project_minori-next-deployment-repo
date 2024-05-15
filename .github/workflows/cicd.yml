@@ -1,4 +1,4 @@
-name: Deploy to ECR
+name: Deploy to ECR and ECS
 
 on:
   push:
@@ -29,3 +29,11 @@ jobs:
           docker build -t minori-next .
           docker tag minori-next:latest 233629834663.dkr.ecr.ap-northeast-2.amazonaws.com/minori-next:latest
           docker push 233629834663.dkr.ecr.ap-northeast-2.amazonaws.com/minori-next:latest
+
+      - name: Update ECS service
+        run: |
+          aws ecs update-service --cluster minori-next-cluster --service minori-frontend --force-new-deployment
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-northeast-2
