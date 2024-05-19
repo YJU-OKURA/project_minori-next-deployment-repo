@@ -1,45 +1,54 @@
-# Base image
-FROM node:20-alpine AS base
+# Base image for building the application
+FROM node:20-alpine AS builder
 
-# Dependencies stage
-FROM base AS deps
-RUN apk add --no-cache libc6-compat python3 make g++
+# Set working directory
 WORKDIR /src/app
+
+# Install dependencies for building
+RUN apk add --no-cache libc6-compat python3 make g++
+
+# Copy package.json and yarn.lock
 COPY package.json yarn.lock ./
+
+# Install dependencies
 RUN yarn install --frozen-lockfile
 
-# Builder stage
-FROM base AS builder
-WORKDIR /src/app
-COPY --from=deps /src/app/node_modules ./node_modules
+# Copy all source code
 COPY . .
+
+# Build the application
 RUN yarn build
 
+
 # Final production image
-FROM base AS runner
+FROM node:20-alpine AS runner
+
+# Set working directory
 WORKDIR /src/app
 
+# Environment variables
 ENV NODE_ENV=production
+ENV PORT=3000
 
+# Add non-root user
 RUN addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 nextjs
 
-# Copy Next.js build output
+# Copy Next.js build output and dependencies from builder stage
 COPY --from=builder /src/app/public ./public
 COPY --from=builder /src/app/.next/standalone ./
 COPY --from=builder /src/app/.next/static ./.next/static
-
-# Copy additional necessary files
 COPY --from=builder /src/app/package.json ./package.json
 COPY --from=builder /src/app/yarn.lock ./yarn.lock
 
-# Install production-only dependencies while ignoring optional ones
+# Install production dependencies
 RUN yarn install --frozen-lockfile --production --ignore-optional
 
+# Set user to nextjs
 USER nextjs
 
+# Expose the port the app runs on
 EXPOSE 3000
 
-ENV PORT 3000
-
+# Command to run the application
 CMD ["node", "server.js"]
