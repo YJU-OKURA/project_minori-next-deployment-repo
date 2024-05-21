@@ -1,9 +1,48 @@
-# yuminnk-nextjs-template
+# project_minori-next-deployment-repo
 
-This is a Next.js boilerplate project created using `npx create-next-app`. It comes with TypeScript support and includes GTS, commitlint, husky, and Jest.
-
-## Getting Started
-To get started, clone the repository and install the dependencies using `yarn`. Then, run the development server using `yarn dev`.
+## Directory Structure
+```
+.
+├── Dockerfile
+├── README.md
+├── tests
+│ ├── snapshots
+│ ├── api
+│ └── snapshot.js
+├── public
+│ ├── fonts
+│ ├── gif
+│ ├── images
+│ └── svgs
+├── src
+│ ├── api
+│ ├── app
+│ │ ├── classes
+│ │ ├── components
+│ │ ├── googleLogin
+│ │ ├── layout.tsx
+│ │ ├── not-found.tsx
+│ │ └── page.tsx
+│ ├── components
+│ ├── constants
+│ ├── hooks
+│ ├── interfaces
+│ ├── model
+│ ├── recoil
+│ └── styles
+├── commitlint.config.js
+├── jest.config.ts
+├── jest.setup.ts
+├── minori-next-task.json
+├── next-env.d.ts
+├── next.config.js
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── tailwind.config.ts
+├── tsconfig.json
+└── yarn.lock
+```
 
 ## Scripts
 - `dev`: Runs the development server
@@ -14,8 +53,6 @@ To get started, clone the repository and install the dependencies using `yarn`. 
 - `test:watch`: Runs the tests in watch mode
 - `postinstall`: Sets up Husky for Git hooks
 - `lint-staged`: Runs ESLint on staged files
-
-Feel free to customize this template to fit your needs!
 
 ## Version
 - Next.js: 14.0.4
