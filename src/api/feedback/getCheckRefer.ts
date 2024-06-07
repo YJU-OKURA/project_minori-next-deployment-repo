@@ -9,7 +9,7 @@ const getCheckRefer = async (cId: number, mId: number): Promise<boolean> => {
 
   console.log(response);
 
-  return response;
+  return response.data;
 };
 
 export default getCheckRefer;

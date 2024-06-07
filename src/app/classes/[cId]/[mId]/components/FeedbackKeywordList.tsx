@@ -3,33 +3,35 @@ import {useEffect, useState} from 'react';
 import Image from 'next/image';
 import getKeywords from '@/src/api/feedback/getKeywords';
 import {keyword} from '@/src/interfaces/feedback';
+import getCheckRefer from '@/src/api/feedback/getCheckRefer';
 
-const FeedbackKeywordList = ({
-  cId,
-  mId,
-  references,
-}: {
-  cId: number;
-  mId: number;
-  references: boolean;
-}) => {
+const FeedbackKeywordList = ({cId, mId}: {cId: number; mId: number}) => {
+  const [references, setReferences] = useState<boolean>(false);
   const [keywords, setKeywords] = useState<keyword[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (references) {
-      getKeywords(cId, mId).then(res => {
-        console.log(res);
-        setKeywords(res);
-        setLoading(false);
-      });
-    } else {
-      setLoading(false);
-    }
+    getCheckRefer(cId, mId).then(res => {
+      setReferences(res);
+    });
   }, []);
+
+  useEffect(() => {
+    if (!references) {
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    getKeywords(cId, mId).then(res => {
+      console.log(res);
+      setKeywords(res);
+      setLoading(false);
+    });
+  }, [references]);
+
   return (
     <div className="flex justify-center">
-      {!references ? (
+      {references ? (
         loading ? (
           <div className="text-3xl p-3 font-semibold">
             <Image
