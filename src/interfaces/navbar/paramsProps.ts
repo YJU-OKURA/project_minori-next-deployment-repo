@@ -1,5 +1,5 @@
 interface ParamsProps {
-  className: string;
+  cId: string;
   materialName?: string;
 }
 
