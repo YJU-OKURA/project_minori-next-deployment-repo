@@ -10,6 +10,7 @@ const ChatInput = ({setMsg}: inputProps) => {
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
+      e.preventDefault();
       handleClickButton();
     }
   };

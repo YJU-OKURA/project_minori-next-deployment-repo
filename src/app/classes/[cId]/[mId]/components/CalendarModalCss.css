@@ -1,0 +1,27 @@
+/* TimePicker.css */
+
+.react-calendar {
+  margin: auto;
+}
+
+.react-time-picker__inputGroup {
+}
+
+.react-time-picker__inputGroup__leadingZero {
+  display: none;
+}
+
+.react-time-picker__inputGroup__input {
+  width: 50px !important;
+  height: 30px;
+  outline: none;
+  border-bottom: 1px solid black;
+}
+
+.react-time-picker__clear-button {
+  display: none;
+}
+
+.react-time-picker__clock-button {
+  display: none;
+}

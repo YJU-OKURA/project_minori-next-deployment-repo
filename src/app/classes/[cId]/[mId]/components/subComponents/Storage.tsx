@@ -7,14 +7,14 @@ import patchMessage from '@/src/api/prompts/patchMessage';
 import {StorageMessage} from '@/src/interfaces/prompt';
 import icons from '@/public/svgs/prompt';
 
-const Storage = ({pId}: {pId: number}) => {
+const Storage = ({pId, cId}: {pId: number; cId: number}) => {
   const [isOpen, setIsOpen] = useState<boolean[]>([]);
   const [messages, setMsg] = useState<StorageMessage[]>();
   const [reload, setReload] = useState<boolean>(false);
 
   useEffect(() => {
     // コメントを取得する処理
-    getMessage(4, pId, 1, 5).then(res => {
+    getMessage(cId, pId, 1, 5).then(res => {
       console.log(res);
       setMsg(res);
       setIsOpen(new Array(res.length).fill(false)); // コメントの開閉状態を初期化
@@ -23,7 +23,7 @@ const Storage = ({pId}: {pId: number}) => {
 
   const handleClickDelete = (messageId: number) => {
     // コメントを削除する処理
-    patchMessage(4, pId, messageId, false).then(res => {
+    patchMessage(cId, pId, messageId, false).then(res => {
       console.log(res);
       setReload(!reload);
     });

@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import BASE_URLS from './baseUrl';
 import HTTP_STATUS from './httpStatus';
 
@@ -5,7 +6,7 @@ async function fetchWithInterceptors(url: string, options: RequestInit) {
   let response = await fetch(url, options);
 
   if (response.status === HTTP_STATUS.UNAUTHORIZED) {
-    const refreshToken = localStorage.getItem('refresh_token');
+    const refreshToken = Cookies.get('refresh_token');
     const refreshResponse = await fetch(
       `${BASE_URLS.gin}/auth/google/refresh-token`,
       {
@@ -20,7 +21,7 @@ async function fetchWithInterceptors(url: string, options: RequestInit) {
     if (refreshResponse.ok) {
       const data = await refreshResponse.json();
       const newToken = data.data.access_token;
-      localStorage.setItem('access_token', newToken);
+      Cookies.set('access_token', newToken);
       options.headers = {
         ...options.headers,
         Authorization: `Bearer ${newToken}`,
@@ -47,7 +48,7 @@ const req = async (
   body: BodyInit | object | undefined = undefined
 ) => {
   const headers = new Headers();
-  const token = localStorage.getItem('access_token');
+  const token = Cookies.get('access_token');
   if (token) {
     headers.append('Authorization', `Bearer ${token}`);
   }

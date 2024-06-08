@@ -3,7 +3,6 @@ import {useRecoilValue} from 'recoil';
 import FeedbackForm from './FeedbackForm';
 import FeedbackList from './FeedbackList';
 import FeedbackKeywordList from './FeedbackKeywordList';
-import getCheckRefer from '@/src/api/feedback/getCheckRefer';
 import getFeedbacks from '@/src/api/feedback/getFeedbacks';
 import materialState from '@/src/recoil/atoms/materialState';
 import {feedback} from '@/src/interfaces/feedback';
@@ -12,17 +11,12 @@ import '@/src/styles/variable.css';
 const FeedbackContainer = (props: {cId: number}) => {
   const material = useRecoilValue(materialState);
   const [reload, setReload] = useState<boolean>(false);
-  const [references, setReferences] = useState<boolean>(false);
   const [feedbacks, setFeedbacks] = useState<feedback[]>([]);
   useEffect(() => {
     if (!material) return;
     getFeedbacks(props.cId, parseInt(material.id), 1, 5).then(res => {
       console.log(res);
       setFeedbacks(res);
-    });
-    getCheckRefer(props.cId, parseInt(material.id)).then(res => {
-      console.log(res);
-      setReferences(res);
     });
   }, [reload]);
 
@@ -66,11 +60,7 @@ const FeedbackContainer = (props: {cId: number}) => {
             ✅ 사용자가 질문한 내용과 가장 관련성이 높은 페이지
           </div>
           {material ? (
-            <FeedbackKeywordList
-              cId={props.cId}
-              mId={parseInt(material?.id)}
-              references={references}
-            />
+            <FeedbackKeywordList cId={props.cId} mId={parseInt(material?.id)} />
           ) : null}
         </div>
       </div>

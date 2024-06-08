@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 import ReactMarkdown from 'react-markdown';
 import Image from 'next/image';
-import {useParams} from 'next/navigation';
 import ChatInput from './ChatInput';
 import getPrompt from '@/src/api/prompts/getPrompt';
 import patchMessage from '@/src/api/prompts/patchMessage';
@@ -10,22 +9,22 @@ import {PromptMessagesProps} from '@/src/interfaces/prompt';
 import icons from '@/public/svgs/prompt';
 import '@/src/styles/variable.css';
 
-const PromptChat = ({pId}: {pId: number}) => {
+const PromptChat = ({pId, cId}: {pId: number; cId: number}) => {
   const [messages, setMsg] = useState<PromptMessagesProps[]>();
   const [inputMsg, setInputMsg] = useState<string>('');
   const [promptRes, setPromptRes] = useState<string>('');
   const [reload, setReload] = useState<boolean>(false);
-  const params = useParams<{cId: string}>();
 
   useEffect(() => {
-    getPrompt(parseInt(params.cId), pId, 1, 6).then(res => {
+    getPrompt(cId, pId, 1, 6).then(res => {
       res.messages.reverse();
       setMsg(res.messages);
     });
-  }, []);
+  }, [reload]);
 
   const handleClickIcon = (mId: number) => {
-    patchMessage(parseInt(params.cId), pId, mId, true).then(res => {
+    console.log(mId);
+    patchMessage(cId, pId, mId, true).then(res => {
       console.log(res);
     });
   };
@@ -58,10 +57,12 @@ const PromptChat = ({pId}: {pId: number}) => {
 
   useEffect(() => {
     if (inputMsg === '') return;
-    postPrompt(4, pId, inputMsg, chat).then(() => {
+    console.log(inputMsg);
+    postPrompt(cId, pId, inputMsg, chat).then(() => {
       setInputMsg('');
     });
   }, [inputMsg]);
+
   return (
     <div className="h-full pt-5">
       <div className="promptContainer overflow-scroll">

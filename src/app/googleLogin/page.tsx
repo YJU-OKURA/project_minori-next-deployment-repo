@@ -2,10 +2,9 @@
 import {useEffect} from 'react';
 import Image from 'next/image';
 import {useRouter, useSearchParams} from 'next/navigation';
+import Cookies from 'js-cookie';
 import {useSetRecoilState} from 'recoil';
 import userState from '@/src/recoil/atoms/userState';
-import accessTokenState from '@/src/recoil/atoms/accessTokenState';
-import refreshTokenState from '@/src/recoil/atoms/refreshTokenState';
 import postGoogleLogin from '@/src/api/auth/postGoogleLogin';
 import gifs from '@/public/gif';
 import '@/src/styles/variable.css';
@@ -13,8 +12,6 @@ import '@/src/styles/variable.css';
 const Page = () => {
   const code: string | null = useSearchParams().get('code');
   const setUser = useSetRecoilState(userState);
-  const setAccessToken = useSetRecoilState(accessTokenState);
-  const setRefreshToken = useSetRecoilState(refreshTokenState);
   const router = useRouter();
   useEffect(() => {
     if (code) {
@@ -23,10 +20,8 @@ const Page = () => {
           setUser(res.user);
         }
         if (res) {
-          setAccessToken({access_token: res.access_token});
-          setRefreshToken({refresh_token: res.refresh_token});
-          window.localStorage.setItem('access_token', res.access_token);
-          window.localStorage.setItem('refresh_token', res.refresh_token);
+          Cookies.set('access_token', res.access_token);
+          Cookies.set('refresh_token', res.refresh_token);
         }
         router.push('/classes');
       });

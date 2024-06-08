@@ -2,7 +2,7 @@
 import {useState} from 'react';
 import {Dashboard, TabsMapping} from '@/src/components/dashboard';
 import ManageMaterialContainer from './ManageMaterialContainer';
-// import QuizContainer from './QuizContainer';
+import QuizContainer from './QuizContainer';
 import FeedbackContainer from './FeedbackContainer';
 // import AttendanceContainer from './AttendanceContainer';
 import '@/src/styles/variable.css';
@@ -12,7 +12,7 @@ const ManageContainer = (props: {cId: string}) => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const tabMapping = {
     자료: <ManageMaterialContainer />,
-    // Quiz: <QuizContainer />,
+    퀴즈: <QuizContainer cId={parseInt(props.cId)} />,
     피드백: <FeedbackContainer cId={parseInt(props.cId)} />,
     // Attendance: <AttendanceContainer />,
   };
