@@ -1,9 +1,24 @@
-const manageSubContainer = () => {
+import React from 'react';
+import LiveClass from './LiveClass';
+import {useParams} from 'next/navigation';
+import {useRecoilValue} from 'recoil';
+import {User} from '@/src/interfaces/user';
+import userState from '@/src/recoil/atoms/userState';
+
+const ManageSubContainer: React.FC = () => {
+  const {cId} = useParams<{cId: string}>();
+  const classId = parseInt(cId, 10);
+  const user = useRecoilValue(userState) as User;
+
+  if (isNaN(classId) || user.id === 0) {
+    return <div>loading...</div>;
+  }
+
   return (
     <div>
-      <h1>ManageSubContainer</h1>
+      <LiveClass classId={classId} userId={user.id} />
     </div>
   );
 };
 
-export default manageSubContainer;
+export default ManageSubContainer;
