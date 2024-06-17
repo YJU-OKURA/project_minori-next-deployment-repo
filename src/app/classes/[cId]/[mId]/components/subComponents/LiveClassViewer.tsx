@@ -1,107 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-// import React, {useEffect, useRef} from 'react';
-
-// interface LiveClassViewerProps {
-//   classId: number;
-//   userId: number;
-// }
-
-// const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
-//   const videoRef = useRef<HTMLVideoElement | null>(null);
-//   const pcRef = useRef<RTCPeerConnection | null>(null);
-//   const wsRef = useRef<WebSocket | null>(null);
-
-//   useEffect(() => {
-//     const pc = new RTCPeerConnection({
-//       iceServers: [{urls: 'stun:stun.l.google.com:19302'}],
-//     });
-//     pcRef.current = pc;
-
-//     const ws = new WebSocket(
-//       `ws://localhost:8080/?classId=${classId}&userId=${userId}`
-//     );
-//     wsRef.current = ws;
-
-//     ws.onopen = () => {
-//       console.log('WebSocket opened');
-//     };
-
-//     ws.onmessage = async event => {
-//       const {event: evt, data} = JSON.parse(event.data);
-//       console.log('Message received:', evt, data);
-//       if (evt === 'offer' && pcRef.current) {
-//         try {
-//           console.log('Received offer:', data);
-//           await pcRef.current.setRemoteDescription(
-//             new RTCSessionDescription(data)
-//           );
-//           console.log('Set remote description');
-//           const answer = await pcRef.current.createAnswer();
-//           console.log('Created answer:', answer);
-//           await pcRef.current.setLocalDescription(answer);
-//           console.log('Set local description with answer');
-//           if (wsRef.current) {
-//             wsRef.current.send(JSON.stringify({event: 'answer', data: answer}));
-//             console.log('Sent answer:', answer);
-//           }
-//         } catch (error) {
-//           console.error('Failed to handle offer:', error);
-//         }
-//       } else if (evt === 'candidate' && pcRef.current) {
-//         try {
-//           console.log('Received candidate:', data);
-//           await pcRef.current.addIceCandidate(new RTCIceCandidate(data));
-//           console.log('Added ICE candidate');
-//         } catch (error) {
-//           console.error('Failed to add ICE candidate:', error);
-//         }
-//       }
-//     };
-
-//     ws.onclose = () => {
-//       console.log('WebSocket closed');
-//     };
-
-//     pc.onicecandidate = event => {
-//       if (event.candidate && wsRef.current) {
-//         wsRef.current.send(
-//           JSON.stringify({event: 'candidate', data: event.candidate.toJSON()})
-//         );
-//       }
-//     };
-
-//     pc.ontrack = event => {
-//       if (videoRef.current) {
-//         videoRef.current.srcObject = event.streams[0];
-//       }
-//     };
-
-//     return () => {
-//       pc.close();
-//       ws.close();
-//     };
-//   }, [classId, userId]);
-
-//   return (
-//     <video
-//       ref={videoRef}
-//       autoPlay
-//       playsInline
-//       controls
-//       style={{width: '100%', height: 'auto'}}
-//     />
-//   );
-// };
-
-// export default LiveClassViewer;
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// LiveClassViewer.tsx
+
 import React, {useEffect, useRef, useState} from 'react';
 
 interface LiveClassViewerProps {
-  classId: number;
-  userId: number;
+  classId: string;
+  userId: string;
 }
 
 const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
@@ -111,6 +16,7 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const iceCandidatesRef = useRef<any[]>([]);
+  const [isSharingScreen, setIsSharingScreen] = useState(false);
 
   const startWebSocket = () => {
     const ws = new WebSocket(
@@ -137,6 +43,14 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
           if (localVideoRef.current) {
             localVideoRef.current.srcObject = mediaStream;
           }
+          const offer = await pcRef.current.createOffer();
+          await pcRef.current.setLocalDescription(offer);
+          ws.send(
+            JSON.stringify({
+              event: 'offer',
+              data: pcRef.current.localDescription,
+            })
+          );
         } catch (error) {
           console.error('Failed to start media stream', error);
         }
@@ -158,13 +72,14 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
         } catch (error) {
           console.error('Failed to handle offer:', error);
         }
-      } else if (evt === 'candidate' && pcRef.current) {
+      } else if (evt === 'candidate') {
         try {
-          console.log('Received candidate:', data);
-          await pcRef.current.addIceCandidate(new RTCIceCandidate(data));
+          await pcRef.current?.addIceCandidate(new RTCIceCandidate(data));
         } catch (error) {
-          console.error('Failed to add ICE candidate:', error);
+          console.error('Failed to add ICE candidate', error);
         }
+      } else if (evt === 'screenShare') {
+        setIsSharingScreen(data);
       }
     };
 
@@ -211,12 +126,20 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
       };
 
       startWebSocket();
-    }
 
-    return () => {
-      pcRef.current?.close();
-      wsRef.current?.close();
-    };
+      return () => {
+        pcRef.current?.close();
+        wsRef.current?.close();
+        pcRef.current = null;
+        wsRef.current = null;
+        if (localVideoRef.current) {
+          localVideoRef.current.srcObject = null;
+        }
+        if (remoteVideoRef.current) {
+          remoteVideoRef.current.srcObject = null;
+        }
+      };
+    }
   }, [inClass]);
 
   const handleJoinClass = () => {
@@ -238,8 +161,8 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
   };
 
   return (
-    <div className="flex flex-col items-center h-screen">
-      <div className="bg-[#ffffff] border border-gray-400 shadow-md rounded-lg p-6 w-80 flex flex-col items-center mb-8 mt-12">
+    <div className="relative flex flex-col items-center h-screen">
+      <div className="absolute top-0 right-0 m-4">
         {!inClass ? (
           <button
             onClick={handleJoinClass}
@@ -256,49 +179,18 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
           </button>
         )}
       </div>
-
       {inClass && (
         <div
-          className="flex flex-col items-center border border-gray-400 rounded-lg p-4 mb-8 overflow-y-auto"
-          style={{
-            height: '60vh',
-          }}
+          className="flex flex-col items-center  mt-12 overflow-y-auto"
+          style={{height: '60vh'}}
         >
-          <div
-            className="flex flex-col items-center p-4 mb-8"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            <video
-              controls
-              autoPlay
-              ref={localVideoRef}
-              playsInline
-              style={{width: '80%'}}
-            />
-            <input
-              type="text"
-              placeholder="이름 입력"
-              className="mt-2 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-          <div
-            className="flex flex-col items-center p-4 mb-8"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
+          <div className="flex flex-col items-center p-4 mb-8">
             <video
               ref={remoteVideoRef}
               autoPlay
               playsInline
               controls
-              style={{width: '80%'}}
+              style={{width: '100%'}}
             />
             <input
               type="text"
@@ -306,20 +198,13 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
               className="mt-2 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
-          <div
-            className="flex flex-col items-center p-4 mb-8"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
+          <div className="flex flex-col items-center p-4 mb-8">
             <video
-              className="h-full w-full rounded-lg"
               controls
               autoPlay
+              ref={localVideoRef}
               playsInline
-              style={{width: '80%'}}
+              style={{width: '100%'}}
             />
             <input
               type="text"
@@ -327,20 +212,27 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
               className="mt-2 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
-          <div
-            className="flex flex-col items-center p-4 mb-8"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
+          <div className="flex flex-col items-center p-4 mb-8">
             <video
               className="h-full w-full rounded-lg"
               controls
               autoPlay
               playsInline
-              style={{width: '80%'}}
+              style={{width: '100%'}}
+            />
+            <input
+              type="text"
+              placeholder="이름 입력"
+              className="mt-2 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div className="flex flex-col items-center p-4 mb-8">
+            <video
+              className="h-full w-full rounded-lg"
+              controls
+              autoPlay
+              playsInline
+              style={{width: '100%'}}
             />
             <input
               type="text"
@@ -353,4 +245,5 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
     </div>
   );
 };
+
 export default LiveClassViewer;
