@@ -1,123 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-// import React, {useEffect, useRef} from 'react';
-
-// interface LiveClassProps {
-//   classId: number;
-//   userId: number;
-// }
-
-// const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
-//   const videoRef = useRef<HTMLVideoElement | null>(null);
-//   const pcRef = useRef<RTCPeerConnection | null>(null);
-//   const wsRef = useRef<WebSocket | null>(null);
-
-//   useEffect(() => {
-//     const pc = new RTCPeerConnection({
-//       iceServers: [{urls: 'stun:stun.l.google.com:19302'}],
-//     });
-//     pcRef.current = pc;
-
-//     const ws = new WebSocket(
-//       `ws://localhost:8080/?classId=${classId}&userId=${userId}`
-//     );
-//     wsRef.current = ws;
-
-//     ws.onopen = async () => {
-//       console.log('WebSocket connected');
-//       if (pcRef.current) {
-//         const offer = await pcRef.current.createOffer();
-//         await pcRef.current.setLocalDescription(offer);
-//         console.log('Created offer:', offer);
-//         if (wsRef.current && pcRef.current.localDescription) {
-//           wsRef.current.send(
-//             JSON.stringify({
-//               event: 'offer',
-//               data: pcRef.current.localDescription,
-//             })
-//           );
-//           console.log('Sent offer:', pcRef.current.localDescription);
-//         }
-//       }
-//     };
-
-//     ws.onmessage = async event => {
-//       const {event: evt, data} = JSON.parse(event.data);
-//       console.log('Message received:', evt, data);
-//       if (evt === 'answer') {
-//         await pc.setRemoteDescription(new RTCSessionDescription(data));
-//       } else if (evt === 'candidate') {
-//         await pc.addIceCandidate(new RTCIceCandidate(data));
-//       }
-//     };
-
-//     ws.onclose = () => {
-//       console.log('WebSocket closed');
-//     };
-
-//     pc.onicecandidate = event => {
-//       if (event.candidate && wsRef.current) {
-//         wsRef.current.send(
-//           JSON.stringify({event: 'candidate', data: event.candidate.toJSON()})
-//         );
-//       }
-//     };
-
-//     pc.ontrack = event => {
-//       if (videoRef.current) {
-//         videoRef.current.srcObject = event.streams[0];
-//       }
-//     };
-
-//     return () => {
-//       pcRef.current?.close();
-//       wsRef.current?.close();
-//     };
-//   }, [classId, userId]);
-
-//   const startScreenShare = async () => {
-//     try {
-//       const mediaStream = await navigator.mediaDevices.getDisplayMedia({
-//         video: true,
-//         audio: true,
-//       });
-//       mediaStream
-//         .getTracks()
-//         .forEach(track => pcRef.current?.addTrack(track, mediaStream));
-//       if (videoRef.current) {
-//         videoRef.current.srcObject = mediaStream;
-//       }
-
-//       if (wsRef.current && pcRef.current) {
-//         const offer = await pcRef.current.createOffer();
-//         await pcRef.current.setLocalDescription(offer);
-//         wsRef.current.send(
-//           JSON.stringify({event: 'offer', data: pcRef.current.localDescription})
-//         );
-//       }
-//       console.log('Screen sharing started');
-//     } catch (error) {
-//       console.error('Screen sharing failed', error);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <video
-//         ref={videoRef}
-//         autoPlay
-//         playsInline
-//         controls
-//         style={{width: '100%'}}
-//       />
-//       <button onClick={startScreenShare}>Start Screen Sharing</button>
-//     </div>
-//   );
-// };
-
-// export default LiveClass;
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// LiveClass.tsx
+
 import React, {useEffect, useRef, useState} from 'react';
 
 interface LiveClassProps {
@@ -127,11 +10,14 @@ interface LiveClassProps {
 
 const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
   const [classStarted, setClassStarted] = useState(false);
+  const [isSharingScreen, setIsSharingScreen] = useState(false);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const iceCandidatesRef = useRef<any[]>([]);
+  const [localDescriptionSet, setLocalDescriptionSet] = useState(false);
+  const screenStreamRef = useRef<MediaStream | null>(null);
 
   const startWebSocket = () => {
     const ws = new WebSocket(
@@ -160,6 +46,7 @@ const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
           }
           const offer = await pcRef.current.createOffer();
           await pcRef.current.setLocalDescription(offer);
+          setLocalDescriptionSet(true);
           ws.send(
             JSON.stringify({
               event: 'offer',
@@ -176,11 +63,19 @@ const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
       const {event: evt, data} = JSON.parse(event.data);
       console.log('Message received:', evt, data);
       if (evt === 'answer') {
-        await pcRef.current?.setRemoteDescription(
-          new RTCSessionDescription(data)
-        );
+        if (localDescriptionSet) {
+          await pcRef.current?.setRemoteDescription(
+            new RTCSessionDescription(data)
+          );
+        } else {
+          console.error('Local description not set');
+        }
       } else if (evt === 'candidate') {
-        await pcRef.current?.addIceCandidate(new RTCIceCandidate(data));
+        if (localDescriptionSet) {
+          await pcRef.current?.addIceCandidate(new RTCIceCandidate(data));
+        } else {
+          iceCandidatesRef.current.push(data);
+        }
       }
     };
 
@@ -248,7 +143,91 @@ const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
   };
 
   const handleEndClass = () => {
+    wsRef.current?.close();
+    pcRef.current?.close();
+    pcRef.current = null;
+    wsRef.current = null;
     setClassStarted(false);
+    if (localVideoRef.current) {
+      localVideoRef.current.srcObject = null;
+    }
+    if (remoteVideoRef.current) {
+      remoteVideoRef.current.srcObject = null;
+    }
+  };
+
+  const startScreenShare = async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+        audio: true,
+      });
+      screenStreamRef.current = mediaStream;
+      const videoTrack = mediaStream.getVideoTracks()[0];
+
+      if (pcRef.current) {
+        const senders = pcRef.current.getSenders();
+        const videoSender = senders.find(
+          sender => sender.track?.kind === 'video'
+        );
+        if (videoSender) {
+          videoSender.replaceTrack(videoTrack);
+        } else {
+          mediaStream
+            .getTracks()
+            .forEach(track => pcRef.current?.addTrack(track, mediaStream));
+        }
+
+        if (localVideoRef.current) {
+          localVideoRef.current.srcObject = mediaStream;
+        }
+
+        setIsSharingScreen(true);
+        wsRef.current?.send(JSON.stringify({event: 'screenShare', data: true}));
+      }
+    } catch (error) {
+      console.error('Screen sharing failed', error);
+    }
+  };
+
+  const stopScreenShare = async () => {
+    if (screenStreamRef.current) {
+      screenStreamRef.current.getTracks().forEach(track => track.stop());
+      screenStreamRef.current = null;
+    }
+    setIsSharingScreen(false);
+    resetLocalVideo();
+    wsRef.current?.send(JSON.stringify({event: 'screenShare', data: false}));
+  };
+
+  const resetLocalVideo = async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      const videoTrack = mediaStream.getVideoTracks()[0];
+
+      if (pcRef.current) {
+        const senders = pcRef.current.getSenders();
+        const videoSender = senders.find(
+          sender => sender.track?.kind === 'video'
+        );
+        if (videoSender) {
+          videoSender.replaceTrack(videoTrack);
+        } else {
+          mediaStream
+            .getTracks()
+            .forEach(track => pcRef.current?.addTrack(track, mediaStream));
+        }
+
+        if (localVideoRef.current) {
+          localVideoRef.current.srcObject = mediaStream;
+        }
+      }
+    } catch (error) {
+      console.error('Failed to reset local video stream', error);
+    }
   };
 
   return (
@@ -262,36 +241,44 @@ const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
             수업 시작
           </button>
         ) : (
-          <button
-            onClick={handleEndClass}
-            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md"
-          >
-            수업 종료
-          </button>
+          <>
+            <button
+              onClick={handleEndClass}
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md"
+            >
+              수업 종료
+            </button>
+            {isSharingScreen ? (
+              <button
+                onClick={stopScreenShare}
+                className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-md mt-4"
+              >
+                화면 공유 종료
+              </button>
+            ) : (
+              <button
+                onClick={startScreenShare}
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md mt-4"
+              >
+                화면 공유 시작
+              </button>
+            )}
+          </>
         )}
       </div>
 
       {classStarted && (
         <div
-          className="flex flex-col items-center border border-gray-400 rounded-lg p-4 mb-8 overflow-y-auto"
-          style={{
-            height: '60vh',
-          }}
+          className="flex flex-col items-center  mt-12 overflow-y-auto"
+          style={{height: '60vh'}}
         >
-          <div
-            className="flex flex-col items-center p-4 mb-8"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
+          <div className="flex flex-col items-center p-4 mb-8">
             <video
               controls
               autoPlay
               ref={localVideoRef}
               playsInline
-              style={{width: '80%'}}
+              style={{width: '100%'}}
             />
             <input
               type="text"
@@ -299,20 +286,13 @@ const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
               className="mt-2 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
-          <div
-            className="flex flex-col items-center p-4 mb-8"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
+          <div className="flex flex-col items-center p-4 mb-8">
             <video
               ref={remoteVideoRef}
               autoPlay
               playsInline
               controls
-              style={{width: '80%'}}
+              style={{width: '100%'}}
             />
             <input
               type="text"
@@ -320,20 +300,14 @@ const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
               className="mt-2 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
-          <div
-            className="flex flex-col items-center p-4 mb-8"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
+
+          <div className="flex flex-col items-center p-4 mb-8">
             <video
               className="h-full w-full rounded-lg"
               controls
               autoPlay
               playsInline
-              style={{width: '80%'}}
+              style={{width: '100%'}}
             />
             <input
               type="text"
@@ -341,20 +315,13 @@ const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
               className="mt-2 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
-          <div
-            className="flex flex-col items-center p-4 mb-8"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
+          <div className="flex flex-col items-center p-4 mb-8">
             <video
               className="h-full w-full rounded-lg"
               controls
               autoPlay
               playsInline
-              style={{width: '80%'}}
+              style={{width: '100%'}}
             />
             <input
               type="text"
