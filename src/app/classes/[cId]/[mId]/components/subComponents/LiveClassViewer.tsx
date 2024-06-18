@@ -192,11 +192,6 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
               controls
               style={{width: '100%'}}
             />
-            <input
-              type="text"
-              placeholder="이름 입력"
-              className="mt-2 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
           </div>
           <div className="flex flex-col items-center p-4 mb-8">
             <video
@@ -206,11 +201,6 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
               playsInline
               style={{width: '100%'}}
             />
-            <input
-              type="text"
-              placeholder="이름 입력"
-              className="mt-2 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
           </div>
           <div className="flex flex-col items-center p-4 mb-8">
             <video
@@ -220,11 +210,6 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
               playsInline
               style={{width: '100%'}}
             />
-            <input
-              type="text"
-              placeholder="이름 입력"
-              className="mt-2 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
           </div>
           <div className="flex flex-col items-center p-4 mb-8">
             <video
@@ -233,11 +218,6 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
               autoPlay
               playsInline
               style={{width: '100%'}}
-            />
-            <input
-              type="text"
-              placeholder="이름 입력"
-              className="mt-2 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
         </div>
