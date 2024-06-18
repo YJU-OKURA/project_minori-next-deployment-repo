@@ -8,7 +8,7 @@ const patchMessage = async (
 ) => {
   const response = await req(
     `/class/${cId}/prompts/${id}/messages/${mId}?is_save=${isSave}`,
-    'patch',
+    'PATCH',
     'nest'
   );
 

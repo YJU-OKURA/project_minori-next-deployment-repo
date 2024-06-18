@@ -11,7 +11,7 @@ const patchMaterial = async (
   formData.append('file', file ? file : '');
   const response = await req(
     `/class/${cId}/materials/${id}`,
-    'patch',
+    'PATCH',
     'nest',
     formData
   );

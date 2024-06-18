@@ -27,27 +27,27 @@ const MaterialList = ({
     setIsToggleOpen(new Array(materials.length).fill(false));
   }, [materials]);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      document.addEventListener('click', handleOutsideClick);
+  // 現在エラーが発生して修正中
+  // useEffect(() => {
+  //   if (typeof window !== 'undefined') {
+  //     document.addEventListener('click', handleOutsideClick);
 
-      return () => {
-        document.removeEventListener('click', handleOutsideClick);
-      };
-    }
-  }, []);
+  //     return () => {
+  //       document.removeEventListener('click', handleOutsideClick);
+  //     };
+  //   }
+  // }, []);
 
-  const handleOutsideClick = (event: MouseEvent) => {
-    const modalContainer = document.getElementById('modal-container');
-    const moreHorizIcon = document.getElementById('more-horiz-icon');
-    if (
-      modalContainer &&
-      !modalContainer.contains(event.target as Node) &&
-      moreHorizIcon !== event.target
-    ) {
-      closeDropdown();
-    }
-  };
+  // const handleOutsideClick = (event: MouseEvent) => {
+  //   const moreHorizIcon = document.getElementById('more-horiz-icon');
+  //   const modalContainer = document.getElementById('modal-container');
+  //   if (modalContainer && !modalContainer.contains(event.target as Node)) {
+  //     if (moreHorizIcon && !moreHorizIcon.contains(event.target as Node)) {
+  //       console.log('click');
+  //       closeDropdown();
+  //     }
+  //   }
+  // };
 
   const handleClickSubject = (mId: number) => {
     const material = materials.find(material => material.id === String(mId));
@@ -62,14 +62,15 @@ const MaterialList = ({
   };
 
   const toggleDropdown = (index: number) => {
+    console.log(index);
     setIsToggleOpen(prev =>
-      prev.map((open, i) => (i === index ? !open : false))
+      prev.map((open, i) => (i === index ? !open : open))
     );
   };
 
-  const closeDropdown = () => {
-    setIsToggleOpen(prev => prev.map(() => false));
-  };
+  // const closeDropdown = () => {
+  //   setIsToggleOpen(prev => prev.map(() => false));
+  // };
 
   const handleMaterialDelete = (mId: number) => {
     if (cId) {

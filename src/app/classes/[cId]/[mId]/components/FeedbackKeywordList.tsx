@@ -14,7 +14,7 @@ const FeedbackKeywordList = ({cId, mId}: {cId: number; mId: number}) => {
     getCheckRefer(cId, mId).then(res => {
       setReferences(res);
     });
-  }, []);
+  }, [cId, mId]);
 
   useEffect(() => {
     if (!references) {
@@ -27,7 +27,9 @@ const FeedbackKeywordList = ({cId, mId}: {cId: number; mId: number}) => {
       setKeywords(res);
       setLoading(false);
     });
-  }, [references]);
+  }, [references, cId, mId]);
+
+  console.log(keywords);
 
   return (
     <div className="flex justify-center">
