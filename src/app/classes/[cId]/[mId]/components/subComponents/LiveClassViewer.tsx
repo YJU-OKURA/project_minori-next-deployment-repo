@@ -248,8 +248,8 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
 
   const startWebSocket = () => {
     const ws = new WebSocket(
-      `ws://localhost:8080/?classId=${classId}&userId=${userId}`
-      // `ws://43.203.217.108:8080/?classId=${classId}&userId=${userId}`
+      // `ws://localhost:8080/?classId=${classId}&userId=${userId}`
+      `ws://43.203.217.108:8080/?classId=${classId}&userId=${userId}`
     );
     wsRef.current = ws;
 
@@ -328,6 +328,11 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
               'stun:stun3.l.google.com:19302',
               'stun:stun4.l.google.com:19302',
             ],
+          },
+          {
+            urls: 'turn:60.70.80.91:3478',
+            username: 'minori',
+            credential: 'minoriwebrtc',
           },
         ],
       });
