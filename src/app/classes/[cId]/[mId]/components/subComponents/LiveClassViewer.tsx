@@ -231,8 +231,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 
 interface LiveClassViewerProps {
-  classId: string;
-  userId: string;
+  classId: number;
+  userId: number;
 }
 
 const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
@@ -249,6 +249,7 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
   const startWebSocket = () => {
     const ws = new WebSocket(
       `ws://localhost:8080/?classId=${classId}&userId=${userId}`
+      // `ws://43.203.217.108:8080/?classId=${classId}&userId=${userId}`
     );
     wsRef.current = ws;
 

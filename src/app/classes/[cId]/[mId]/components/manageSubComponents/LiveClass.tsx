@@ -341,6 +341,7 @@ const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
   const startWebSocket = () => {
     const ws = new WebSocket(
       `ws://localhost:8080/?classId=${classId}&userId=${userId}`
+      // `ws://43.203.217.108:8080/?classId=${classId}&userId=${userId}`
     );
     wsRef.current = ws;
 
