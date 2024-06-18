@@ -1,7 +1,7 @@
 interface ClassUser {
   uid: number;
   nickname: string;
-  role_id: number;
+  role: string;
   image: string;
 }
 

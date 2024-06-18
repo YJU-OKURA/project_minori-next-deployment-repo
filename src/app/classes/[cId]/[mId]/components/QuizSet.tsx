@@ -11,6 +11,9 @@ import {QuizList, Result} from '@/src/interfaces/quiz';
 import postMark from '@/src/api/quizSet/postMark';
 import Image from 'next/image';
 import pngs from '@/public/images/quiz';
+import getUserQuizInfo from '@/src/api/quizSet/getUserQuizInfo';
+import SubmitQuiz from '@/src/interfaces/quiz/submitQuiz';
+import getQuizFeedback from '@/src/api/quizFeedback/getQuizFeedback';
 
 const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
   SwiperCore.use([Navigation, Scrollbar, Autoplay]);
@@ -20,8 +23,11 @@ const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
   );
   const [results, setResults] = useState<Result[]>([]);
   const [quizSet, setQuizSet] = useState<QuizList[]>([]);
-  const [isGrade, setIsGrade] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [feedback, setFeedback] = useState<string>('');
+  const [isSubmit, setIsSubmit] = useState<boolean>(false);
+  const [isFeedback, setIsFeedback] = useState<boolean>(false);
+  const [reload, setReload] = useState<boolean>(false);
+  const [submitQuizList, setSubmitQuizList] = useState<SubmitQuiz[]>([]);
   const swiperRef = useRef<SwiperCore | null>(null);
 
   useEffect(() => {
@@ -29,7 +35,26 @@ const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
       console.log(res);
       setQuizSet(res.quizList);
     });
-  }, []);
+    getUserQuizInfo(cId, mId, 4)
+      .then(res => {
+        setIsSubmit(true);
+        setSubmitQuizList(res.results);
+        getQuizFeedback(cId, mId, 4)
+          .then(res => {
+            console.log(res);
+            setFeedback(res.data.content);
+            setIsFeedback(true);
+          })
+          .catch(() => {
+            console.log('not found');
+            setIsFeedback(false);
+          });
+        console.log(res);
+      })
+      .catch(() => {
+        setIsSubmit(false);
+      });
+  }, [reload]);
 
   const handleAnswer = (questionId: string, answer: string) => {
     setUserAnswers(prev => {
@@ -75,16 +100,12 @@ const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
     if (results && currentTime) {
       postMark(cId, mId, currentTime, results).then(res => {
         console.log(res);
-        setIsGrade(true);
+        setReload(!reload);
       });
     }
     if (swiperRef.current) {
       swiperRef.current.slideTo(0); // 첫 번째 페이지로 이동
     }
-  };
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
   };
 
   return (
@@ -95,17 +116,12 @@ const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
         navigation={true} // prev, next button
         centeredSlides={true} // 中央揃え
       >
-        {quizSet.map(quiz => (
+        {quizSet.map((quiz, index) => (
           <SwiperSlide key={quiz.id} style={{width: 'auto'}}>
-            <div className="relative w-[750px] m-auto py-3">
-              {isGrade ? (
+            <div className="relative w-[750px] h-[800px] m-auto py-3">
+              {isSubmit ? (
                 <Image
-                  src={
-                    results.find(answer => answer.q_id === parseInt(quiz.id))
-                      ?.result
-                      ? pngs.true
-                      : pngs.false
-                  }
+                  src={submitQuizList[index].result ? pngs.true : pngs.false}
                   width={120}
                   height={100}
                   alt="icon"
@@ -116,48 +132,26 @@ const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
               <div className="border-2 p-5 rounded-lg leading-8">
                 {quiz.content.question}
               </div>
-              <div className="py-3">
-                <div className="flex justify-between items-center relative py-1">
-                  <div className="">
-                    {isGrade ? (
-                      <button
-                        className="border-2 p-2 rounded-lg bg-gray-100 text-sm"
-                        onClick={toggleDropdown}
-                      >
-                        해설 보기
-                      </button>
-                    ) : null}
-                    {isOpen ? (
-                      <div className="absolute top-12 right-0 bg-gray-100 w-full p-5 border-2  rounded-lg leading-8 drop-shadow-md">
-                        <div className="font-semibold">
-                          정답:{' '}
-                          <span className="text-red-500 ">
-                            {quiz.content.commentary.correctAnswer}
-                          </span>
-                        </div>
-                        <div className="font-semibold pt-2">
-                          해설:{' '}
-                          <span className="font-medium">
-                            {quiz.content.commentary.content}
-                          </span>
-                        </div>
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
+              <div className={isSubmit ? 'py-3 pointer-events-none' : 'py-3'}>
                 <ul>
                   <li className="py-2">
                     <div
                       className="w-full border-2 p-5 rounded-lg text-m"
                       onClick={() => handleAnswer(quiz.id, 'a')}
-                      style={{
-                        color:
-                          (userAnswers.find(answer => answer[quiz.id]) || {})[
-                            quiz.id
-                          ] === 'a'
-                            ? '#1e90ff'
-                            : 'black',
-                      }}
+                      style={
+                        isSubmit &&
+                        quiz.content.commentary.correctAnswer === 'a'
+                          ? {color: '#1e90ff'}
+                          : !isSubmit
+                          ? {
+                              color:
+                                (userAnswers.find(answer => answer[quiz.id]) ||
+                                  {})[quiz.id] === 'a'
+                                  ? '#1e90ff'
+                                  : 'black',
+                            }
+                          : {color: 'black'}
+                      }
                     >
                       a. {quiz.content.answer.a}
                     </div>
@@ -166,14 +160,20 @@ const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
                     <div
                       className="w-full border-2 p-5 rounded-lg text-m"
                       onClick={() => handleAnswer(quiz.id, 'b')}
-                      style={{
-                        color:
-                          (userAnswers.find(answer => answer[quiz.id]) || {})[
-                            quiz.id
-                          ] === 'b'
-                            ? '#1e90ff'
-                            : 'black',
-                      }}
+                      style={
+                        isSubmit &&
+                        quiz.content.commentary.correctAnswer === 'b'
+                          ? {color: '#1e90ff'}
+                          : !isSubmit
+                          ? {
+                              color:
+                                (userAnswers.find(answer => answer[quiz.id]) ||
+                                  {})[quiz.id] === 'b'
+                                  ? '#1e90ff'
+                                  : 'black',
+                            }
+                          : {color: 'black'}
+                      }
                     >
                       b. {quiz.content.answer.b}
                     </div>
@@ -182,14 +182,20 @@ const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
                     <div
                       className="w-full border-2 p-5 rounded-lg text-m"
                       onClick={() => handleAnswer(quiz.id, 'c')}
-                      style={{
-                        color:
-                          (userAnswers.find(answer => answer[quiz.id]) || {})[
-                            quiz.id
-                          ] === 'c'
-                            ? '#1e90ff'
-                            : 'black',
-                      }}
+                      style={
+                        isSubmit &&
+                        quiz.content.commentary.correctAnswer === 'c'
+                          ? {color: '#1e90ff'}
+                          : !isSubmit
+                          ? {
+                              color:
+                                (userAnswers.find(answer => answer[quiz.id]) ||
+                                  {})[quiz.id] === 'c'
+                                  ? '#1e90ff'
+                                  : 'black',
+                            }
+                          : {color: 'black'}
+                      }
                     >
                       c. {quiz.content.answer.c}
                     </div>
@@ -198,32 +204,70 @@ const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
                     <div
                       className="w-full border-2 p-5 rounded-lg text-m"
                       onClick={() => handleAnswer(quiz.id, 'd')}
-                      style={{
-                        color:
-                          (userAnswers.find(answer => answer[quiz.id]) || {})[
-                            quiz.id
-                          ] === 'd'
-                            ? '#1e90ff'
-                            : 'black',
-                      }}
+                      style={
+                        isSubmit &&
+                        quiz.content.commentary.correctAnswer === 'd'
+                          ? {color: '#1e90ff'}
+                          : !isSubmit
+                          ? {
+                              color:
+                                (userAnswers.find(answer => answer[quiz.id]) ||
+                                  {})[quiz.id] === 'd'
+                                  ? '#1e90ff'
+                                  : 'black',
+                            }
+                          : {color: 'black'}
+                      }
                     >
                       d. {quiz.content.answer.d}
                     </div>
                   </li>
                 </ul>
               </div>
+              <div className="flex justify-between items-center relative py-1">
+                <div className="">
+                  {isSubmit ? (
+                    <div className="h-[250px] bg-gray-100 w-full p-5 border-2 rounded-lg leading-8 drop-shadow-md overflow-scroll">
+                      <div className="font-semibold">
+                        정답:{' '}
+                        <span className="text-red-500 ">
+                          {quiz.content.commentary.correctAnswer}
+                        </span>
+                      </div>
+                      <div className="font-semibold pt-2">
+                        해설:{' '}
+                        <span className="font-medium">
+                          {quiz.content.commentary.content}
+                        </span>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
             </div>
           </SwiperSlide>
         ))}
+        {isFeedback ? (
+          <SwiperSlide style={{width: 'auto'}}>
+            <div className="flex w-[750px] h-[800px] m-auto py-3 justify-center items-center">
+              <div className="w-[600px] h-[200px] bg-gray-200 rounded-lg p-3 flex">
+                <div className="font-bold h-[176px] mr-1">교수님의 말 : </div>
+                <div className="grow">{feedback}</div>
+              </div>
+            </div>
+          </SwiperSlide>
+        ) : null}
       </Swiper>
-      <div className="flex justify-center">
-        <button
-          className="px-2 py-2 bg-blue-400 text-white rounded-lg"
-          onClick={handleSubmitAnswer}
-        >
-          제출하기
-        </button>
-      </div>
+      {isSubmit ? null : (
+        <div className="flex justify-center">
+          <button
+            className="px-2 py-2 bg-blue-400 text-white rounded-lg"
+            onClick={handleSubmitAnswer}
+          >
+            제출하기
+          </button>
+        </div>
+      )}
     </div>
   );
 };

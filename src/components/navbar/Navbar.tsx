@@ -9,18 +9,19 @@ const Navbar = () => {
   const pages = [
     {name: '클래스', icon: icons.group, url: '/classes'},
     {name: '내정보', icon: icons.myPage, url: '/info'},
-    {name: '문제은행', icon: icons.myPage, url: '/bank'},
+    // {name: '문제은행', icon: icons.bank, url: '/bank'},
     /* Billing Page - 保留 */
   ];
 
   return (
-    <div className="w-72 h-full bg-gray-50">
+    <div className="w-72 h-screen bg-gray-50">
       <div className="relative w-72 p-6 h-full flex flex-col">
         {/* Profile */}
-        <Profile />
-        <div className="h-8"></div>
+        <div className="h-14">
+          <Profile />
+        </div>
         {/* Pages */}
-        <div className="w-full">
+        <div className="w-full py-4">
           <div>
             <p className="text-zinc-400 mb-4">페이지</p>
             <ul className="w-full">
@@ -43,9 +44,13 @@ const Navbar = () => {
             </ul>
           </div>
         </div>
-        <div className="h-8"></div>
         {/* Material*/}
-        <div className="flex-grow">
+        <div
+          className="flex-grow"
+          style={{
+            maxHeight: 'calc(100% - 216px)',
+          }}
+        >
           <MaterialContainer />
         </div>
       </div>

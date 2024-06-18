@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import Image from 'next/image';
 import getRate from '@/src/api/quizSet/getRate';
 import getUsers from '@/src/api/quizSet/getUsers';
 import {Users} from '@/src/interfaces/quiz';
@@ -38,7 +39,12 @@ const QuizReport = ({cId, mId}: {cId: number; mId: number}) => {
       {/* ユーザーリスト */}
       <div className="w-4/6">
         {users.map((user, index) => (
-          <div key={index}>
+          <div
+            key={index}
+            className={
+              user.collectedRate === 'N/A' ? 'pointer-events-none' : ''
+            }
+          >
             <div
               className="bg-gray-100 flex justify-between items-center p-3 rounded-lg mb-3 font-semibold text-lg"
               onClick={() =>
@@ -47,7 +53,14 @@ const QuizReport = ({cId, mId}: {cId: number; mId: number}) => {
             >
               <span className="flex justify-center items-center w-[100px]">
                 {index + 1}.
-                <div className="w-[35px] h-[35px] ml-3 rounded-full bg-red-400 overflow-hidden"></div>
+                <div className="w-[35px] h-[35px] ml-3 rounded-full overflow-hidden">
+                  <Image
+                    src={user.user.image}
+                    width={35}
+                    height={35}
+                    alt="image"
+                  />{' '}
+                </div>
               </span>
               <span className="w-[150px] text-center">{user.nickname}</span>
               <span className="w-[50px] text-center">{user.collectedRate}</span>

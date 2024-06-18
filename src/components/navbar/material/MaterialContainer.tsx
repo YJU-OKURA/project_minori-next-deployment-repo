@@ -61,8 +61,8 @@ const MaterialContainer = () => {
     <div className="h-full flex flex-col">
       {param.cId && (
         <>
-          <div className="w-full flex-1">
-            <div className="w-full flex justify-between items-center mb-4">
+          <div className="w-full flex-1 h-[calc(100%-82px)]">
+            <div className="w-full flex justify-between items-center mb-[8px]">
               <p className="text-zinc-400">자료</p>
               <div
                 className="text-end bg-blue-500 w-6 h-6 flex justify-center items-center rounded-lg"
@@ -73,7 +73,7 @@ const MaterialContainer = () => {
             </div>
             {isOpen && <MaterialForm setIsOpen={setIsOpen} cId={param.cId} />}
             {/* prompt - search */}
-            <div className="w-full flex bg-white items-center mb-3 px-1">
+            <div className="w-full flex bg-white items-center mb-[8px] px-1">
               <Image
                 src={icons.search}
                 alt="icon"
@@ -89,7 +89,7 @@ const MaterialContainer = () => {
               />
             </div>
             {/* Prompt - list */}
-            <div className="h-[calc(100%-85px)] overflow-auto">
+            <div className="h-[calc(100%-72px)] overflow-auto">
               <InfiniteScroll
                 pageStart={0}
                 loadMore={onLoadMore}
@@ -106,21 +106,23 @@ const MaterialContainer = () => {
               </InfiniteScroll>
             </div>
           </div>
-          <div className="flex-none h-16"></div>
+          <div className="flex-none h-8"></div>
           {/* Exit */}
-          <div className="flex flex-none h-[50px]">
-            <Image
-              src={icons.door}
-              alt="icon"
-              width={30}
-              height={30}
-              className="w-6 h-6 mr-2"
-            ></Image>
-            {param.mId ? (
-              <Link href={`/classes/${param.cId}`}>프롬프트 떠나기</Link>
-            ) : (
-              <Link href="/classes">클래스 떠나기</Link>
-            )}
+          <div className="flex-none h-[50px] ">
+            <div className="flex pt-[10px]">
+              <Image
+                src={icons.door}
+                alt="icon"
+                width={30}
+                height={30}
+                className="w-6 h-6 mr-2"
+              ></Image>
+              {param.mId ? (
+                <Link href={`/classes/${param.cId}`}>프롬프트 떠나기</Link>
+              ) : (
+                <Link href="/classes">클래스 떠나기</Link>
+              )}
+            </div>
           </div>
         </>
       )}

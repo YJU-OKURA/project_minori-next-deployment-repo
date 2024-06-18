@@ -1,4 +1,5 @@
 import BASE_URLS from '../baseUrl';
+import Cookies from 'js-cookie';
 
 const getFeedback = async (
   cId: number,
@@ -6,7 +7,7 @@ const getFeedback = async (
   type: string,
   chat: (reader: ReadableStreamDefaultReader) => void
 ) => {
-  const token = localStorage.getItem('access_token');
+  const token = Cookies.get('access_token');
   try {
     const response = await fetch(
       `${BASE_URLS.nest}/class/${cId}/feedback/materials/${mId}/get-feedback?type=${type}`,

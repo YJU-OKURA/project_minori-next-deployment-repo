@@ -27,7 +27,7 @@ const FeedbackList = ({feedbacks}: {feedbacks: feedback[]}) => {
         >
           {feedbacks.map(feedback => (
             <SwiperSlide key={feedback.id}>
-              <div className="w-[500px] h-[400px] bg-green-300 drop-shadow-xl overflow-scroll m-auto">
+              <div className="w-[500px] h-[400px] bg-green-300 drop-shadow-lg overflow-scroll m-auto my-3">
                 <div className="p-2 text-start">
                   {feedback.content.split('\n').map((content, index) => {
                     return (

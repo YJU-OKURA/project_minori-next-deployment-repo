@@ -20,11 +20,19 @@ const QuizFeedback = ({
   const [submitQuizList, setSubmitQuizList] = useState<SubmitQuiz[]>([]);
   const [feedback, setFeedback] = useState<string>('');
   const [collectRate, setCollectRate] = useState<number>(0);
+  const [isWrite, setIsWrite] = useState<boolean>(false);
 
   useEffect(() => {
-    getQuizFeedback(cId, mId, uId).then(res => {
-      console.log(res);
-    });
+    getQuizFeedback(cId, mId, uId)
+      .then(res => {
+        console.log(res);
+        setFeedback(res.data.content);
+        setIsWrite(true);
+      })
+      .catch(() => {
+        console.log('error');
+        setIsWrite(false);
+      });
     getUserQuizInfo(cId, mId, uId).then(res => {
       console.log(res);
       setSubmitQuizList(res.results);
@@ -49,20 +57,24 @@ const QuizFeedback = ({
           <div className="text-xl font-semibold">ㅇㅇ님이 제출한 퀴즈</div>
           <div className="py-3">
             <p className="pb-2">ㅇㅇ님에 대한 피드백</p>
-            <div className="flex justify-between items-end">
-              <input
-                type="text"
-                className="w-[550px] p-2 outline-none border-2 border-gray-400 rounded-lg"
-                value={feedback}
-                onChange={e => setFeedback(e.target.value)}
-              />
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold"
-                onClick={handleCreateFeedback}
-              >
-                작성
-              </button>
-            </div>
+            {isWrite ? (
+              <div>{feedback}</div>
+            ) : (
+              <div className="flex justify-between items-end">
+                <input
+                  type="text"
+                  className="w-[550px] p-2 outline-none border-2 border-gray-400 rounded-lg"
+                  value={feedback}
+                  onChange={e => setFeedback(e.target.value)}
+                />
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold"
+                  onClick={handleCreateFeedback}
+                >
+                  작성
+                </button>
+              </div>
+            )}
           </div>
           <div className="h-[280px] overflow-scroll">
             <div className="font-bold py-2">

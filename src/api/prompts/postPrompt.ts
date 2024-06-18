@@ -1,10 +1,12 @@
+import Cookies from 'js-cookie';
+
 const postPrompt = async (
   cId: number,
   id: number,
   message: string,
   chat: (reader: ReadableStreamDefaultReader) => void
 ) => {
-  const token = localStorage.getItem('access_token');
+  const token = Cookies.get('access_token');
   console.log('token:', token);
   const body = {
     message: message,
