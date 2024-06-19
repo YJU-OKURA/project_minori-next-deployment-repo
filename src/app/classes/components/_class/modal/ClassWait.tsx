@@ -4,6 +4,7 @@ import {useState} from 'react';
 import Image from 'next/image';
 import {Wait} from '@/src/app/classes/components/card';
 import {ClassWaitProps} from '@/src/interfaces/_class/modal';
+import logos from '@/public/images/_class';
 
 const ClassWait = ({ImageSrc, ClassName}: ClassWaitProps) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -47,7 +48,7 @@ const ClassWait = ({ImageSrc, ClassName}: ClassWaitProps) => {
                     </p>
                     <div className="mt-4 flex justify-center">
                       <Image
-                        src={ImageSrc}
+                        src={ImageSrc !== '' ? ImageSrc : logos.yeungjin}
                         alt={'classThumbnail'}
                         width={300}
                         height={200}

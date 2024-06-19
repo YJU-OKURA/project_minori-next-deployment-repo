@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import {ClassWaitProps} from '@/src/interfaces/_class/modal';
+import logos from '@/public/images/_class';
 
 const Wait = ({ImageSrc, ClassName, setModalOpen}: ClassWaitProps) => {
   return (
@@ -12,7 +13,7 @@ const Wait = ({ImageSrc, ClassName, setModalOpen}: ClassWaitProps) => {
       <div className="flex justify-center items-center mt-2">
         <div className="w-72 h-44 relative overflow-hidden">
           <Image
-            src={ImageSrc}
+            src={ImageSrc !== '' ? ImageSrc : logos.yeungjin}
             alt={'Card Image'}
             fill={true}
             sizes="(max-width: 288px), (max-hight:176px)"
