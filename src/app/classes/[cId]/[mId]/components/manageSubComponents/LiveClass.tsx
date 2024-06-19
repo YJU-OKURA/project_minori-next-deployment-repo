@@ -341,25 +341,6 @@ const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
               style={{width: '100%'}}
             />
           </div>
-
-          <div className="flex flex-col items-center p-4 mb-8">
-            <video
-              className="h-full w-full rounded-lg"
-              controls
-              autoPlay
-              playsInline
-              style={{width: '100%'}}
-            />
-          </div>
-          <div className="flex flex-col items-center p-4 mb-8">
-            <video
-              className="h-full w-full rounded-lg"
-              controls
-              autoPlay
-              playsInline
-              style={{width: '100%'}}
-            />
-          </div>
         </div>
       )}
     </div>

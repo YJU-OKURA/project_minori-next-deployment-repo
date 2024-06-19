@@ -198,7 +198,7 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
   };
 
   return (
-    <div className="relative flex flex-col items-end h-screen">
+    <div className="relative flex flex-col items-end h-[calc(100%- 122px)]">
       <div className="bg-[#ffffff] border border-gray-400 shadow-md rounded-lg p-6 w-80 flex flex-col items-center mb-8">
         {!inClass ? (
           <button
@@ -239,7 +239,7 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
 
       {inClass && (
         <div
-          className="flex flex-col items-center mt-12 overflow-y-auto"
+          className="flex flex-col items-center mt-4 overflow-y-auto m-auto"
           style={{height: '60vh'}}
         >
           <div className="flex flex-col items-center p-4 mb-8">
@@ -257,44 +257,6 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
               autoPlay
               playsInline
               controls
-              style={{width: '100%'}}
-            />
-          </div>
-
-          <div className="flex flex-col items-center p-4 mb-8">
-            <video
-              className="h-full w-full rounded-lg"
-              controls
-              autoPlay
-              playsInline
-              style={{width: '100%'}}
-            />
-          </div>
-          <div className="flex flex-col items-center p-4 mb-8">
-            <video
-              className="h-full w-full rounded-lg"
-              controls
-              autoPlay
-              playsInline
-              style={{width: '100%'}}
-            />
-          </div>
-
-          <div className="flex flex-col items-center p-4 mb-8">
-            <video
-              className="h-full w-full rounded-lg"
-              controls
-              autoPlay
-              playsInline
-              style={{width: '100%'}}
-            />
-          </div>
-          <div className="flex flex-col items-center p-4 mb-8">
-            <video
-              className="h-full w-full rounded-lg"
-              controls
-              autoPlay
-              playsInline
               style={{width: '100%'}}
             />
           </div>
