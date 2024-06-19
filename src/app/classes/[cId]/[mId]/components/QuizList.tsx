@@ -213,7 +213,7 @@ const QuizList = (props: {cId: number; mId: number; mName: string}) => {
               className="py-2 px-4 bg-red-500 text-white rounded-3xl"
               onClick={handleDeleteSet}
             >
-              퀴즈 마감
+              퀴즈 삭제
             </button>
           ) : (
             <button
