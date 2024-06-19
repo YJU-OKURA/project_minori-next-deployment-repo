@@ -18,7 +18,7 @@ const AttendanceCard = ({cid}: {cid: number; uid: number}) => {
       const uids = res.map((user: ClassUser) => ({
         uid: user.uid,
         cid: cid,
-        csid: 10,
+        csid: 19,
         status: '',
       }));
       setSubmitUsers(uids);

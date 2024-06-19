@@ -32,11 +32,11 @@ const MaterialContainer = () => {
     }
   }, [debounceVal]);
 
-  useEffect(() => {
-    setMaterials([]);
-    setBoardPage(1);
-    onLoadMore();
-  }, [param.cId]);
+  // useEffect(() => {
+  //   setMaterials([]);
+  //   setBoardPage(1);
+  //   onLoadMore();
+  // }, [param.cId]);
 
   const onLoadMore = () => {
     setHasMore(false);

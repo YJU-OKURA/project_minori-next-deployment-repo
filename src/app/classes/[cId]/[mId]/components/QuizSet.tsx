@@ -111,7 +111,7 @@ const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
   };
 
   return (
-    <div className="py-2 w-[850px] m-auto">
+    <div className="py-2 w-[750px] m-auto">
       <Swiper
         onSwiper={swiper => (swiperRef.current = swiper)}
         slidesPerView={1} // 表示されるスライス数
@@ -120,7 +120,7 @@ const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
       >
         {quizSet.map((quiz, index) => (
           <SwiperSlide key={quiz.id} style={{width: 'auto'}}>
-            <div className="relative w-[750px] h-[800px] m-auto py-3">
+            <div className="relative w-[650px] h-[800px] m-auto py-3">
               {isSubmit ? (
                 <Image
                   src={submitQuizList[index].result ? pngs.true : pngs.false}

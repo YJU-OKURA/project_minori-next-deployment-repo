@@ -1,7 +1,6 @@
-import {keyword} from '@/src/interfaces/feedback';
 import req from '../apiUtils';
 
-const getKeywords = async (cId: number, mId: number): Promise<keyword[]> => {
+const getKeywords = async (cId: number, mId: number) => {
   const response = await req(
     `/class/${cId}/feedback/materials/${mId}/get-keyword`,
     'get',
