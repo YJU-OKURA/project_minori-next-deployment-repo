@@ -26,7 +26,7 @@ const ManageSubContainer: React.FC = () => {
         {showMain ? '💬' : '💬'}
       </button>
       {showMain && (
-        <div className="fixed top-0 right-0 w-96 h-full bg-white shadow-lg z-10">
+        <div className="fixed bottom-0 right-0 w-96 h-full bg-white shadow-lg z-10">
           <ShowMain />
         </div>
       )}

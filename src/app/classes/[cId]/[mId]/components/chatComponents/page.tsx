@@ -21,7 +21,7 @@ const ShowMain = () => {
   const [chatUsers, setChatUsers] = useState<{[key: string]: User}>({});
   const params = useParams();
   const getClassId = Number(params.cId);
-  const getScheduleId = 14;
+  const getScheduleId = 19;
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const handleGetMessages = () => {
@@ -101,10 +101,10 @@ const ShowMain = () => {
   }, [getScheduleId]);
 
   return (
-    <div className="flex justify-center mt-10">
-      <div className="w-full max-w-md">
-        <div className="w-full mt-2">
-          <div className="border-4 rounded-lg border-gray-500 p-2 h-[550px] overflow-auto">
+    <div className="flex h-full flex-col justify-between">
+      <div className="w-full h-full overflow-auto">
+        <div className="w-full h-full mt-2">
+          <div className="border-4 rounded-lg border-gray-500 p-2 h-full overflow-auto">
             <p className="text-center inline-block px-4 py-2 text-sm text-white bg-violet-300 rounded-lg w-full">
               최상단 채팅 내용입니다
             </p>
@@ -162,6 +162,8 @@ const ShowMain = () => {
             <div ref={messagesEndRef} />
           </div>
         </div>
+      </div>
+      <div>
         <ChatInput setMsg={setMessage} />
       </div>
     </div>

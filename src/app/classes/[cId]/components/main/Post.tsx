@@ -113,7 +113,7 @@ const Post = ({
           {classPosts.map((post, index) =>
             !post.IsAnnounced ? (
               <div
-                className="flex justify-center items-center w-full md:w-1/3"
+                className="flex items-center w-full"
                 key={post.ID}
                 onClick={async (event: React.MouseEvent) => {
                   event.stopPropagation();
