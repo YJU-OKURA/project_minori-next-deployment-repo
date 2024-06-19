@@ -5,8 +5,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 
 interface LiveClassViewerProps {
-  classId: string;
-  userId: string;
+  classId: number;
+  userId: number;
 }
 
 const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
@@ -22,7 +22,8 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
 
   const startWebSocket = () => {
     const ws = new WebSocket(
-      `ws://localhost:8080/?classId=${classId}&userId=${userId}`
+      // `ws://localhost:8080/?classId=${classId}&userId=${userId}`
+      `ws://3.39.137.182:8080/?classId=${classId}&userId=${userId}`
     );
     wsRef.current = ws;
 
@@ -102,7 +103,22 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
               'stun:stun4.l.google.com:19302',
             ],
           },
+          {
+            urls: 'turn:3.39.137.182:3478',
+            username: 'minori',
+            credential: 'minoriwebrtc',
+          },
         ],
+      });
+      pc.addEventListener('icecandidate', event => {
+        if (event.candidate) {
+          wsRef.current?.send(
+            JSON.stringify({
+              event: 'candidate',
+              data: event.candidate,
+            })
+          );
+        }
       });
       pcRef.current = pc;
 

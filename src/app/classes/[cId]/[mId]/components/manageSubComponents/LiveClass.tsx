@@ -24,7 +24,8 @@ const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
 
   const startWebSocket = () => {
     const ws = new WebSocket(
-      `ws://localhost:8080/?classId=${classId}&userId=${userId}`
+      // `ws://localhost:8080/?classId=${classId}&userId=${userId}`
+      `ws://3.39.137.182:8080/?classId=${classId}&userId=${userId}`
     );
     wsRef.current = ws;
 
@@ -101,8 +102,15 @@ const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
               'stun:stun4.l.google.com:19302',
             ],
           },
+          {
+            urls: 'turn:3.39.137.182:3478',
+            username: 'minori',
+            credential: 'minoriwebrtc',
+          },
         ],
       });
+      //code for creating PeerConnection in each browser
+
       pcRef.current = pc;
 
       pc.onicecandidate = event => {
