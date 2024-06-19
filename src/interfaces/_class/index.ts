@@ -7,6 +7,7 @@ import PostCardProps from './postCardProps';
 import RoleProps from './roleProps';
 import InviteProps from './inviteProps';
 import InvitationProps from './invitationProps';
+import ScheduleData from './scheduleData';
 
 export type {
   CardItemProps,
@@ -18,4 +19,5 @@ export type {
   RoleProps,
   InviteProps,
   InvitationProps,
+  ScheduleData,
 };

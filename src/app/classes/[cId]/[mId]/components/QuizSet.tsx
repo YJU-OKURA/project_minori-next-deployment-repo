@@ -14,10 +14,12 @@ import pngs from '@/public/images/quiz';
 import getUserQuizInfo from '@/src/api/quizSet/getUserQuizInfo';
 import SubmitQuiz from '@/src/interfaces/quiz/submitQuiz';
 import getQuizFeedback from '@/src/api/quizFeedback/getQuizFeedback';
+import {useRecoilValue} from 'recoil';
+import userState from '@/src/recoil/atoms/userState';
 
 const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
   SwiperCore.use([Navigation, Scrollbar, Autoplay]);
-
+  const user = useRecoilValue(userState);
   const [userAnswers, setUserAnswers] = useState<Array<Record<string, string>>>(
     []
   );
@@ -35,11 +37,11 @@ const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
       console.log(res);
       setQuizSet(res.quizList);
     });
-    getUserQuizInfo(cId, mId, 4)
+    getUserQuizInfo(cId, mId, user.id)
       .then(res => {
         setIsSubmit(true);
         setSubmitQuizList(res.results);
-        getQuizFeedback(cId, mId, 4)
+        getQuizFeedback(cId, mId, user.id)
           .then(res => {
             console.log(res);
             setFeedback(res.data.content);

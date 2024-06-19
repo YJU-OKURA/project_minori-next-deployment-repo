@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React, {useEffect, useRef, useState} from 'react';
+import AttendanceCard from '../AttendanceCard';
 
 interface LiveClassProps {
   classId: number;
@@ -317,6 +318,12 @@ const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
           </>
         )}
       </div>
+
+      {classStarted ? (
+        <div className="w-80 flex justify-end ">
+          <AttendanceCard cid={classId} uid={userId} />
+        </div>
+      ) : null}
 
       {classStarted && (
         <div

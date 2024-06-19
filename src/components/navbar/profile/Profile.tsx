@@ -73,7 +73,7 @@ const Profile = () => {
           height={36}
           alt="userImage"
           className=" rounded-lg object-cover"
-          loading="lazy"
+          priority
         />
 
         <div className="w-full mx-2 text-ml font-semibold overflow-hidden">
@@ -109,7 +109,7 @@ const Profile = () => {
                       setDropdownOpen(false);
                     }}
                   >
-                    그룹 수정
+                    클래스 수정
                   </li>
                 ) : null,
                 <li
@@ -120,7 +120,7 @@ const Profile = () => {
                     setDropdownOpen(false);
                   }}
                 >
-                  {user.role_id === 'ADMIN' ? '그룹 삭제' : '그룹 탈퇴'}
+                  {user.role_id === 'ADMIN' ? '클래스 삭제' : '클래스 탈퇴'}
                 </li>,
               ]
             : null}
