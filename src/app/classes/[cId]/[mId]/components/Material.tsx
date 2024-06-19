@@ -88,7 +88,7 @@ const Material = () => {
   }, [numPages]);
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-start">
+    <div className="relative h-[calc(100%-122px)] flex flex-col items-center justify-start">
       <Suspense fallback={<div>Loading...</div>}>
         {file && (
           <>
