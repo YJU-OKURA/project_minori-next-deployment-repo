@@ -6,7 +6,9 @@ const getVerifySecret = async (
   uid: number
 ) => {
   const response = await req(
-    `/cc/VerifyClassCode?code=${classCode}secret=${secret}&uid=${uid}`,
+    `/cc/verifyAndRequestAccess?code=${classCode}${
+      secret ? `&secret=${secret}` : ''
+    }&uid=${uid}`,
     'get',
     'gin'
   );

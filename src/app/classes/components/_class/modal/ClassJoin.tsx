@@ -2,15 +2,20 @@
 
 import React, {useState} from 'react';
 import Image from 'next/image';
-import getCheckClassSecret from '@/src/api/classCode/getCheckClassSecret';
+import getVerifySecret from '@/src/api/classCode/getVerifySecret';
+import putUserName from '@/src/api/classUser/putUserName';
 import {ModalProps} from '@/src/interfaces/_class/modal';
 import icons from '@/public/svgs/_class';
 
-const ClassJoin = ({setActiveModalId, setIsModalOpen}: ModalProps) => {
+const ClassJoin = ({setActiveModalId, uid, name}: ModalProps) => {
   const [inputValue, setInputValue] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
+  };
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
   };
 
   const handleSubmit = async (
@@ -21,19 +26,15 @@ const ClassJoin = ({setActiveModalId, setIsModalOpen}: ModalProps) => {
       alert('클래스 코드를 입력해주세요');
       return;
     }
-    try {
-      const res = await getCheckClassSecret(inputValue);
-      console.log(res);
-      if (!res.secretExists) {
-        alert('이 클래스는 비밀번호가 설정되어있지 않습니다');
-        return;
+    if (uid && name) {
+      try {
+        const res = await getVerifySecret(inputValue, password, uid);
+        await putUserName(uid, res.cid, name);
+        alert('신청 완료되었습니다.');
+        setActiveModalId('');
+      } catch (error: unknown) {
+        alert('잘못된 요청입니다.');
       }
-      setActiveModalId('');
-      if (setIsModalOpen) {
-        setIsModalOpen(true);
-      }
-    } catch (error: unknown) {
-      alert('잘못된 요청입니다.');
     }
   };
 
@@ -75,12 +76,19 @@ const ClassJoin = ({setActiveModalId, setIsModalOpen}: ModalProps) => {
               </div>
               <div className="mt-3">
                 <input
-                  className="mt-3 w-full inline-flex justify-center rounded-md border ring-gray-100 shadow-sm px-4 py-2 bg-white-50 text-base font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:bg-gray-50 focus:ring-gray-100 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                  className="mt-3 w-full inline-flex justify-center rounded-md border ring-gray-100 shadow-sm px-4 py-2 bg-white-50 text-base font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:bg-gray-50 focus:ring-gray-100"
                   type="text"
                   placeholder="클래스 코드를 입력해주세요"
                   value={inputValue}
                   onChange={handleInputChange}
                   required
+                />
+                <input
+                  type="password"
+                  className="mt-3 w-full inline-flex justify-center rounded-md border ring-gray-100 shadow-sm px-4 py-2 bg-white-50 text-base font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:bg-gray-50 focus:ring-gray-100"
+                  placeholder="비밀번호를 입력해주세요"
+                  value={password}
+                  onChange={handlePasswordChange}
                 />
               </div>
             </div>

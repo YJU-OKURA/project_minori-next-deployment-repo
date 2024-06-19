@@ -1,4 +1,5 @@
 const icons = {
+  copy: '/svgs/_class/copyButton.svg',
   favorite: '/svgs/_class/favorite.svg',
   folder: '/svgs/_class/folder.svg',
   noneFavorite: '/svgs/_class/noneFavorite.svg',

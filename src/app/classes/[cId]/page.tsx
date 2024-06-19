@@ -2,6 +2,7 @@
 
 import {useState, useEffect} from 'react';
 import {useParams} from 'next/navigation';
+import Image from 'next/image';
 import {useRecoilValue} from 'recoil';
 import userState from '@/src/recoil/atoms/userState';
 import {Dashboard, TabsMapping} from '@/src/components/dashboard';
@@ -11,11 +12,14 @@ import {Alarm} from './components/alarm';
 import classAPI from '@/src/api/_class';
 import getUserInfo from '@/src/api/classUser/getUserInfo';
 import {User} from '@/src/interfaces/user';
+import icons from '@/public/svgs/_class';
 
 const ClassMain = () => {
   const user = useRecoilValue(userState) as User;
   const [className, setClassName] = useState('');
   const [classDescription, setClassDescription] = useState('');
+  const [classCode, setClassCode] = useState('');
+  const [classSecret, setClassSecret] = useState('');
   const [userInfo, setUserInfo] = useState({
     id: 0,
     name: '',
@@ -32,17 +36,30 @@ const ClassMain = () => {
     메인: (
       <Main managerRole={managerRole} classId={classId} userInfo={userInfo} />
     ),
-    맴버목록: <Member />,
+    맴버목록: (
+      <Member managerRole={managerRole} classId={classId} userInfo={userInfo} />
+    ),
     알람: <Alarm />,
   };
   const fetchData = async () => {
     if (classId !== undefined) {
       const classData = await classAPI.getClassInfo(classId);
       const userData = await getUserInfo(user.id, classId);
+      setClassCode(classData.data.classCode.code);
+      setClassSecret(classData.data.classCode.secret);
       setClassName(classData.data.class.Name);
       setUserInfo(userData);
       setClassDescription(classData.data.class.Description);
       setManagerRole(userData.role);
+    }
+  };
+
+  const copyToClipboard = async (text: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      alert(`${label}가 클립보드에 저장되었습니다.`);
+    } catch (err) {
+      console.error('클립보드에 저장 실패:', err);
     }
   };
 
@@ -57,7 +74,35 @@ const ClassMain = () => {
             <h1 className="text-black text-5xl font-medium">{className}</h1>
           </div>
           {managerRole === 'ADMIN' || managerRole === 'ASSISTANT' ? (
-            <p className="mt-4 text-gray-400">{classDescription}</p>
+            <>
+              <div className="rounded-lg ps-4 mt-4 bg-gray-200 w-1/5 h-20 flex flex-col justify-center shadow-md">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-gray-600">클래스코드</span>
+                  <span className="mr-4 text-gray-800">{classCode}</span>
+                  <Image
+                    src={icons.copy}
+                    alt={'copy'}
+                    width={24}
+                    height={24}
+                    onClick={() => copyToClipboard(classCode, '클래스코드')}
+                    className="mr-2"
+                  />
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                  <span className="font-bold text-gray-600">비밀번호</span>
+                  <span className="mr-4 text-gray-800">{classSecret}</span>
+                  <Image
+                    src={icons.copy}
+                    alt={'copy'}
+                    width={24}
+                    height={24}
+                    onClick={() => copyToClipboard(classSecret, '비밀번호')}
+                    className="mr-2"
+                  />
+                </div>
+              </div>
+              <p className="mt-4 text-gray-400">{classDescription}</p>
+            </>
           ) : (
             <p className="mt-4 text-black">{classDescription}</p>
           )}

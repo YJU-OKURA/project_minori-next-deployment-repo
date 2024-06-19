@@ -10,14 +10,24 @@ import userState from '@/src/recoil/atoms/userState';
 import {User} from '@/src/interfaces/user';
 import classAPI from '@/src/api/_class';
 
+export interface ClassItem {
+  id: number;
+  name: string;
+  description: string;
+  image: string;
+  is_favorite: boolean;
+  uid: number;
+  role?: string;
+}
+
 const Main = () => {
   const user = useRecoilValue(userState) as User;
   const tabs = ['전체보기', '생성목록', '즐겨찾기', '초대목록', '신청목록'];
-  const [classes, setClasses] = useState([]);
-  const [createdClasses, setCreatedClasses] = useState([]);
-  const [inviteClasses, setInviteClasses] = useState([]);
-  const [favoriteClasses, setFavoriteClasses] = useState([]);
-  const [waitingClasses, setWaitingClasses] = useState([]);
+  const [classes, setClasses] = useState<ClassItem[]>([]);
+  const [createdClasses, setCreatedClasses] = useState<ClassItem[]>([]);
+  const [inviteClasses, setInviteClasses] = useState<ClassItem[]>([]);
+  const [favoriteClasses, setFavoriteClasses] = useState<ClassItem[]>([]);
+  const [waitingClasses, setWaitingClasses] = useState<ClassItem[]>([]);
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [activeModalId, setActiveModalId] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,26 +41,17 @@ const Main = () => {
     switch (activeTab) {
       case '생성목록': {
         const createdRes = await classAPI.getClassesRole(user.id, 'ADMIN');
-        const adminClasses = createdRes.data.filter(
-          (classItem: {role: string}) => classItem.role === 'ADMIN'
-        );
-        setCreatedClasses(adminClasses);
+        setCreatedClasses(createdRes.data);
         break;
       }
       case '초대목록': {
         const inviteRes = await classAPI.getClassesRole(user.id, 'INVITE');
-        const inviteClasses = inviteRes.data.filter(
-          (classItem: {role: string}) => classItem.role === 'INVITE'
-        );
-        setInviteClasses(inviteClasses);
+        setInviteClasses(inviteRes.data);
         break;
       }
       case '신청목록': {
         const waitingRes = await classAPI.getClassesRole(user.id, 'APPLICANT');
-        const waitingClasses = waitingRes.data.filter(
-          (classItem: {role: string}) => classItem.role === 'APPLICANT'
-        );
-        setWaitingClasses(waitingClasses);
+        setWaitingClasses(waitingRes.data);
         break;
       }
       case '즐겨찾기': {
@@ -60,7 +61,11 @@ const Main = () => {
       }
       default: {
         const allRes = await classAPI.getClasses(user.id);
-        setClasses(allRes.data);
+        const filteredClasses = allRes.data.filter(
+          (classItem: ClassItem) =>
+            classItem.role !== 'INVITE' && classItem.role !== 'APPLICANT'
+        );
+        setClasses(filteredClasses);
         break;
       }
     }
@@ -110,6 +115,8 @@ const Main = () => {
           <ClassJoin
             setActiveModalId={setActiveModalId}
             setIsModalOpen={setIsModalOpen}
+            uid={user.id}
+            name={user.name}
           />
         )}
         {isModalOpen && <ClassPassword onClose={handleModalClose} />}

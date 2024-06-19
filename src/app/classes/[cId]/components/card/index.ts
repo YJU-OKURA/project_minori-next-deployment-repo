@@ -1,4 +1,5 @@
+import MemberCard from './MemberCard';
 import PostCard from './PostCard';
 import ScheduleCard from './ScheduleCard';
 
-export {ScheduleCard, PostCard};
+export {MemberCard, ScheduleCard, PostCard};
