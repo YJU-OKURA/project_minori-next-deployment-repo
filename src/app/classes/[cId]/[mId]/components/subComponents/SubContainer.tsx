@@ -7,10 +7,12 @@ import PromptChat from './PromptChat';
 import Storage from './Storage';
 import materialState from '@/src/recoil/atoms/materialState';
 import '@/src/styles/variable.css';
+import ShowMain from '../chatComponents/page';
 
 const SubContainer: React.FC = () => {
   const TABS = ['프롬프트창', '저장목록'];
   const [activeTab, setActiveTab] = useState(TABS[0]);
+  const [showMain, setShowMain] = useState(false);
   const params = useParams<{cId: string}>();
   const material = useRecoilValue(materialState);
 
@@ -39,6 +41,17 @@ const SubContainer: React.FC = () => {
       <div className="subContainer">
         <TabsMapping activeTab={activeTab} tabMapping={tabMapping} />
       </div>
+      <button
+        onClick={() => setShowMain(!showMain)}
+        className="fixed top-1 right-4 z-50 bg-primary text-primary-foreground rounded-full p-3 shadow-lg hover:bg-primary/90"
+      >
+        {showMain ? '💬' : '💬'}
+      </button>
+      {showMain && (
+        <div className="fixed top-0 right-0 w-96 h-full bg-white shadow-lg z-10">
+          <ShowMain />
+        </div>
+      )}
     </div>
   );
 };
