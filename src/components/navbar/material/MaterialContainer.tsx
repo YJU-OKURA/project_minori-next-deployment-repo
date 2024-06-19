@@ -11,6 +11,7 @@ import searchMaterial from '@/src/api/material/searchMaterial';
 import useDebounce from '@/src/hooks/useDebounce';
 import {Material} from '@/src/interfaces/navbar';
 import icons from '@/public/svgs/navbar';
+import test from '@/public/images/navbar';
 
 const MaterialContainer = () => {
   const [materials, setMaterials] = useState<Material[]>([]);
@@ -31,20 +32,30 @@ const MaterialContainer = () => {
     }
   }, [debounceVal]);
 
+  useEffect(() => {
+    setMaterials([]);
+    setBoardPage(1);
+    onLoadMore();
+  }, [param.cId]);
+
   const onLoadMore = () => {
     setHasMore(false);
-    getMaterial(parseInt(param.cId), boardPage, 8).then(res => {
-      if (res.length === 0) {
-        setHasMore(false);
-      } else {
-        setMaterials(prevMaterials => [
-          ...(prevMaterials ? prevMaterials : []),
-          ...res,
-        ]);
-        setBoardPage(prevBoardPage => prevBoardPage + 1);
-        setHasMore(true);
-      }
-    });
+    getMaterial(parseInt(param.cId), boardPage, 8)
+      .then(res => {
+        if (res.length === 0) {
+          setHasMore(false);
+        } else {
+          setMaterials(prevMaterials => [
+            ...(prevMaterials ? prevMaterials : []),
+            ...res,
+          ]);
+          setBoardPage(prevBoardPage => prevBoardPage + 1);
+          setHasMore(true);
+        }
+      })
+      .catch(() => {
+        console.log('클래스에 접속된 상태가 아닙니다');
+      });
   };
 
   const handleInputText = (e: ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +69,16 @@ const MaterialContainer = () => {
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="relative h-full flex flex-col">
+      <div className="absolute top-[20%] m-auto">
+        <Image
+          src={test.school}
+          width={250}
+          height={250}
+          alt="logo"
+          className="opacity-5"
+        />
+      </div>
       {param.cId && (
         <>
           <div className="w-full flex-1 h-[calc(100%-82px)]">
@@ -108,7 +128,7 @@ const MaterialContainer = () => {
           </div>
           <div className="flex-none h-8"></div>
           {/* Exit */}
-          <div className="flex-none h-[50px] ">
+          <div className="flex-none h-[50px] bg-gray-50 z-10">
             <div className="flex pt-[10px]">
               <Image
                 src={icons.door}
