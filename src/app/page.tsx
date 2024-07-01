@@ -37,10 +37,10 @@ const Page = () => {
     <main className="flex h-screen justify-center items-center">
       <div className="text-center">
         <div className="text-5xl font-semibold text-center">
-          미노리에서, <br /> <p className="mt-4">학습을 더욱 즐겁고 편리하게</p>
+          ミノリで, <br /> <p className="mt-4">学習をより楽しく、より便利に</p>
         </div>
         <div className="m-4 font-semibold text-gray-500">
-          학습의 편의성을 향상시키고 즐겁게 학습하는 경험을 만끽해 보세요!
+          学習の利便性を向上させ、楽しい学習体験を満喫してください！
         </div>
         <div>
           <Image
@@ -55,7 +55,7 @@ const Page = () => {
           onClick={openModal}
           className="bg-indigo-600 text-white py-2 px-7 rounded-3xl"
         >
-          시작하기
+          ログインする
         </button>
         {isOpen && <Login />}
       </div>

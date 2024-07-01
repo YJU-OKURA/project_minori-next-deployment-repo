@@ -130,7 +130,7 @@ const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
                   className="absolute top-0 left-[-30px] z-20"
                 ></Image>
               ) : null}
-              <div className="text-lg font-medium p-1">질문</div>
+              <div className="text-lg font-medium p-1">質問</div>
               <div className="border-2 p-5 rounded-lg leading-8">
                 {quiz.content.question}
               </div>
@@ -231,13 +231,13 @@ const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
                   {isSubmit ? (
                     <div className="h-[250px] bg-gray-100 w-full p-5 border-2 rounded-lg leading-8 drop-shadow-md overflow-scroll">
                       <div className="font-semibold">
-                        정답:{' '}
+                        正解:{' '}
                         <span className="text-red-500 ">
                           {quiz.content.commentary.correctAnswer}
                         </span>
                       </div>
                       <div className="font-semibold pt-2">
-                        해설:{' '}
+                        解説:{' '}
                         <span className="font-medium">
                           {quiz.content.commentary.content}
                         </span>
@@ -253,7 +253,7 @@ const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
           <SwiperSlide style={{width: 'auto'}}>
             <div className="flex w-[750px] h-[800px] m-auto py-3 justify-center items-center">
               <div className="w-[600px] h-[200px] bg-gray-200 rounded-lg p-3 flex">
-                <div className="font-bold h-[176px] mr-1">교수님의 말 : </div>
+                <div className="font-bold h-[176px] mr-1">教授の言葉 : </div>
                 <div className="grow">{feedback}</div>
               </div>
             </div>
@@ -266,7 +266,7 @@ const QuizSet = ({cId, mId}: {cId: number; mId: number}) => {
             className="px-2 py-2 bg-blue-400 text-white rounded-lg"
             onClick={handleSubmitAnswer}
           >
-            제출하기
+            提出する
           </button>
         </div>
       )}

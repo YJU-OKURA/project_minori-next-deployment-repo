@@ -63,23 +63,23 @@ const MaterialForm = ({setIsOpen, editData, cId}: FormProps) => {
           <div className="w-full h-full flex box-border">
             <div className="flex flex-col space-y-4 h-full w-full">
               <div>
-                <div className="text-3xl font-bold">프롬프트 생성</div>
+                <div className="text-3xl font-bold">プロンプト生成</div>
                 <div className="text-gray-500 py-1">
-                  원하는 파일을 추가해주세요.
+                  ご希望のファイルを追加してください。
                 </div>
               </div>
               <div className="py-1">
-                <div className="pb-2 font-semibold">프롬프트명</div>
+                <div className="pb-2 font-semibold">プロンプト名</div>
                 <input
                   type="text"
                   className="w-full border-2 p-2 rounded"
-                  placeholder="프롬프트 명을 입력해주세요"
+                  placeholder="プロンプト名を入力してください"
                   value={materialName}
                   onChange={handleEnterName}
                 />
               </div>
               <div className="flex flex-col h-2/3">
-                <div className="pb-2 font-semibold">파일 추가</div>
+                <div className="pb-2 font-semibold">ファイルの追加</div>
                 <div
                   className="w-full h-[230px] flex items-center justify-center bg-gray-50 text-center p-8 border-dashed border-2 border-gray-300"
                   onClick={() => {
@@ -96,9 +96,11 @@ const MaterialForm = ({setIsOpen, editData, cId}: FormProps) => {
                         className="m-auto "
                       />
                     </div>
-                    <div className="font-medium">PDF 파일을 추가해주세요</div>
+                    <div className="font-medium">
+                      PDFファイルを追加してください
+                    </div>
                     <div className="text-xs text-gray-400">
-                      지원하는 파일 형식: PDF
+                      対応ファイル形式: PDF
                     </div>
                     <input
                       type="file"
@@ -114,21 +116,21 @@ const MaterialForm = ({setIsOpen, editData, cId}: FormProps) => {
                   className="bg-gray-100 py-2 px-4  rounded"
                   onClick={() => setIsOpen(false)}
                 >
-                  {'< '}뒤로가기
+                  {'< '}戻る
                 </button>
                 {editData ? (
                   <button
                     className="bg-indigo-600 text-white py-2 px-3 rounded"
                     onClick={handleClickEdit}
                   >
-                    자료 수정
+                    資料修正
                   </button>
                 ) : (
                   <button
                     className="bg-indigo-600 text-white py-2 px-3 rounded"
                     onClick={handleClickButton}
                   >
-                    자료 생성
+                    資料作成
                   </button>
                 )}
               </div>

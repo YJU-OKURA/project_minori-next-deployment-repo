@@ -95,7 +95,7 @@ const QuizReport = ({cId, mId}: {cId: number; mId: number}) => {
         >
           <div className="w-[200px] h-[200px] bg-white rounded-full flex justify-center items-center">
             <span className="w-[15px] h-[15px] bg-green-400 rounded-full mr-1"></span>
-            응시현황
+            受験状況
           </div>
         </div>
       </div>

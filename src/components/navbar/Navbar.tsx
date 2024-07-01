@@ -7,8 +7,8 @@ import '@/src/styles/variable.css';
 
 const Navbar = () => {
   const pages = [
-    {name: '클래스', icon: icons.group, url: '/classes'},
-    {name: '내정보', icon: icons.myPage, url: '/info'},
+    {name: 'クラス', icon: icons.group, url: '/classes'},
+    {name: 'マイページ', icon: icons.myPage, url: '/info'},
     // {name: '문제은행', icon: icons.bank, url: '/bank'},
     /* Billing Page - 保留 */
   ];
@@ -23,12 +23,12 @@ const Navbar = () => {
         {/* Pages */}
         <div className="w-full py-4">
           <div>
-            <p className="text-zinc-400 mb-4">페이지</p>
+            <p className="text-zinc-400 mb-4">ページ</p>
             <ul className="w-full">
               {pages.map((page, index) => {
                 return (
                   <li className="w-full mb-2 py-1" key={index}>
-                    <Link href={page.url} className="flex">
+                    <Link href={page.url} className="flex items-center">
                       <Image
                         src={page.icon}
                         alt="icon"

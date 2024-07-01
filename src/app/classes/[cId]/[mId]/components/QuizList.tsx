@@ -98,7 +98,7 @@ const QuizList = (props: {cId: number; mId: number; mName: string}) => {
             height={25}
             alt="icon"
           />
-          <span>퀴즈 목록</span>
+          <span>クイズリスト</span>
         </div>
         {isSubmit ? null : (
           <div className="w-6 h-6 flex justify-center items-center bg-blue-500 text-white text-xl font-medium rounded-lg ml-4">
@@ -118,7 +118,7 @@ const QuizList = (props: {cId: number; mId: number; mName: string}) => {
       </div>
       <div className={isShow ? '' : 'hidden'}>
         <div className="flex items-center pl-[25px] py-2 ">
-          <span className="pr-2 font-semibold">마감 기한 :</span>
+          <span className="pr-2 font-semibold">締め切り :</span>
           {isSubmit ? (
             <div className="text-red-500 font-semibold">
               {moment(deadLine).format('YYYY-MM-DD / HH:mm')}
@@ -133,7 +133,7 @@ const QuizList = (props: {cId: number; mId: number; mName: string}) => {
               >
                 {deadLine
                   ? moment(deadLine).format('YYYY-MM-DD / HH:mm')
-                  : '마감기한을 설정해주세요'}
+                  : '期限を設定してください'}
               </button>
               {isOpen ? (
                 <CalendarModal
@@ -194,10 +194,10 @@ const QuizList = (props: {cId: number; mId: number; mName: string}) => {
                         )
                       )}
                       <div className="font-semibold pt-2">
-                        정답: {quiz.content.commentary.correctAnswer}
+                        正解: {quiz.content.commentary.correctAnswer}
                       </div>
                       <p>
-                        <span className="font-semibold">해설: </span>
+                        <span className="font-semibold">解説: </span>
                         {quiz.content.commentary.content}
                       </p>
                     </div>
@@ -213,14 +213,14 @@ const QuizList = (props: {cId: number; mId: number; mName: string}) => {
               className="py-2 px-4 bg-red-500 text-white rounded-3xl"
               onClick={handleDeleteSet}
             >
-              퀴즈 삭제
+              クイズの削除
             </button>
           ) : (
             <button
               className="py-2 px-4 bg-blue-500 text-white rounded-3xl"
               onClick={handleSubmitQuiz}
             >
-              퀴즈 출제
+              クイズ出題
             </button>
           )}
         </div>
@@ -238,7 +238,7 @@ const QuizList = (props: {cId: number; mId: number; mName: string}) => {
               height={25}
               alt="icon"
             />
-            <span>퀴즈 통계</span>
+            <span>クイズ統計</span>
           </div>
         </div>
       </div>
@@ -250,7 +250,7 @@ const QuizList = (props: {cId: number; mId: number; mName: string}) => {
           </div>
         ) : (
           <div className="h-[100px] flex justify-center items-center text-2xl text-gray-300 font-normal">
-            아직 퀴즈가 출제되지 않았습니다.
+            まだクイズは出題されていません。
           </div>
         )}
       </div>

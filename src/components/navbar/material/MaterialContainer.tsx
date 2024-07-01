@@ -83,13 +83,13 @@ const MaterialContainer = () => {
         <>
           <div className="w-full flex-1 h-[calc(100%-82px)]">
             <div className="w-full flex justify-between items-center mb-[8px]">
-              <p className="text-zinc-400">자료</p>
-              <div
+              <p className="text-zinc-400">資料</p>
+              {/* <div
                 className="text-end bg-blue-500 w-6 h-6 flex justify-center items-center rounded-lg"
                 onClick={() => setIsOpen(true)}
               >
                 <Image src={icons.plus} width={30} height={30} alt="plus" />
-              </div>
+              </div> */}
             </div>
             {isOpen && <MaterialForm setIsOpen={setIsOpen} cId={param.cId} />}
             {/* prompt - search */}
@@ -104,7 +104,7 @@ const MaterialContainer = () => {
               <input
                 type="text"
                 className="w-full p-1 border-0 outline-none"
-                placeholder="Search"
+                placeholder="検索"
                 onChange={handleInputText}
               />
             </div>
@@ -138,9 +138,9 @@ const MaterialContainer = () => {
                 className="w-6 h-6 mr-2"
               ></Image>
               {param.mId ? (
-                <Link href={`/classes/${param.cId}`}>프롬프트 떠나기</Link>
+                <Link href={`/classes/${param.cId}`}>フロンプトを出る</Link>
               ) : (
-                <Link href="/classes">클래스 떠나기</Link>
+                <Link href="/classes">クラスを出る</Link>
               )}
             </div>
           </div>

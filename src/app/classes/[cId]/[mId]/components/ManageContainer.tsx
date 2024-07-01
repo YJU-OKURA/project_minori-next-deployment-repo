@@ -8,13 +8,13 @@ import AttendanceContainer from './AttendanceContainer';
 import '@/src/styles/variable.css';
 
 const ManageContainer = (props: {cId: string}) => {
-  const tabs = ['자료', '퀴즈', '피드백', '출석'];
+  const tabs = ['資料', 'クイズ', 'フィードバック', '出席'];
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const tabMapping = {
-    자료: <ManageMaterialContainer />,
-    퀴즈: <QuizContainer cId={parseInt(props.cId)} />,
-    피드백: <FeedbackContainer cId={parseInt(props.cId)} />,
-    출석: <AttendanceContainer />,
+    資料: <ManageMaterialContainer />,
+    クイズ: <QuizContainer cId={parseInt(props.cId)} />,
+    フィードバック: <FeedbackContainer cId={parseInt(props.cId)} />,
+    出席: <AttendanceContainer />,
   };
   return (
     // 퀴즈
