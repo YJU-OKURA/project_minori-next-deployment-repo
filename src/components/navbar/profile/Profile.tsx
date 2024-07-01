@@ -98,7 +98,7 @@ const Profile = () => {
                     setDropdownOpen(false);
                   }}
                 >
-                  이름 변경
+                  名前変更
                 </li>,
                 user.role_id === 'ADMIN' ? (
                   <li
@@ -109,7 +109,7 @@ const Profile = () => {
                       setDropdownOpen(false);
                     }}
                   >
-                    클래스 수정
+                    クラス修正
                   </li>
                 ) : null,
                 <li
@@ -120,12 +120,12 @@ const Profile = () => {
                     setDropdownOpen(false);
                   }}
                 >
-                  {user.role_id === 'ADMIN' ? '클래스 삭제' : '클래스 탈퇴'}
+                  {user.role_id === 'ADMIN' ? 'クラス削除' : 'クラス退会'}
                 </li>,
               ]
             : null}
           <li className="p-2 hover:bg-gray-200">
-            <Link href="/">로그아웃</Link>
+            <Link href="/">ログアウト</Link>
           </li>
         </ul>
       )}

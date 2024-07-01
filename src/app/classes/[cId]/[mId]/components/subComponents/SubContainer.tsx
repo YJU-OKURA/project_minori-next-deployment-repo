@@ -10,20 +10,20 @@ import '@/src/styles/variable.css';
 import ShowMain from '../chatComponents/page';
 
 const SubContainer: React.FC = () => {
-  const TABS = ['프롬프트창', '저장목록'];
+  const TABS = ['プロンプト', 'セーブリスト'];
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const [showMain, setShowMain] = useState(false);
   const params = useParams<{cId: string}>();
   const material = useRecoilValue(materialState);
 
   const tabMapping = {
-    프롬프트창: (
+    プロンプト: (
       <PromptChat
         pId={material ? material.prompts[0]?.id : 0}
         cId={parseInt(params.cId)}
       />
     ),
-    저장목록: (
+    セーブリスト: (
       <Storage
         pId={material ? material.prompts[0]?.id : 0}
         cId={parseInt(params.cId)}

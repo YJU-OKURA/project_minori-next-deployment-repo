@@ -88,9 +88,7 @@ const FeedbackKeywordList = ({cId, mId}: {cId: number; mId: number}) => {
           ))
         )
       ) : (
-        <div className="text-blue-400">
-          현재 질문 데이터가 존재하지 않습니다.
-        </div>
+        <div className="text-blue-400">現在、質問データが存在しません。</div>
       )}
     </div>
   );

@@ -11,12 +11,14 @@ import LiveClassViewer from './subComponents/LiveClassViewer';
 const UserContainer = ({cId}: {cId: string}) => {
   const material = useRecoilValue(materialState);
   const user = useRecoilValue(userState);
-  const TABS = ['학습자료', '퀴즈', '온라인수업'];
+  const TABS = ['学習資料', 'クイズ', 'オンライン授業'];
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const tabMapping = {
-    학습자료: <Material />,
-    퀴즈: <QuizSet cId={parseInt(cId)} mId={parseInt(material?.id || '0')} />,
-    온라인수업: <LiveClassViewer classId={parseInt(cId)} userId={user?.id} />,
+    学習資料: <Material />,
+    クイズ: <QuizSet cId={parseInt(cId)} mId={parseInt(material?.id || '0')} />,
+    オンライン授業: (
+      <LiveClassViewer classId={parseInt(cId)} userId={user?.id} />
+    ),
   };
 
   return (

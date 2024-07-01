@@ -62,7 +62,7 @@ const Attendance = () => {
         <div className="w-full h-[500px]">
           <div className="text-xl font-semibold text-center">Attendance</div>
           <div className="text-lg font-semibold text-green-400 text-center">
-            출석률 : 100%
+            出席率 : 100%
           </div>
           <div className="p-5 overflow-scroll">
             {AttendanceUsers.map((user, index) => (
@@ -92,9 +92,9 @@ const Attendance = () => {
                           onChange={handleSelectChange}
                           value={user.IsAttendance}
                         >
-                          <option value="ATTENDANCE">출석</option>
-                          <option value="TARDY">지각</option>
-                          <option value="ABSENCE">결석</option>
+                          <option value="ATTENDANCE">出席</option>
+                          <option value="TARDY">遅刻</option>
+                          <option value="ABSENCE">欠席</option>
                         </select>
                         <div>
                           <button
@@ -108,7 +108,7 @@ const Attendance = () => {
                               )
                             }
                           >
-                            수정
+                            修正
                           </button>
                         </div>
                       </div>
@@ -116,10 +116,10 @@ const Attendance = () => {
                       <div className="flex items-center">
                         <div>
                           {user.IsAttendance === 'ATTENDANCE'
-                            ? '출석'
+                            ? '出席'
                             : user.IsAttendance === 'TARDY'
-                            ? '지각'
-                            : '결석'}
+                            ? '遅刻'
+                            : '欠席'}
                         </div>
                         <span
                           className="px-2"

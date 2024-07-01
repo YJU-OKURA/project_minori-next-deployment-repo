@@ -195,7 +195,7 @@ const QuizForm = (props: {
           <div className="w-full h-full px-4 pt-4">
             <div className="relative w-full h-full bg-gray-100">
               <div className="p-2 text-lg font-semibold">
-                이런 퀴즈는 어떠신가요?
+                こんなクイズはいかがですか？
               </div>
               {!loading && recommendQuiz ? (
                 <QuizPrompt props={recommendQuiz} />
@@ -207,13 +207,13 @@ const QuizForm = (props: {
                   className="p-2 bg-blue-400 text-white rounded-lg"
                   onClick={handleAcceptQuiz}
                 >
-                  적용하기
+                  適用する
                 </button>
                 <button
                   className="p-2 bg-red-400 text-white rounded-lg ml-3"
                   onClick={handleImportQuiz}
                 >
-                  새로고침
+                  再取得
                 </button>
               </div>
             </div>
@@ -225,13 +225,13 @@ const QuizForm = (props: {
           href={`/classes/${params.cId}/${params.mId}`}
           className="py-2 px-4 border border-black rounded-3xl"
         >
-          {'< '}뒤로가기
+          {'< '}戻る
         </Link>
         <button
           className="py-2 px-4 ml-4 bg-blue-500 text-white rounded-3xl"
           onClick={handleClickSubmit}
         >
-          저장
+          セーブ
         </button>
       </div>
     </div>

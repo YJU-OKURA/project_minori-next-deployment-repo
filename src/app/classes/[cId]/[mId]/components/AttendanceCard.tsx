@@ -49,7 +49,7 @@ const AttendanceCard = ({cid}: {cid: number; uid: number}) => {
             setIsOpen(true);
           }}
         >
-          출석부
+          出席簿
         </button>
       </div>
       {isOpen ? (
@@ -58,7 +58,7 @@ const AttendanceCard = ({cid}: {cid: number; uid: number}) => {
             className=" bg-white rounded-lg w-[500px] h-[630px] px-4 py-10 box-border"
             id="modal-container"
           >
-            <div className="text-center text-lg text-gray-500">출석부</div>
+            <div className="text-center text-lg text-gray-500">出席簿</div>
             <div className="relative h-[calc(100%-28px)]">
               {users.map((user, index) => (
                 <div
@@ -74,19 +74,19 @@ const AttendanceCard = ({cid}: {cid: number; uid: number}) => {
                       className="px-3 hover:bg-gray-200 border-s-2"
                       onClick={() => handleClickStatus(user.uid, 'ATTENDANCE')}
                     >
-                      출석
+                      出席
                     </button>
                     <button
                       className="px-2 hover:bg-gray-200 border-s-2"
                       onClick={() => handleClickStatus(user.uid, 'TARDY')}
                     >
-                      지각
+                      遅刻
                     </button>
                     <button
                       className="px-2 hover:bg-gray-200 border-s-2"
                       onClick={() => handleClickStatus(user.uid, 'ABSENCE')}
                     >
-                      결석
+                      欠席
                     </button>
                   </div>
                 </div>
@@ -98,13 +98,13 @@ const AttendanceCard = ({cid}: {cid: number; uid: number}) => {
                     setIsOpen(false);
                   }}
                 >
-                  닫기
+                  閉じる
                 </button>
                 <button
                   className="px-3 py-1 bg-blue-400 text-white rounded-lg"
                   onClick={handleClickSave}
                 >
-                  저장
+                  セーブ
                 </button>
               </div>
             </div>
