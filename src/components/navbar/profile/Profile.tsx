@@ -120,7 +120,7 @@ const Profile = () => {
                     setDropdownOpen(false);
                   }}
                 >
-                  {user.role_id === 'ADMIN' ? '클래스 삭제' : '클래스 탈퇴'}
+                  {user.role_id === 'ADMIN' ? 'クラス削除' : 'クラス退会'}
                 </li>,
               ]
             : null}

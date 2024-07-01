@@ -1,11 +1,11 @@
 import type {Metadata} from 'next';
-import {Inter} from 'next/font/google';
+// import {Inter} from 'next/font/google';
 // import {Footer} from '../components/footer';
 import RecoilRootContainer from '../components/RecoilRootContainer';
 import './globals.css';
 import '@/src/styles/variable.css';
 
-const inter = Inter({subsets: ['latin']});
+// const inter = Inter({subsets: ['latin']});
 
 export const metadata: Metadata = {
   title: 'Minori',
@@ -15,7 +15,8 @@ export const metadata: Metadata = {
 const RootLayout = ({children}: {children: React.ReactNode}) => {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      {/* <body className={inter.className}> */}
+      <body>
         <RecoilRootContainer>
           <div className="flex h-full relative">
             {/* <Navbar /> */}
