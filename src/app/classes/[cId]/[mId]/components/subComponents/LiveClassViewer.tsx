@@ -205,7 +205,7 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
             onClick={handleJoinClass}
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md"
           >
-            수업 입장
+            授業参加
           </button>
         ) : (
           <>
@@ -213,7 +213,7 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
               onClick={handleLeaveClass}
               className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md"
             >
-              수업 퇴장
+              授業退場
             </button>
             <div className="flex space-x-4 mt-4">
               <button
@@ -222,7 +222,7 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
                   isMicMuted ? 'bg-gray-500' : 'bg-blue-500'
                 } hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md`}
               >
-                {isMicMuted ? '마이크 켜기' : '마이크 끄기'}
+                {isMicMuted ? 'マイクオン' : 'マイクオフ'}
               </button>
               <button
                 onClick={toggleCamera}
@@ -230,7 +230,7 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
                   isCameraOn ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-500'
                 } text-white font-bold py-2 px-4 rounded-md`}
               >
-                {isCameraOn ? '카메라 끄기' : '카메라 켜기'}
+                {isCameraOn ? 'カメラオン' : 'カメラオフ'}
               </button>
             </div>
           </>

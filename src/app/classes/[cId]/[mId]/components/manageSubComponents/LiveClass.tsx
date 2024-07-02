@@ -272,7 +272,7 @@ const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
             onClick={handleStartClass}
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md"
           >
-            수업 시작
+            授業開始
           </button>
         ) : (
           <>
@@ -280,21 +280,21 @@ const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
               onClick={handleEndClass}
               className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md"
             >
-              수업 종료
+              授業終了
             </button>
             {isSharingScreen ? (
               <button
                 onClick={stopScreenShare}
                 className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-md mt-4"
               >
-                화면 공유 종료
+                画面共有停止
               </button>
             ) : (
               <button
                 onClick={startScreenShare}
                 className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md mt-4"
               >
-                화면 공유 시작
+                画面共有開始
               </button>
             )}
             <div className="flex justify-center space-x-4 mt-4">
@@ -304,7 +304,7 @@ const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
                   isMicOn ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-500'
                 } hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md`}
               >
-                {isMicOn ? '마이크 끄기' : '마이크 켜기'}
+                {isMicOn ? 'マイクオン' : 'マイクオフ'}
               </button>
               <button
                 onClick={toggleCamera}
@@ -312,7 +312,7 @@ const LiveClass: React.FC<LiveClassProps> = ({classId, userId}) => {
                   isCameraOn ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-500'
                 } text-white font-bold py-2 px-4 rounded-md`}
               >
-                {isCameraOn ? '카메라 끄기' : '카메라 켜기'}
+                {isCameraOn ? 'カメラオン' : 'カメラオフ'}
               </button>
             </div>
           </>
