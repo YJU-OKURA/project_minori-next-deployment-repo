@@ -18,13 +18,13 @@ const Schedule = ({
   const deleteSchedule = async (scheduleId: number) => {
     if (classId !== undefined) {
       try {
-        if (confirm('정말로 일정을 삭제하시겠습니까?')) {
+        if (confirm('本当にスケジュールを削除しますか？')) {
           await classScheduleAPI.deleteClassSchedule(
             scheduleId,
             classId,
             user.id
           );
-          alert('Schedule deleted successfully!');
+          alert('スケジュールは正常に削除されました！');
           const schedules =
             await classScheduleAPI.getClassScheduleList(classId);
           if (Array.isArray(schedules.data)) {
@@ -35,10 +35,10 @@ const Schedule = ({
         }
       } catch (error) {
         console.error(error);
-        alert('Failed to delete schedule');
+        alert('スケジュールの削除に失敗しました');
       }
     } else {
-      alert('Failed to delete schedule');
+      alert('スケジュールの削除に失敗しました');
     }
   };
   const toKST = (date: string) => {
@@ -89,7 +89,7 @@ const Schedule = ({
         <div className="flex justify-center mt-2 w-full">
           <div className="flex w-1/2 border-4 justify-center items-center h-20">
             <h1 className="text-3xl font-semibold">
-              현재 일정이 존재하지 않습니다...
+              現在スケジュールが存在しません...
             </h1>
           </div>
         </div>

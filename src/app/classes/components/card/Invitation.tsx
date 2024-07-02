@@ -31,7 +31,7 @@ const Invitation = ({
         </h3>
       </div>
       <p className="text-base ms-4 me-2 overflow-hidden overflow-ellipsis whitespace-nowrap text-base text-gray-700">
-        Invited by{' '}
+        招待者
         <span className="font-semibold text-rose-500">{ManagerName}</span>
       </p>
     </div>

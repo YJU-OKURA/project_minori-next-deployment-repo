@@ -53,15 +53,14 @@ const Member = ({classId}: RoleProps) => {
     <>
       <div className="w-11/12">
         <div className="ps-1">
-          <p className="text-2xl my-2 font-bold">가입된 맴버 리스트</p>
+          <p className="text-2xl my-2 font-bold">登録済みメンバーリスト</p>
           <p className="text-4xl my-1 font-semibold">
             {memberCount} / {classInfo?.Limitation}
           </p>
           <p className="text-xl text-emerald-500">
-            {' '}
             {classInfo?.Limitation
-              ? `정원율 ${(memberCount / classInfo.Limitation) * 100}%`
-              : '정원 정보 없음'}
+              ? `定員率 ${(memberCount / classInfo.Limitation) * 100}%`
+              : '定員情報なし'}
           </p>
         </div>
         <div className="w-full">
@@ -72,11 +71,11 @@ const Member = ({classId}: RoleProps) => {
           />
         </div>
         <div className="ps-1 mt-10">
-          <p className="text-2xl my-2 font-bold">가입 신청자</p>
+          <p className="text-2xl my-2 font-bold">加入申請者</p>
           <p className="text-4xl my-4 font-semibold">
             {applicantInfo.length === 0
-              ? '신청한 유저가 없습니다'
-              : applicantInfo.length + '명'}
+              ? '申請したユーザーがいません'
+              : applicantInfo.length + '名'}
           </p>
         </div>
         <div className="w-full">

@@ -18,7 +18,7 @@ const Invite = ({onInvitationClick, classes = []}: InviteProps) => {
       ) : (
         <div>
           <p className="text-center text-2xl font-bold text-gray-900">
-            현재 초대 받은 클래스가 존재하지 않습니다
+            現在、加入したクラスは存在しません
           </p>
         </div>
       )}

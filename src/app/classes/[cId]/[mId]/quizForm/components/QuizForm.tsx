@@ -101,7 +101,7 @@ const QuizForm = (props: {
             <div className="text-lg font-medium p-1">Question</div>
             <input
               className="w-full border-2 p-3 rounded-lg leading-8"
-              placeholder="문제를 입력해주세요"
+              placeholder="問題を入力してください"
               onChange={handleInputQuestion}
               value={question}
             />
@@ -117,7 +117,7 @@ const QuizForm = (props: {
                   <input
                     name="a"
                     className="w-[calc(100%-25px)] outline-none"
-                    placeholder="답변을 입력해주세요"
+                    placeholder="回答を入力してください"
                     onChange={handleInputAnswer}
                     value={answer?.a}
                   />
@@ -129,7 +129,7 @@ const QuizForm = (props: {
                   <input
                     name="b"
                     className="w-[calc(100%-25px)] outline-none"
-                    placeholder="답변을 입력해주세요"
+                    placeholder="回答を入力してください"
                     onChange={handleInputAnswer}
                     value={answer?.b}
                   />
@@ -141,7 +141,7 @@ const QuizForm = (props: {
                   <input
                     name="c"
                     className="w-[calc(100%-25px)] outline-none"
-                    placeholder="답변을 입력해주세요"
+                    placeholder="回答を入力してください"
                     onChange={handleInputAnswer}
                     value={answer?.c}
                   />
@@ -153,7 +153,7 @@ const QuizForm = (props: {
                   <input
                     name="d"
                     className="w-[calc(100%-25px)] outline-none"
-                    placeholder="답변을 입력해주세요"
+                    placeholder="回答を入力してください"
                     onChange={handleInputAnswer}
                     value={answer?.d}
                   />
@@ -183,7 +183,7 @@ const QuizForm = (props: {
               </div>
               <textarea
                 className="font-medium bg-gray-100 pt-1 w-full outline-none resize-none"
-                placeholder="해설을 입력해주세요"
+                placeholder="解説を入力してください"
                 rows={5}
                 onChange={handleInputCommentary}
                 value={commentary?.content}

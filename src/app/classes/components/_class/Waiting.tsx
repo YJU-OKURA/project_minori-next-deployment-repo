@@ -13,7 +13,7 @@ const Waiting = ({classes}: ClassProps) => {
       ) : (
         <div>
           <p className="text-center text-2xl font-bold text-gray-900">
-            현재 신청 중인 클래스가 존재하지 않습니다
+            現在申請中のクラスが存在しません
           </p>
         </div>
       )}
