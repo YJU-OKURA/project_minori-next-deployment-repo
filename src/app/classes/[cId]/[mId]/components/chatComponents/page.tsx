@@ -106,7 +106,7 @@ const ShowMain = () => {
         <div className="w-full h-full mt-2">
           <div className="border-4 rounded-lg border-gray-500 p-2 h-full overflow-auto">
             <p className="text-center inline-block px-4 py-2 text-sm text-white bg-violet-300 rounded-lg w-full">
-              최상단 채팅 내용입니다
+              一番上のチャット内容です
             </p>
             {messages.map((msg, index) => {
               const [id, message] = msg.split(': ');

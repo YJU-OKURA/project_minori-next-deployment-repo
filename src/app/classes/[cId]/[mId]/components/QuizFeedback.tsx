@@ -54,9 +54,9 @@ const QuizFeedback = ({
         id="modal-container"
       >
         <div>
-          <div className="text-xl font-semibold">ㅇㅇ님이 제출한 퀴즈</div>
+          <div className="text-xl font-semibold">OOさんが投稿したクイズ</div>
           <div className="py-3">
-            <p className="pb-2">ㅇㅇ님에 대한 피드백</p>
+            <p className="pb-2">OOさんへのフィードバック</p>
             {isWrite ? (
               <div>{feedback}</div>
             ) : (
@@ -71,14 +71,14 @@ const QuizFeedback = ({
                   className="bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold"
                   onClick={handleCreateFeedback}
                 >
-                  작성
+                  作成
                 </button>
               </div>
             )}
           </div>
           <div className="h-[280px] overflow-scroll">
             <div className="font-bold py-2">
-              정답률 :{' '}
+              正解率 :{' '}
               <span
                 className={
                   collectRate >= 50 ? 'text-green-500' : 'text-red-500'
@@ -110,7 +110,7 @@ const QuizFeedback = ({
             className="p-2 border border-gray-500 rounded-lg"
             onClick={() => setIsOpen(false)}
           >
-            닫기
+            閉じる
           </button>
         </div>
       </div>

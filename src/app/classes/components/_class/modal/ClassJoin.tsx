@@ -23,17 +23,17 @@ const ClassJoin = ({setActiveModalId, uid, name}: ModalProps) => {
   ) => {
     event.preventDefault();
     if (!inputValue) {
-      alert('클래스 코드를 입력해주세요');
+      alert('クラスコードを入力してください');
       return;
     }
     if (uid && name) {
       try {
         const res = await getVerifySecret(inputValue, password, uid);
         await putUserName(uid, res.cid, name);
-        alert('신청 완료되었습니다.');
+        alert('申請完了しました');
         setActiveModalId('');
       } catch (error: unknown) {
-        alert('잘못된 요청입니다.');
+        alert('間違ったリクエストです');
       }
     }
   };
@@ -59,10 +59,10 @@ const ClassJoin = ({setActiveModalId, uid, name}: ModalProps) => {
             <div className="items-center">
               <div className="mt-3">
                 <h3 className="text-3xl leading-6 font-bold text-gray-900">
-                  클래스 가입하기
+                  クラスに参加する
                 </h3>
                 <p className="mt-4 text-sm text-gray-500">
-                  클래스 코드를 입력하여 가입하세요.
+                  クラスコードを入力して登録してください
                 </p>
                 <div className="mt-4 flex justify-center">
                   <Image
@@ -78,7 +78,7 @@ const ClassJoin = ({setActiveModalId, uid, name}: ModalProps) => {
                 <input
                   className="mt-3 w-full inline-flex justify-center rounded-md border ring-gray-100 shadow-sm px-4 py-2 bg-white-50 text-base font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:bg-gray-50 focus:ring-gray-100"
                   type="text"
-                  placeholder="클래스 코드를 입력해주세요"
+                  placeholder="クラスコードを入力してください"
                   value={inputValue}
                   onChange={handleInputChange}
                   required
@@ -86,7 +86,7 @@ const ClassJoin = ({setActiveModalId, uid, name}: ModalProps) => {
                 <input
                   type="password"
                   className="mt-3 w-full inline-flex justify-center rounded-md border ring-gray-100 shadow-sm px-4 py-2 bg-white-50 text-base font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:bg-gray-50 focus:ring-gray-100"
-                  placeholder="비밀번호를 입력해주세요"
+                  placeholder="パスワードを入力してください"
                   value={password}
                   onChange={handlePasswordChange}
                 />
@@ -99,14 +99,14 @@ const ClassJoin = ({setActiveModalId, uid, name}: ModalProps) => {
               onClick={handleClose}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              닫기
+              閉じる
             </button>
             <button
               type="submit"
               onClick={handleSubmit}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              제출
+              提出
             </button>
           </div>
         </div>

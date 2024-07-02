@@ -21,10 +21,10 @@ const ClassPassword = ({onClose}: ClassPasswordProps) => {
             <div className="items-center">
               <div className="mt-3">
                 <h3 className="text-3xl leading-6 font-bold text-gray-900">
-                  Welcome! {User.name}
+                  ようこそ！ {User.name}
                 </h3>
                 <p className="mt-4 text-sm text-gray-500">
-                  Please input the class password.
+                  クラスのパスワードを入力してください
                 </p>
                 <div className="mt-4 flex justify-center">
                   <Image
@@ -41,7 +41,7 @@ const ClassPassword = ({onClose}: ClassPasswordProps) => {
                   <input
                     className="mt-3 w-full inline-flex justify-center rounded-md border ring-gray-100 shadow-sm px-4 py-2 bg-white-50 text-base font-medium hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:bg-gray-50 focus:ring-gray-100 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                     type="text"
-                    placeholder="Input Class Password"
+                    placeholder="入力クラスのパスワード"
                     required
                   />
                 </form>
@@ -54,13 +54,13 @@ const ClassPassword = ({onClose}: ClassPasswordProps) => {
               onClick={onClose}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              Close
+              閉じる
             </button>
             <button
               type="submit"
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              Submit
+              提出
             </button>
           </div>
         </div>

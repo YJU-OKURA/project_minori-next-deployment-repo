@@ -15,7 +15,7 @@ const ClassWait = ({ImageSrc, ClassName}: ClassWaitProps) => {
     setModalOpen(true);
   };
   const withdrawConfirm = () => {
-    confirm('Are you sure you want to withdraw?');
+    confirm('本当に辞退するのか？');
   };
 
   return (
@@ -44,7 +44,7 @@ const ClassWait = ({ImageSrc, ClassName}: ClassWaitProps) => {
                       {ClassName}
                     </h3>
                     <p className="mt-4 text-sm text-gray-500">
-                      Please wait for the teacher to approve your application.
+                      教師が申請を承認するまでお待ちください
                     </p>
                     <div className="mt-4 flex justify-center">
                       <Image
@@ -57,11 +57,11 @@ const ClassWait = ({ImageSrc, ClassName}: ClassWaitProps) => {
                     </div>
                   </div>
                   <div className="mt-3">
-                    If you want to cancel, please click the{' '}
+                    キャンセルする場合は
                     <span className="inline-block h-7 w-24 border rounded-md bg-blue-600 text-white">
-                      withdraw
-                    </span>{' '}
-                    button.
+                      撤退
+                    </span>
+                    ボタンをクリックしてください
                   </div>
                 </div>
               </div>
@@ -71,14 +71,14 @@ const ClassWait = ({ImageSrc, ClassName}: ClassWaitProps) => {
                   onClick={onClose}
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                 >
-                  Close
+                  閉じる
                 </button>
                 <button
                   type="submit"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                   onClick={withdrawConfirm}
                 >
-                  withdraw
+                  撤退
                 </button>
               </div>
             </div>

@@ -85,19 +85,19 @@ const ClassCreate = ({
       };
       try {
         await postCreateClass(postData);
-        alert('Class created successfully!');
+        alert('クラスは正常に作成されました！');
         handleClose();
         getClassAfterCreate && getClassAfterCreate();
       } catch (error) {
         console.error(error);
-        alert('Failed to create class.');
+        alert('クラスの作成に失敗しました');
       }
     }
   };
 
   const passwordPlaceholder = isPasswordEnabled
-    ? '비밀번호를 입력해주세요'
-    : '비밀번호 박스를 먼저 체크해주세요!';
+    ? 'パスワードを入力してください'
+    : 'パスワードボックスにチェックを入れてください！';
 
   return (
     <div id="classCreate" className="fixed z-10 inset-0 overflow-y-auto">
@@ -114,10 +114,10 @@ const ClassCreate = ({
             <div>
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                 <h3 className="text-3xl leading-6 font-bold text-gray-900">
-                  클래스 생성하기
+                  クラスを作成する
                 </h3>
                 <div className="mt-6">
-                  <p className="text-lg font-semibold">대표 이미지</p>
+                  <p className="text-lg font-semibold">代表画像</p>
                   <div
                     onDragEnter={handleDragIn}
                     onDragLeave={handleDragOut}
@@ -147,7 +147,7 @@ const ClassCreate = ({
                           />
                         )}
                         <span className="block text-gray-400 font-normal mb-2">
-                          파일을 드래그하여 업로드
+                          ファイルをドラッグしてアップロード
                         </span>
                       </div>
                     </div>
@@ -162,7 +162,7 @@ const ClassCreate = ({
                   <div className="flex justify-between px-1">
                     <div className="items-start">
                       <p className="text-lg font-semibold">
-                        클래스 명 <span className="text-red-600">*</span>
+                        クラス名 <span className="text-red-600">*</span>
                       </p>
                       <input
                         type="text"
@@ -173,7 +173,7 @@ const ClassCreate = ({
                     </div>
                     <div className="items-start">
                       <p className="text-lg font-semibold">
-                        최대 정원수 <span className="text-red-600">*</span>
+                        最大収容人数 <span className="text-red-600">*</span>
                       </p>
                       <div className="relative inline-block text-left">
                         <select
@@ -182,7 +182,7 @@ const ClassCreate = ({
                           id="menu-button"
                           required
                         >
-                          <option value="">정원 수 선택</option>
+                          <option value="">定員数選択</option>
                           <option value="10">10</option>
                           <option value="20">20</option>
                           <option value="30">30</option>
@@ -194,7 +194,7 @@ const ClassCreate = ({
                 </div>
                 <div className="mt-6">
                   <div className="items-start">
-                    <p className="text-lg font-semibold">클래스 비밀번호</p>
+                    <p className="text-lg font-semibold">クラスパスワード</p>
                     <div className="flex justify-between items-center pe-2">
                       <input
                         type="password"
@@ -210,7 +210,7 @@ const ClassCreate = ({
                           className="me-1 size-4"
                           onChange={handleCheckboxChange}
                         />
-                        비밀번호
+                        パスワード
                       </span>
                     </div>
                   </div>
@@ -218,13 +218,13 @@ const ClassCreate = ({
                 <div className="mt-6">
                   <div className="items-start">
                     <p className="text-lg font-semibold">
-                      클래스 소개 <span className="text-red-600">*</span>
+                      クラス紹介 <span className="text-red-600">*</span>
                     </p>
                     <div className="flex justify-between items-center pe-2">
                       <textarea
                         onChange={handleContentChange}
                         className="ps-2 pt-2 border border-gray-400 rounded h-28 w-full"
-                        placeholder="클래스 소개문을 작성해주세요"
+                        placeholder="クラス紹介文を書いてください"
                         required
                       />
                     </div>
@@ -239,14 +239,14 @@ const ClassCreate = ({
               onClick={handlePostRequest}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              생성
+              生成
             </button>
             <button
               type="button"
               onClick={handleClose}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              닫기
+              閉じる
             </button>
           </div>
         </div>

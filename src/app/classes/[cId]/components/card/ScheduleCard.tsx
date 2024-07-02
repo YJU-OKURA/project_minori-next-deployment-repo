@@ -20,16 +20,16 @@ const ScheduleCard = ({
 }) => {
   const dropdownItems = [
     {
-      modalId: '일정 수정',
+      modalId: 'スケジュール修正',
       icon: icons.edit,
       alt: 'Edit Icon',
-      text: '수정',
+      text: '修正',
     },
     {
-      modalId: '일정 삭제',
+      modalId: 'スケジュール削除',
       icon: icons.delete,
       alt: 'Delete Icon',
-      text: '삭제',
+      text: '削除',
     },
   ];
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,7 +38,7 @@ const ScheduleCard = ({
   const setActiveModalId = (modalId: string) => {
     setSelectedModalId(modalId);
     setIsModalOpen(true);
-    if (modalId === '일정 삭제') {
+    if (modalId === 'スケジュール削除') {
       deleteSchedule(scheduleId);
     }
   };
@@ -70,7 +70,7 @@ const ScheduleCard = ({
           </div>
         </div>
         <div className="my-2">
-          <p className="font-bold text-lg mb-2">날짜</p>
+          <p className="font-bold text-lg mb-2">日付</p>
           <p className="ms-2 text-md mb-1">{startTime}</p>
           <p className="ms-2 text-md">{endTime}</p>
         </div>

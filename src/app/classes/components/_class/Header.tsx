@@ -5,22 +5,22 @@ import icons from '@/public/svgs/_class';
 const Header = ({setActiveModalId}: ModalProps) => {
   const dropdownItems = [
     {
-      modalId: 'classCreate',
+      modalId: 'クラス作成',
       icon: icons.create,
       alt: 'Create Icon',
-      text: '클래스 생성',
+      text: 'クラス作成',
     },
     {
-      modalId: 'classJoin',
+      modalId: 'クラス加入',
       icon: icons.join,
       alt: 'Join Icon',
-      text: '클래스 가입',
+      text: 'クラス加入',
     },
   ];
   return (
     <div className="mt-6">
       <div className="flex items-center justify-between me-10">
-        <p className="text-black text-5xl font-medium">클래스 목록</p>
+        <p className="text-black text-5xl font-medium">クラスリスト</p>
         <Dropdown
           dropdownImageSrc={icons.folder}
           items={dropdownItems}

@@ -34,10 +34,10 @@ const ClassCreatePost = ({setShowModal, classId, userInfo}: ClassShowProps) => {
         ...createData,
         is_announced: createData.isAnnounced,
       });
-      alert('Post created successfully');
+      alert('投稿の作成に成功');
       setShowModal(false);
     } catch (error) {
-      alert('Failed to create post');
+      alert('投稿の作成に失敗しました');
       console.error(error);
     }
   };
@@ -98,7 +98,7 @@ const ClassCreatePost = ({setShowModal, classId, userInfo}: ClassShowProps) => {
             <div>
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                 <h3 className="text-3xl leading-6 font-bold text-gray-900">
-                  클래스 게시글 생성
+                  クラス投稿の作成
                 </h3>
               </div>
               <div className="mt-4">
@@ -107,7 +107,7 @@ const ClassCreatePost = ({setShowModal, classId, userInfo}: ClassShowProps) => {
                     id="title"
                     type="text"
                     className="border-b border-slate-400 text-center text-3xl py-2"
-                    placeholder="게시글 제목"
+                    placeholder="投稿タイトル"
                     value={title}
                     onChange={e => setTitle(e.target.value)}
                     required
@@ -115,7 +115,7 @@ const ClassCreatePost = ({setShowModal, classId, userInfo}: ClassShowProps) => {
                 </div>
                 <div className="flex justify-center mt-6">
                   <p className="text-xl font-semibold me-2">
-                    공지사항 게시글로 전환
+                    お知らせ投稿に切り替える
                   </p>
                   <input type="checkbox" onChange={handleCheckAnnounced} />
                 </div>
@@ -149,7 +149,7 @@ const ClassCreatePost = ({setShowModal, classId, userInfo}: ClassShowProps) => {
                           />
                         )}
                         <span className="block text-gray-400 font-normal mb-2">
-                          드래그하여 이미지 업로드
+                          ドラッグして画像をアップロード
                         </span>
                       </div>
                     </div>
@@ -165,7 +165,7 @@ const ClassCreatePost = ({setShowModal, classId, userInfo}: ClassShowProps) => {
                 <textarea
                   id="content"
                   className="ps-2 pt-2 border border-gray-400 rounded h-28 w-full"
-                  placeholder="게시글 내용을 입력해주세요."
+                  placeholder="投稿内容を入力してください"
                   value={content}
                   onChange={e => setContent(e.target.value)}
                   required
@@ -179,14 +179,14 @@ const ClassCreatePost = ({setShowModal, classId, userInfo}: ClassShowProps) => {
               onClick={handleCreate}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              생성
+              生成
             </button>
             <button
               type="button"
               onClick={handleClose}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              닫기
+              閉じる
             </button>
           </div>
         </div>

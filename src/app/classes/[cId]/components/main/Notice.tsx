@@ -17,16 +17,16 @@ const Notice = ({
 }: RoleProps & {isOpen: boolean}) => {
   const dropdownItems = [
     {
-      modalId: '공지사항 수정',
+      modalId: 'お知らせの修正',
       icon: icons.edit,
       alt: 'Edit Icon',
-      text: '수정',
+      text: '修正',
     },
     {
-      modalId: '공지사항 삭제',
+      modalId: 'お知らせの削除',
       icon: icons.delete,
       alt: 'Delete Icon',
-      text: '삭제',
+      text: '削除',
     },
   ];
   const [classAnnounced, setClassAnnounced] = useState<
@@ -38,7 +38,7 @@ const Notice = ({
   const deleteNotice = async (postId: number) => {
     if (classId !== undefined && userInfo) {
       try {
-        if (confirm('정말로 공지사항을 삭제하시겠습니까?')) {
+        if (confirm('本当にお知らせを削除しますか？')) {
           await DeleteClassBoard(postId, classId, userInfo.id);
           alert('Notice deleted successfully!');
         }
@@ -60,7 +60,7 @@ const Notice = ({
   const setActiveModalId = (modalId: string) => {
     setSelectedModalId(modalId);
     setIsModalOpen(true);
-    if (modalId === '공지사항 삭제') {
+    if (modalId === 'お知らせの削除') {
       deleteNotice(classAnnounced[0].ID);
     }
   };
@@ -101,10 +101,12 @@ const Notice = ({
               </>
             )}
           </div>
-          {isModalOpen && selectedModalId === 'noticeEdit' && <ClassEditPost />}
+          {isModalOpen && selectedModalId === 'お知らせの修正' && (
+            <ClassEditPost />
+          )}
         </>
       ) : (
-        <p className="ms-2 text-xl font-bold">현재 공지사항이 없습니다...</p>
+        <p className="ms-2 text-xl font-bold">現在、お知らせはありません...</p>
       )}
     </div>
   );

@@ -22,7 +22,13 @@ export interface ClassItem {
 
 const Main = () => {
   const user = useRecoilValue(userState) as User;
-  const tabs = ['전체보기', '생성목록', '즐겨찾기', '초대목록', '신청목록'];
+  const tabs = [
+    '全体',
+    '生成リスト',
+    'ブックマーク',
+    '招待リスト',
+    '申込リスト',
+  ];
   const [classes, setClasses] = useState<ClassItem[]>([]);
   const [createdClasses, setCreatedClasses] = useState<ClassItem[]>([]);
   const [inviteClasses, setInviteClasses] = useState<ClassItem[]>([]);
@@ -39,22 +45,22 @@ const Main = () => {
 
   const loadClasses = async () => {
     switch (activeTab) {
-      case '생성목록': {
+      case '生成リスト': {
         const createdRes = await classAPI.getClassesRole(user.id, 'ADMIN');
         setCreatedClasses(createdRes.data);
         break;
       }
-      case '초대목록': {
+      case '招待リスト': {
         const inviteRes = await classAPI.getClassesRole(user.id, 'INVITE');
         setInviteClasses(inviteRes.data);
         break;
       }
-      case '신청목록': {
+      case '申込リスト': {
         const waitingRes = await classAPI.getClassesRole(user.id, 'APPLICANT');
         setWaitingClasses(waitingRes.data);
         break;
       }
-      case '즐겨찾기': {
+      case 'ブックマーク': {
         const favoriteRes = await classAPI.getFavoriteClasses(user.id);
         setFavoriteClasses(favoriteRes.data);
         break;
@@ -83,13 +89,13 @@ const Main = () => {
   };
 
   const tabMapping = {
-    전체보기: <CardList classes={classes} />,
-    생성목록: <CardList classes={createdClasses} />,
-    즐겨찾기: <CardList classes={favoriteClasses} />,
-    초대목록: (
+    全体: <CardList classes={classes} />,
+    生成リスト: <CardList classes={createdClasses} />,
+    ブックマーク: <CardList classes={favoriteClasses} />,
+    招待リスト: (
       <Invite onInvitationClick={handleModalOpen} classes={inviteClasses} />
     ),
-    신청목록: <Waiting classes={waitingClasses} />,
+    申込リスト: <Waiting classes={waitingClasses} />,
   };
 
   return (
@@ -104,14 +110,14 @@ const Main = () => {
         <div className="flex flex-wrap ms-2 mt-12 ">
           <TabsMapping activeTab={activeTab} tabMapping={tabMapping} />
         </div>
-        {activeModalId === 'classCreate' && (
+        {activeModalId === 'クラス作成' && (
           <ClassCreate
             setActiveModalId={setActiveModalId}
             getClassAfterCreate={getClassAfterCreate}
             uid={user.id}
           />
         )}
-        {activeModalId === 'classJoin' && (
+        {activeModalId === 'クラス加入' && (
           <ClassJoin
             setActiveModalId={setActiveModalId}
             setIsModalOpen={setIsModalOpen}

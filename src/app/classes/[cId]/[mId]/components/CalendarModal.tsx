@@ -43,7 +43,7 @@ const CalendarModal = ({
       >
         <Calendar onChange={onChange} value={value} />
         <div className="flex justify-center items-center py-2">
-          <span className="font-semibold">마감일시 :</span>
+          <span className="font-semibold">締切日時 :</span>
           <TimePicker onChange={handleTimeSet} value={time} />
         </div>
         <div className="flex justify-center py-1">

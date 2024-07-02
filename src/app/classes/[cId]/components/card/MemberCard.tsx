@@ -112,7 +112,7 @@ const MemberCard = ({
                     </option>
                   </select>
                   <button className="bg-white font-semibold text-black py-1 px-2 rounded hover:bg-gray-200 ml-2">
-                    권한 변경
+                    権限の変更
                   </button>
                 </div>
               )}

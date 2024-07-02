@@ -12,9 +12,9 @@ import icons from '@/public/svgs/_class';
 
 const Main = ({managerRole, classId, userInfo}: RoleProps) => {
   const [showDropdown, setShowDropdown] = useState<Record<string, boolean>>({
-    공지사항: true,
-    일정: true,
-    게시글: true,
+    お知らせ: true,
+    スケジュール: true,
+    投稿: true,
   });
   const [modalState, setModalState] = useState({
     schedule: false,
@@ -54,18 +54,23 @@ const Main = ({managerRole, classId, userInfo}: RoleProps) => {
 
   const mainSections: MainSectionProps[] = [
     {
-      title: '공지사항',
+      title: 'お知らせ',
       component: (
         <Notice
           managerRole={managerRole}
           classId={classId}
           userInfo={userInfo}
-          isOpen={showDropdown['공지사항']}
+          isOpen={showDropdown['お知らせ']}
         />
       ),
     },
-    createSection('일정', Schedule, ClassCreateSchedule, 'schedule'),
-    createSection('게시글', Post, ClassCreatePost, 'post'),
+    createSection(
+      'スケジュール',
+      Schedule,
+      ClassCreateSchedule,
+      'スケジュール'
+    ),
+    createSection('投稿', Post, ClassCreatePost, '投稿'),
   ];
 
   return (
@@ -96,7 +101,8 @@ const Main = ({managerRole, classId, userInfo}: RoleProps) => {
                   {section.title}
                 </h3>
                 {managerRole &&
-                  (section.title === '일정' || section.title === '게시글') && (
+                  (section.title === 'スケジュール' ||
+                    section.title === '投稿') && (
                     <div onClick={section.openModal}>
                       <Image
                         src={icons.addButton}

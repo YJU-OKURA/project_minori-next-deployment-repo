@@ -6,7 +6,7 @@ const CardList = ({classes}: ClassProps) => {
     <>
       {classes.length === 0 ? (
         <p className="text-center text-2xl font-bold text-gray-900">
-          현재 가입된 클래스가 존재하지 않습니다
+          現在加入しているクラスが存在しません
         </p>
       ) : (
         classes.map((classItem, index) => {

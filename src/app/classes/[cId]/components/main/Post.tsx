@@ -47,9 +47,9 @@ const Post = ({
   const deletePost = async (postId: number) => {
     if (classId !== undefined && userInfo) {
       try {
-        if (confirm('정말로 게시글을 삭제하시겠습니까?')) {
+        if (confirm('本当に投稿を削除しますか？')) {
           await classBoardAPI.deleteClassBoard(postId, classId, userInfo.id);
-          alert('Post deleted successfully!');
+          alert('投稿は正常に削除されました！');
           const posts = await classBoardAPI.getClassBoardList(
             classId,
             pageNum,
@@ -63,10 +63,10 @@ const Post = ({
         }
       } catch (error) {
         console.error(error);
-        alert('Failed to delete post');
+        alert('投稿の削除に失敗しました');
       }
     } else {
-      alert('Failed to delete post');
+      alert('投稿の削除に失敗しました');
     }
   };
 
@@ -100,7 +100,7 @@ const Post = ({
         <div className="flex justify-center mt-2 w-full">
           <div className="flex w-1/2 border-4 justify-center items-center h-20">
             <h1 className="text-3xl font-semibold">
-              현재 게시글이 존재하지 않습니다...
+              現在、投稿が存在しません...
             </h1>
           </div>
         </div>
@@ -147,7 +147,7 @@ const Post = ({
     <>
       {renderPosts()}
       <div className="flex justify-center mt-10">
-        {renderPageButton('이전', () => handlePageChange(-1))}
+        {renderPageButton('前へ', () => handlePageChange(-1))}
         {pages.map(page => (
           <button
             className={`border w-12 h-10 rounded-full me-2 ${
@@ -159,7 +159,7 @@ const Post = ({
             {page}
           </button>
         ))}
-        {renderPageButton('다음', () => handlePageChange(1))}
+        {renderPageButton('次へ', () => handlePageChange(1))}
       </div>
     </>
   );
