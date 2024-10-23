@@ -30,37 +30,43 @@ const PromptChat = ({pId, cId}: {pId: number; cId: number}) => {
   };
 
   const chat = async (reader: ReadableStreamDefaultReader) => {
+    const bool = true;
     let feedback = '';
     try {
-      while (reader) {
+      while (bool) {
         const {done, value} = await reader.read();
+
+        if (done) {
+          if (feedback.length > 0) {
+            setPromptRes(promptRes => promptRes + feedback);
+            console.log(feedback); // 남은 피드백 출력
+          }
+          break;
+        }
+
         const decodedValue = new TextDecoder().decode(value);
         feedback += decodedValue;
-        setPromptRes(promptRes => promptRes + feedback);
 
         if (feedback.includes(' ')) {
-          console.log(feedback);
+          setPromptRes(promptRes => promptRes + feedback);
           feedback = '';
-        }
-        if (done) {
-          break;
         }
       }
     } catch (error) {
-      console.error('ストリームの読み込み中にエラーが発生しました:', error);
+      console.error('스트림 읽기 중 오류 발생:', error);
     } finally {
       reader.releaseLock();
       setReload(!reload);
       setPromptRes('');
+      setInputMsg('');
     }
   };
 
+  // 修正要り
   useEffect(() => {
     if (inputMsg === '') return;
-    console.log(inputMsg);
-    postPrompt(cId, pId, inputMsg, chat).then(() => {
-      setInputMsg('');
-    });
+    // console.log(inputMsg);
+    postPrompt(cId, pId, inputMsg, chat).then(() => {});
   }, [inputMsg]);
 
   return (
@@ -70,12 +76,12 @@ const PromptChat = ({pId, cId}: {pId: number; cId: number}) => {
           return (
             <div key={index}>
               <div className="pb-5 flex justify-end">
-                <div className="w-5/6 bg-gray-300 p-5 rounded-l-lg rounded-tr-lg">
+                <div className="w-5/6 bg-blue-300 p-5 rounded-l-lg rounded-tr-lg">
                   {message.question}
                 </div>
               </div>
               <div className="pb-5 flex justify-start items-end">
-                <div className="w-5/6 bg-blue-300 p-5 rounded-r-lg rounded-tl-lg">
+                <div className="w-5/6 bg-gray-100 p-5 rounded-r-lg rounded-tl-lg">
                   {message.answer.split('\n').map((line, index) => (
                     <div key={index}>
                       <ReactMarkdown>{line}</ReactMarkdown>
@@ -99,14 +105,14 @@ const PromptChat = ({pId, cId}: {pId: number; cId: number}) => {
         })}
         {inputMsg ? (
           <div className="pb-5 flex justify-end">
-            <div className="w-5/6 bg-gray-300 p-5 rounded-l-lg rounded-tr-lg">
+            <div className="w-5/6 bg-blue-300 p-5 rounded-l-lg rounded-tr-lg">
               {inputMsg}
             </div>
           </div>
         ) : null}
         {promptRes ? (
           <div className="pb-5 flex justify-start items-end">
-            <div className="w-5/6 bg-blue-300 p-5 rounded-r-lg rounded-tl-lg">
+            <div className="w-5/6 bg-gray-100 p-5 rounded-r-lg rounded-tl-lg">
               <ReactMarkdown>{promptRes}</ReactMarkdown>
             </div>
           </div>

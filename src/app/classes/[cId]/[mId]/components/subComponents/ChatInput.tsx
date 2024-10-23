@@ -8,7 +8,7 @@ const ChatInput = ({setMsg}: inputProps) => {
     setInputMsg(e.target.value);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = async (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       handleClickButton();
@@ -16,9 +16,11 @@ const ChatInput = ({setMsg}: inputProps) => {
   };
 
   const handleClickButton = () => {
+    if (inputMsg.trim()) {
+      setMsg(inputMsg); // 상태 값이 정확히 업데이트된 후 전달
+      setInputMsg(''); // 입력 필드 초기화
+    }
     console.log(inputMsg);
-    setMsg(inputMsg);
-    setInputMsg('');
   };
 
   return (
@@ -29,7 +31,7 @@ const ChatInput = ({setMsg}: inputProps) => {
           className="w-full p-3 outline-none"
           placeholder="Please enter your question"
           onChange={handleInputMsg}
-          onKeyDown={handleKeyPress}
+          onKeyUp={handleKeyPress}
           value={inputMsg}
         />
         <div className="px-2" onClick={handleClickButton}>
