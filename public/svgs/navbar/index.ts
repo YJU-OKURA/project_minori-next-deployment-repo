@@ -7,6 +7,7 @@ const icons = {
   myPage: '/svgs/navbar/mypage.svg',
   search: '/svgs/navbar/search.svg',
   plus: '/svgs/navbar/plus.svg',
+  notion: '/svgs/navbar/notion.svg',
 };
 
 export default icons;
