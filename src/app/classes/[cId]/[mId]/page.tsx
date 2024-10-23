@@ -26,16 +26,16 @@ const Page = (props: {params: {cId: string; mId: string}}) => {
           <ManageContainer cId={params.cId} />
         </div>
       ) : (
-        <div className="flex w-full h-screen p-3">
-          <div className="w-2/3">
+        <div className="flex w-full h-screen">
+          <div className="w-2/3 p-3">
             <div className="text-5xl py-4 border-b-2">{materialName}</div>
             <UserContainer cId={params.cId} />
           </div>
           {/* 右側 */}
-          <div className="px-3">
+          <div className="">
             <div className="h-full w-0.5 bg-gray-200"></div>
           </div>
-          <div className="w-1/3">
+          <div className="w-1/3 p-4 bg-white">
             <SubContainer />
           </div>
         </div>

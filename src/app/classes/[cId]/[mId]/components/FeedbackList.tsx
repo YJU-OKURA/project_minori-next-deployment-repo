@@ -27,8 +27,8 @@ const FeedbackList = ({feedbacks}: {feedbacks: feedback[]}) => {
         >
           {feedbacks.map(feedback => (
             <SwiperSlide key={feedback.id}>
-              <div className="w-[500px] h-[400px] bg-green-300 drop-shadow-lg overflow-scroll m-auto my-3">
-                <div className="p-2 text-start">
+              <div className="w-[500px] h-[400px] bg-green-300 drop-shadow-lg overflow-auto m-auto my-3">
+                <div className="p-5 text-start">
                   {feedback.content.split('\n').map((content, index) => {
                     return (
                       <div key={index} className="text-lg">
@@ -36,14 +36,14 @@ const FeedbackList = ({feedbacks}: {feedbacks: feedback[]}) => {
                       </div>
                     );
                   })}
-                </div>
-                <div className="w-full p-2">
-                  <button
-                    className="bg-red-400 p-2 text-white"
-                    onClick={() => handleClickDelete(feedback.id)}
-                  >
-                    削除
-                  </button>
+                  <div className=" w-full p-2 flex justify-center">
+                    <button
+                      className="bg-red-400 p-2 text-white"
+                      onClick={() => handleClickDelete(feedback.id)}
+                    >
+                      削除
+                    </button>
+                  </div>
                 </div>
               </div>
             </SwiperSlide>

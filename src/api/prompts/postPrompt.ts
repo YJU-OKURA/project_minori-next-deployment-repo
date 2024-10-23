@@ -7,14 +7,12 @@ const postPrompt = async (
   chat: (reader: ReadableStreamDefaultReader) => void
 ) => {
   const token = Cookies.get('access_token');
-  console.log('token:', token);
   const body = {
     message: message,
   };
-  console.log('body:', body);
   try {
     const response = await fetch(
-      `http://3.38.86.236:3000/api/nest/class/${cId}/prompts/${id}`,
+      `http://localhost:8080/api/nest/class/${cId}/prompts/${id}`,
       {
         method: 'POST',
         headers: {
@@ -26,12 +24,13 @@ const postPrompt = async (
     );
     console.log('res:', response);
     const reader = response.body?.getReader();
+    // 応答ストリームがない場合
     if (!reader) {
       console.error('応答ストリームがありません。');
       return;
     }
 
-    await chat(reader);
+    chat(reader);
   } catch (error) {
     console.error('ストリーム処理中にエラーが発生しました:', error);
   }

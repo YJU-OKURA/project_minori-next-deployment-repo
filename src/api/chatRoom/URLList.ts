@@ -1,5 +1,6 @@
 const URLList = {
-  liveURL: 'http://43.203.66.25/api/gin/chat/stream/',
+  // liveURL: 'http://localhost:8080/api/gin/chat/stream/',
+  liveURL: 'https://minoriedu.com/api/gin/chat/stream/',
 };
 
 export default URLList;

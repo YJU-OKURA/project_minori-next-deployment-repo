@@ -3,6 +3,7 @@ import {useEffect, useState} from 'react';
 import Image from 'next/image';
 import {Login} from './components/login';
 import intro from '@/public/svgs/intro';
+import Cookies from 'js-cookie';
 
 const Page = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +24,7 @@ const Page = () => {
   };
 
   useEffect(() => {
+    Cookies.remove;
     if (typeof window !== 'undefined') {
       document.addEventListener('mousedown', handleOutsideClick);
 

@@ -18,7 +18,7 @@ const QuizForm = (props: {
     correctAnswer: 'A',
     content: '',
   });
-  const [recommendQuiz, setRecommendQuiz] = useState<Quiz>();
+  const [recommendQuiz, setRecommendQuiz] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
@@ -69,14 +69,14 @@ const QuizForm = (props: {
     }));
   };
 
-  const handleAcceptQuiz = () => {
-    console.log('accept');
-    if (recommendQuiz) {
-      setQuestion(recommendQuiz.question);
-      setAnswer(recommendQuiz.answer);
-      setCommentary(recommendQuiz.commentary);
-    }
-  };
+  // const handleAcceptQuiz = () => {
+  //   console.log('accept');
+  //   if (recommendQuiz) {
+  //     setQuestion(recommendQuiz.question);
+  //     setAnswer(recommendQuiz.answer);
+  //     setCommentary(recommendQuiz.commentary);
+  //   }
+  // };
 
   const handleClickSubmit = () => {
     console.log(question, answer, commentary);
@@ -205,7 +205,7 @@ const QuizForm = (props: {
               <div className="absolute left-2 bottom-2">
                 <button
                   className="p-2 bg-blue-400 text-white rounded-lg"
-                  onClick={handleAcceptQuiz}
+                  // onClick={handleAcceptQuiz}
                 >
                   適用する
                 </button>
