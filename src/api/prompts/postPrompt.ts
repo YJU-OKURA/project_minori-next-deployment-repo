@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie';
+import BASE_URLS from '../baseUrl';
 
 const postPrompt = async (
   cId: number,
@@ -12,7 +13,7 @@ const postPrompt = async (
   };
   try {
     const response = await fetch(
-      `http://localhost:8080/api/nest/class/${cId}/prompts/${id}`,
+      `${BASE_URLS.nest}/class/${cId}/prompts/${id}`,
       {
         method: 'POST',
         headers: {
