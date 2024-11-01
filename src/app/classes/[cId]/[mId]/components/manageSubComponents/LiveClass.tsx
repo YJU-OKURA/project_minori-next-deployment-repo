@@ -52,6 +52,9 @@ type AppData = {
   [key: string]: unknown;
 };
 
+const MAX_RECONNECT_DELAY = 30000;
+const INITIAL_RECONNECT_DELAY = 1000;
+
 const LiveClass: React.FC<LiveClassProps> = ({
   classId,
   userId,
@@ -83,14 +86,17 @@ const LiveClass: React.FC<LiveClassProps> = ({
   const handleReconnectRef = useRef<(() => void) | null>(null);
   const connectWebSocketRef = useRef<(() => void) | null>(null);
   const wsUrl = useMemo(() => {
-    // Next.js의 환경변수 사용
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
     const baseUrl =
       process.env.NODE_ENV === 'production'
-        ? `wss://${window.location.host}/ws`
+        ? `${protocol}://${window.location.host}/ws`
         : 'ws://localhost:8080';
 
-    return `${baseUrl}/?roomId=${classId}&userId=${userId}&nickname=${encodeURIComponent(
-      nickname
+    // nickname이 없을 경우 기본값 설정
+    const safeNickname = nickname || `User_${userId}`;
+
+    return `${baseUrl}?roomId=${classId}&userId=${userId}&nickname=${encodeURIComponent(
+      safeNickname
     )}`;
   }, [classId, userId, nickname]);
 
@@ -515,14 +521,24 @@ const LiveClass: React.FC<LiveClassProps> = ({
     [userId]
   );
 
+  const getReconnectDelay = (attempt: number) => {
+    return Math.min(
+      INITIAL_RECONNECT_DELAY * Math.pow(2, attempt),
+      MAX_RECONNECT_DELAY
+    );
+  };
+
   // 재연결 처리
   const handleReconnect = useCallback((): void => {
     if (reconnectAttempts < 5) {
-      const timeout = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
+      console.log(`Reconnection attempt ${reconnectAttempts + 1}`);
+      const delay = getReconnectDelay(reconnectAttempts);
       setTimeout(() => {
         setReconnectAttempts(prev => prev + 1);
-        connectWebSocketRef.current?.();
-      }, timeout);
+        if (connectWebSocketRef.current) {
+          connectWebSocketRef.current();
+        }
+      }, delay);
     } else {
       console.error('Maximum reconnection attempts reached');
       handleEndClass();
