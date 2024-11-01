@@ -68,17 +68,17 @@ const Navbar = () => {
 
   return (
     //18.5rem - sidebar-18rem, border-0.5rem
-    <div className="flex">
+    <div className="flex h-full">
       <div
         style={{width: `${baseSize}px`}}
         className={
-          'relative h-screen flex flex-col bg-white drop-shadow-xl overflow-hidden'
+          'relative h-full flex flex-col bg-white drop-shadow-xl overflow-hidden'
         }
       >
         <div className="h-24 flex-none border-b-2">
           <Profile />
         </div>
-        <div className="flex-grow flex flex-col items-between text-lg">
+        <div className="flex-grow flex flex-col items-between text-lg max-h-[calc(100%-15rem)]">
           <div className="grid gap-3 py-3">
             {pages.map((page, index) => {
               return (
@@ -100,11 +100,16 @@ const Navbar = () => {
             })}
           </div>
           {/* material */}
-          <MaterialContainer cId={param.cId} mId={param.mId} />
+          <div className="h-[calc(100%-13rem)]">
+            <MaterialContainer cId={param.cId} mId={param.mId} />
+          </div>
         </div>
         <div className="h-36 border-t-2 flex-none">
           <div className="w-[calc(100%-40px)] h-full flex flex-col justify-center m-auto gap-3">
-            <div className="flex items-center gap-4">
+            <Link
+              href="https://yuminn-k.notion.site/PM-672baf9dc31c4497bec71666ddfbbefe?pvs=4"
+              className="flex items-center gap-4"
+            >
               <Image
                 src={icons.notion}
                 alt="icon"
@@ -113,7 +118,7 @@ const Navbar = () => {
                 className="w-10 h-10 m-1"
               />
               <div>ノーション</div>
-            </div>
+            </Link>
             <Link
               href={param.mId ? `/classes/${param.cId}` : '/classes'}
               className="flex items-center gap-4"

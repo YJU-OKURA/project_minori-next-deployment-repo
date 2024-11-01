@@ -44,7 +44,7 @@ const Page = () => {
         <div className="m-4 font-semibold text-gray-500">
           学習の利便性を向上させ、楽しい学習体験を満喫してください！
         </div>
-        <div>
+        <div className="flex justify-center">
           <Image
             src={intro.introImg}
             width={500}
