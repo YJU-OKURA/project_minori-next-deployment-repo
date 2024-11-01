@@ -52,9 +52,6 @@ type AppData = {
   [key: string]: unknown;
 };
 
-const MAX_RECONNECT_DELAY = 30000;
-const INITIAL_RECONNECT_DELAY = 1000;
-
 const LiveClass: React.FC<LiveClassProps> = ({
   classId,
   userId,
@@ -95,9 +92,14 @@ const LiveClass: React.FC<LiveClassProps> = ({
     // nickname이 없을 경우 기본값 설정
     const safeNickname = nickname || `User_${userId}`;
 
-    return `${baseUrl}?roomId=${classId}&userId=${userId}&nickname=${encodeURIComponent(
-      safeNickname
-    )}`;
+    // URLSearchParams 사용하여 안전한 URL 생성
+    const params = new URLSearchParams({
+      roomId: classId.toString(),
+      userId: userId.toString(),
+      nickname: safeNickname,
+    });
+
+    return `${baseUrl}?${params.toString()}`;
   }, [classId, userId, nickname]);
 
   const handleError = useCallback((error: Error) => {
@@ -188,12 +190,36 @@ const LiveClass: React.FC<LiveClassProps> = ({
 
   // WebSocket 연결 설정
   const connectWebSocket = useCallback((): void => {
+    console.log('Attempting WebSocket connection to:', wsUrl);
+
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
     ws.onopen = () => {
+      console.log('WebSocket connected successfully');
       setConnectionState('connected');
       ws.send(JSON.stringify({event: 'getRouterRtpCapabilities'}));
+    };
+
+    ws.onerror = error => {
+      console.error('WebSocket error:', {
+        error,
+        url: wsUrl,
+        readyState: ws.readyState,
+      });
+      setConnectionState('disconnected');
+    };
+
+    ws.onclose = event => {
+      console.log('WebSocket closed:', {
+        code: event.code,
+        reason: event.reason,
+        wasClean: event.wasClean,
+      });
+      setConnectionState('disconnected');
+      if (handleReconnectRef.current) {
+        handleReconnectRef.current();
+      }
     };
 
     ws.onmessage = async ({data}) => {
@@ -337,18 +363,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
           break;
         }
       }
-    };
-
-    ws.onclose = () => {
-      setConnectionState('disconnected');
-      if (handleReconnectRef.current) {
-        handleReconnectRef.current();
-      }
-    };
-
-    ws.onerror = error => {
-      console.error('WebSocket error:', error);
-      setConnectionState('disconnected');
     };
   }, [wsUrl, monitorTransportState, startLocalStream]);
 
@@ -521,18 +535,14 @@ const LiveClass: React.FC<LiveClassProps> = ({
     [userId]
   );
 
-  const getReconnectDelay = (attempt: number) => {
-    return Math.min(
-      INITIAL_RECONNECT_DELAY * Math.pow(2, attempt),
-      MAX_RECONNECT_DELAY
-    );
-  };
-
   // 재연결 처리
   const handleReconnect = useCallback((): void => {
     if (reconnectAttempts < 5) {
-      console.log(`Reconnection attempt ${reconnectAttempts + 1}`);
-      const delay = getReconnectDelay(reconnectAttempts);
+      const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
+      console.log(
+        `Attempting reconnection ${reconnectAttempts + 1}/5 in ${delay}ms`
+      );
+
       setTimeout(() => {
         setReconnectAttempts(prev => prev + 1);
         if (connectWebSocketRef.current) {
@@ -599,13 +609,19 @@ const LiveClass: React.FC<LiveClassProps> = ({
   }, [streams]);
 
   useEffect(() => {
+    if (classStarted) {
+      connectWebSocketRef.current?.();
+    }
+
     return () => {
+      console.log('Cleaning up WebSocket connection');
+      if (wsRef.current) {
+        wsRef.current.close();
+        wsRef.current = null;
+      }
       cleanupStreams();
-      handleEndClass();
-      wsRef.current?.close();
-      localStreamRef.current?.getTracks().forEach(track => track.stop());
     };
-  }, [cleanupStreams, handleEndClass]);
+  }, [classStarted, cleanupStreams]);
 
   // 비디오 레이아웃 계산
   const getVideoLayout = useCallback(() => {
