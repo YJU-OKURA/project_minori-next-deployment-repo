@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React, {useEffect, useRef, useState, useCallback} from 'react';
+import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import {Device, types} from 'mediasoup-client';
 import AttendanceCard from '../AttendanceCard';
 import ConnectionStatus from './ConnectionStatus';
@@ -82,14 +82,17 @@ const LiveClass: React.FC<LiveClassProps> = ({
   const screenStreamRef = useRef<MediaStream | null>(null);
   const handleReconnectRef = useRef<(() => void) | null>(null);
   const connectWebSocketRef = useRef<(() => void) | null>(null);
-  const wsUrl =
-    process.env.NODE_ENV === 'production'
-      ? `wss://3.39.137.182:8080/?roomId=${classId}&userId=${userId}&nickname=${encodeURIComponent(
-          nickname
-        )}`
-      : `ws://localhost:8080/?roomId=${classId}&userId=${userId}&nickname=${encodeURIComponent(
-          nickname
-        )}`;
+  const wsUrl = useMemo(() => {
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const baseUrl =
+      process.env.NODE_ENV === 'production'
+        ? `${protocol}://${window.location.host}/ws`
+        : 'ws://localhost:8080';
+
+    return `${baseUrl}/?roomId=${classId}&userId=${userId}&nickname=${encodeURIComponent(
+      nickname
+    )}`;
+  }, [classId, userId, nickname]);
 
   const handleError = useCallback((error: Error) => {
     console.error('Error:', error);
