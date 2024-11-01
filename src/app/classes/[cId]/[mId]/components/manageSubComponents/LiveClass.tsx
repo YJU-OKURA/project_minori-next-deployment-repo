@@ -83,10 +83,10 @@ const LiveClass: React.FC<LiveClassProps> = ({
   const handleReconnectRef = useRef<(() => void) | null>(null);
   const connectWebSocketRef = useRef<(() => void) | null>(null);
   const wsUrl = useMemo(() => {
-    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    // Next.js의 환경변수 사용
     const baseUrl =
       process.env.NODE_ENV === 'production'
-        ? `${protocol}://${window.location.host}/ws`
+        ? `wss://${window.location.host}/ws`
         : 'ws://localhost:8080';
 
     return `${baseUrl}/?roomId=${classId}&userId=${userId}&nickname=${encodeURIComponent(
