@@ -195,10 +195,18 @@ const LiveClass: React.FC<LiveClassProps> = ({
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
+    let reconnectTimer: NodeJS.Timeout;
+
     ws.onopen = () => {
-      console.log('WebSocket connected successfully');
+      console.log(
+        'WebSocket connected successfully at:',
+        new Date().toISOString()
+      );
       setConnectionState('connected');
       ws.send(JSON.stringify({event: 'getRouterRtpCapabilities'}));
+
+      // 연결 상태 주기적 체크
+      if (reconnectTimer) clearTimeout(reconnectTimer);
     };
 
     ws.onerror = error => {
@@ -206,6 +214,7 @@ const LiveClass: React.FC<LiveClassProps> = ({
         error,
         url: wsUrl,
         readyState: ws.readyState,
+        time: new Date().toISOString(),
       });
       setConnectionState('disconnected');
     };
