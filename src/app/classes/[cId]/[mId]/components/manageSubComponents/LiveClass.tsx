@@ -190,6 +190,11 @@ const LiveClass: React.FC<LiveClassProps> = ({
 
   // WebSocket 연결 설정
   const connectWebSocket = useCallback((): void => {
+    if (wsRef.current?.readyState === WebSocket.CONNECTING) {
+      console.log('WebSocket connection already in progress');
+      return;
+    }
+
     console.log('Attempting WebSocket connection to:', wsUrl);
 
     const ws = new WebSocket(wsUrl);
@@ -203,6 +208,7 @@ const LiveClass: React.FC<LiveClassProps> = ({
         new Date().toISOString()
       );
       setConnectionState('connected');
+      setReconnectAttempts(0);
       ws.send(JSON.stringify({event: 'getRouterRtpCapabilities'}));
 
       // 연결 상태 주기적 체크
