@@ -119,6 +119,22 @@ const LiveClass: React.FC<LiveClassProps> = ({
     [handleError]
   );
 
+  // 최적의 인코딩 설정을 반환하는 함수
+  const getOptimalEncodings = (kind: string) => {
+    if (kind === 'video') {
+      return [
+        {maxBitrate: 100000, scaleResolutionDownBy: 4, maxFramerate: 15}, // 낮은 품질
+        {maxBitrate: 300000, scaleResolutionDownBy: 2, maxFramerate: 30}, // 중간 품질
+        {maxBitrate: 900000, scaleResolutionDownBy: 1, maxFramerate: 60}, // 높은 품질
+      ];
+    } else if (kind === 'audio') {
+      return [
+        {maxBitrate: 64000}, // 음성 최적화
+      ];
+    }
+    return [];
+  };
+
   // 로컬 스트림 시작
   const startLocalStream = useCallback(async () => {
     try {
@@ -133,18 +149,30 @@ const LiveClass: React.FC<LiveClassProps> = ({
 
       localStreamRef.current = stream;
 
+      // Producer 생성 전 상태 체크 추가
+      if (!producerTransportRef.current || !deviceRef.current) {
+        throw new Error('Transport or device not initialized');
+      }
+
       // Produce audio and video tracks
       for (const track of stream.getTracks()) {
-        const producer = await producerTransportRef.current?.produce({
-          track,
-          encodings: [],
-          codecOptions: {},
-          appData: {mediaType: 'screen'} satisfies AppData,
-          stopTracks: true,
-          disableTrackOnPause: true,
-        });
-        if (producer) {
+        try {
+          const producer = await producerTransportRef.current.produce({
+            track,
+            encodings: getOptimalEncodings(track.kind),
+            codecOptions: {},
+            appData: {mediaType: track.kind},
+          });
+
           producersRef.current.set(track.kind, producer);
+
+          producer.on('transportclose', () => {
+            console.log(`Producer transport closed: ${producer.id}`);
+            producer.close();
+          });
+        } catch (error) {
+          console.error(`Failed to produce ${track.kind}:`, error);
+          track.stop();
         }
       }
 
@@ -170,7 +198,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
       handleMediaError(
         error instanceof Error ? error : new Error(String(error))
       );
-      setConnectionState('disconnected');
     }
   }, [userId, nickname, mediaState.audio, mediaState.video, handleMediaError]);
 
@@ -188,6 +215,23 @@ const LiveClass: React.FC<LiveClassProps> = ({
     []
   );
 
+  // 화면 공유 최적화
+  const getOptimalScreenShareConstraints = () => ({
+    video: {
+      displaySurface: 'monitor' as DisplayCaptureSurfaceType,
+      width: {ideal: 1920},
+      height: {ideal: 1080},
+      frameRate: {max: 30},
+      cursor: 'always' as const,
+    },
+    audio: {
+      autoGainControl: true,
+      echoCancellation: true,
+      noiseSuppression: true,
+      sampleRate: 48000,
+    },
+  });
+
   // WebSocket 연결 설정
   const connectWebSocket = useCallback((): void => {
     if (wsRef.current?.readyState === WebSocket.CONNECTING) {
@@ -200,19 +244,22 @@ const LiveClass: React.FC<LiveClassProps> = ({
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
-    let reconnectTimer: NodeJS.Timeout;
+    // 연결 타임아웃 처리
+    const connectionTimeout = setTimeout(() => {
+      if (ws.readyState === WebSocket.CONNECTING) {
+        ws.close();
+        handleReconnect();
+      }
+    }, 10000);
 
     ws.onopen = () => {
-      console.log(
-        'WebSocket connected successfully at:',
-        new Date().toISOString()
-      );
+      clearTimeout(connectionTimeout);
+      console.log('WebSocket connected');
       setConnectionState('connected');
       setReconnectAttempts(0);
-      ws.send(JSON.stringify({event: 'getRouterRtpCapabilities'}));
 
-      // 연결 상태 주기적 체크
-      if (reconnectTimer) clearTimeout(reconnectTimer);
+      // 즉시 capabilities 요청
+      ws.send(JSON.stringify({event: 'getRouterRtpCapabilities'}));
     };
 
     ws.onerror = error => {
@@ -226,157 +273,158 @@ const LiveClass: React.FC<LiveClassProps> = ({
     };
 
     ws.onclose = event => {
-      console.log('WebSocket closed:', {
-        code: event.code,
-        reason: event.reason,
-        wasClean: event.wasClean,
-      });
+      console.log('WebSocket closed:', event);
       setConnectionState('disconnected');
-      if (handleReconnectRef.current) {
-        handleReconnectRef.current();
+
+      // 정상적인 종료가 아닌 경우에만 재연결
+      if (!event.wasClean) {
+        handleReconnect();
       }
     };
 
     ws.onmessage = async ({data}) => {
-      const {event, data: eventData} = JSON.parse(data);
+      try {
+        const {event, data: eventData} = JSON.parse(data);
+        console.log('Received event:', event);
 
-      switch (event) {
-        case 'routerRtpCapabilities': {
-          try {
-            const device = new Device();
-            await device.load({routerRtpCapabilities: eventData});
-            deviceRef.current = device;
-            ws.send(JSON.stringify({event: 'createProducerTransport'}));
-          } catch (error) {
-            console.error('Failed to load device:', error);
-          }
-          break;
-        }
-
-        case 'producerTransportCreated': {
-          const transport = deviceRef.current?.createSendTransport(eventData);
-          if (!transport) return;
-          if (producerTransportRef.current) {
-            monitorTransportState(producerTransportRef.current);
+        switch (event) {
+          case 'routerRtpCapabilities': {
+            if (!deviceRef.current) {
+              const device = new Device();
+              await device.load({routerRtpCapabilities: eventData});
+              deviceRef.current = device;
+              ws.send(JSON.stringify({event: 'createProducerTransport'}));
+            }
+            break;
           }
 
-          transport.on(
-            'connect',
-            async ({dtlsParameters}, callback, errback) => {
-              try {
-                await ws.send(
-                  JSON.stringify({
-                    event: 'connectProducerTransport',
-                    data: {dtlsParameters},
-                  })
-                );
-                callback();
-              } catch (error) {
-                errback(
-                  error instanceof Error ? error : new Error('Unknown error')
-                );
-              }
+          case 'producerTransportCreated': {
+            const transport = deviceRef.current?.createSendTransport(eventData);
+            if (!transport) return;
+            if (producerTransportRef.current) {
+              monitorTransportState(producerTransportRef.current);
             }
-          );
 
-          transport.on(
-            'produce',
-            async ({kind, rtpParameters, appData}, callback, errback) => {
-              try {
-                ws.send(
-                  JSON.stringify({
-                    event: 'produce',
-                    data: {kind, rtpParameters, appData},
-                  })
-                );
-                callback({id: Date.now().toString()}); // id를 반환하도록 수정
-              } catch (error) {
-                errback(
-                  error instanceof Error ? error : new Error('Unknown error')
-                );
+            transport.on(
+              'connect',
+              async ({dtlsParameters}, callback, errback) => {
+                try {
+                  await ws.send(
+                    JSON.stringify({
+                      event: 'connectProducerTransport',
+                      data: {dtlsParameters},
+                    })
+                  );
+                  callback();
+                } catch (error) {
+                  errback(
+                    error instanceof Error ? error : new Error('Unknown error')
+                  );
+                }
               }
-            }
-          );
+            );
 
-          await startLocalStream();
-          break;
-        }
+            transport.on(
+              'produce',
+              async ({kind, rtpParameters, appData}, callback, errback) => {
+                try {
+                  ws.send(
+                    JSON.stringify({
+                      event: 'produce',
+                      data: {kind, rtpParameters, appData},
+                    })
+                  );
+                  callback({id: Date.now().toString()}); // id를 반환하도록 수정
+                } catch (error) {
+                  errback(
+                    error instanceof Error ? error : new Error('Unknown error')
+                  );
+                }
+              }
+            );
 
-        case 'consumerTransportCreated': {
-          const transport = deviceRef.current?.createRecvTransport(eventData);
-          if (!transport) return;
-          if (consumerTransportRef.current) {
-            monitorTransportState(consumerTransportRef.current);
+            await startLocalStream();
+            break;
           }
 
-          transport.on(
-            'connect',
-            async ({dtlsParameters}, callback, errback) => {
-              try {
-                await ws.send(
-                  JSON.stringify({
-                    event: 'connectProducerTransport',
-                    data: {dtlsParameters},
-                  })
-                );
-                callback();
-              } catch (error) {
-                errback(
-                  error instanceof Error ? error : new Error('Unknown error')
-                );
-              }
+          case 'consumerTransportCreated': {
+            const transport = deviceRef.current?.createRecvTransport(eventData);
+            if (!transport) return;
+            if (consumerTransportRef.current) {
+              monitorTransportState(consumerTransportRef.current);
             }
-          );
-          break;
+
+            transport.on(
+              'connect',
+              async ({dtlsParameters}, callback, errback) => {
+                try {
+                  await ws.send(
+                    JSON.stringify({
+                      event: 'connectProducerTransport',
+                      data: {dtlsParameters},
+                    })
+                  );
+                  callback();
+                } catch (error) {
+                  errback(
+                    error instanceof Error ? error : new Error('Unknown error')
+                  );
+                }
+              }
+            );
+            break;
+          }
+
+          case 'newProducer': {
+            const {producerId, userId: producerUserId} = eventData;
+            subscribeToTrack(producerId, producerUserId);
+            break;
+          }
+
+          case 'consumed': {
+            const {id, producerId, kind, rtpParameters} = eventData;
+            const consumer = await consumerTransportRef.current?.consume({
+              id,
+              producerId,
+              kind,
+              rtpParameters,
+            });
+
+            if (!consumer) return;
+
+            consumersRef.current.set(id, consumer);
+
+            const stream = new MediaStream([consumer.track]);
+            setStreams(prev => ({
+              ...prev,
+              [producerId]: {
+                stream,
+                type: 'video',
+                userId: parseInt(producerId.split('-')[0]),
+              },
+            }));
+
+            ws.send(
+              JSON.stringify({
+                event: 'resumeConsumer',
+                data: {consumerId: id},
+              })
+            );
+            break;
+          }
+
+          case 'producerClosed': {
+            const {producerId} = eventData;
+            setStreams(prev => {
+              const newStreams = {...prev};
+              delete newStreams[producerId];
+              return newStreams;
+            });
+            break;
+          }
         }
-
-        case 'newProducer': {
-          const {producerId, userId: producerUserId} = eventData;
-          subscribeToTrack(producerId, producerUserId);
-          break;
-        }
-
-        case 'consumed': {
-          const {id, producerId, kind, rtpParameters} = eventData;
-          const consumer = await consumerTransportRef.current?.consume({
-            id,
-            producerId,
-            kind,
-            rtpParameters,
-          });
-
-          if (!consumer) return;
-
-          consumersRef.current.set(id, consumer);
-
-          const stream = new MediaStream([consumer.track]);
-          setStreams(prev => ({
-            ...prev,
-            [producerId]: {
-              stream,
-              type: 'video',
-              userId: parseInt(producerId.split('-')[0]),
-            },
-          }));
-
-          ws.send(
-            JSON.stringify({
-              event: 'resumeConsumer',
-              data: {consumerId: id},
-            })
-          );
-          break;
-        }
-
-        case 'producerClosed': {
-          const {producerId} = eventData;
-          setStreams(prev => {
-            const newStreams = {...prev};
-            delete newStreams[producerId];
-            return newStreams;
-          });
-          break;
-        }
+      } catch (error) {
+        console.error('Message handler error:', error);
       }
     };
   }, [wsUrl, monitorTransportState, startLocalStream]);
@@ -388,19 +436,8 @@ const LiveClass: React.FC<LiveClassProps> = ({
   // 화면 공유 시작
   const startScreenShare = async () => {
     try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: {
-          displaySurface: 'monitor' as DisplayCaptureSurfaceType,
-          width: {ideal: 1920},
-          height: {ideal: 1080},
-          frameRate: {max: 30},
-        },
-        audio: {
-          autoGainControl: true,
-          echoCancellation: true,
-          noiseSuppression: true,
-        },
-      });
+      const constraints = getOptimalScreenShareConstraints();
+      const stream = await navigator.mediaDevices.getDisplayMedia(constraints);
 
       if (!stream) return;
 
@@ -410,12 +447,21 @@ const LiveClass: React.FC<LiveClassProps> = ({
       const videoTrack = stream.getVideoTracks()[0];
       const producer = await producerTransportRef.current?.produce({
         track: videoTrack,
-        encodings: [], // 필요한 경우 인코딩 설정 추가
-        codecOptions: {}, // 필요한 경우 코덱 옵션 추가
-        appData: {mediaType: 'screen'},
+        encodings: getOptimalEncodings('video'),
+        codecOptions: {
+          videoGoogleStartBitrate: 1000,
+        },
+        appData: {
+          mediaType: 'screen',
+          trackId: videoTrack.id,
+        },
       });
+
       if (producer) {
         producersRef.current.set('screen', producer);
+        producer.on('trackended', () => {
+          stopScreenShare();
+        });
       }
 
       setStreams(prev => ({
@@ -554,18 +600,14 @@ const LiveClass: React.FC<LiveClassProps> = ({
   const handleReconnect = useCallback((): void => {
     if (reconnectAttempts < 5) {
       const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
-      console.log(
-        `Attempting reconnection ${reconnectAttempts + 1}/5 in ${delay}ms`
-      );
+      console.log(`Reconnecting (${reconnectAttempts + 1}/5) in ${delay}ms`);
 
       setTimeout(() => {
         setReconnectAttempts(prev => prev + 1);
-        if (connectWebSocketRef.current) {
-          connectWebSocketRef.current();
-        }
+        connectWebSocketRef.current?.();
       }, delay);
     } else {
-      console.error('Maximum reconnection attempts reached');
+      console.error('Max reconnection attempts reached');
       handleEndClass();
     }
   }, [reconnectAttempts, handleEndClass]);
@@ -598,17 +640,13 @@ const LiveClass: React.FC<LiveClassProps> = ({
   }, []);
 
   useEffect(() => {
-    const handleAutoReconnect = () => {
-      if (connectionState === 'disconnected' && classStarted) {
+    if (connectionState === 'disconnected' && classStarted) {
+      const timer = setTimeout(() => {
         handleReconnectRef.current?.();
-      }
-    };
+      }, 3000);
 
-    const timer = setTimeout(handleAutoReconnect, 3000);
-
-    return () => {
-      clearTimeout(timer);
-    };
+      return () => clearTimeout(timer);
+    }
   }, [connectionState, classStarted]);
 
   const cleanupStreams = useCallback(() => {
