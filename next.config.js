@@ -20,11 +20,7 @@ module.exports = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'lh3.googleusercontent.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'd3sbrbqucv1146.cloudfront.net',
+        hostname: '**',
       },
     ],
   },
