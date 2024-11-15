@@ -1,7 +1,7 @@
 import {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import Attendance from './Attendance';
 import getClassScheduleList from '@/src/api/classSchedule/getClassScheduleList';
-import {format, isBefore, startOfDay} from 'date-fns';
+import {format, isBefore, parseISO, startOfDay} from 'date-fns';
 import {ScheduleData} from '@/src/interfaces/_class';
 import {ClassDate} from '@/src/interfaces/attendance';
 
@@ -23,20 +23,15 @@ const DayComponent = ({
   const specialDay = specialDays.find(specialDay => {
     const date = new Date(specialDay.endDate);
     return (
-      format(date, 'dd') === day &&
+      date.getDate() === parseInt(day, 10) &&
       date.getMonth() === month &&
       date.getFullYear() === year
     );
   });
   console.log(specialDay);
-  const isSpecialDay = specialDays.some(specialDay => {
-    const date = new Date(specialDay.endDate);
-    return (
-      format(date, 'dd') === day &&
-      date.getMonth() === month &&
-      date.getFullYear() === year
-    );
-  });
+  const isBeforeWithTime = (date1: string, date2: string) => {
+    return isBefore(parseISO(date1), parseISO(date2));
+  };
   const formattedDate = `${year}-${
     month + 1 < 10 ? '0' + (month + 1) : month + 1
   }-${day.length < 2 ? '0' + day : day}`;
@@ -48,23 +43,27 @@ const DayComponent = ({
         className={
           day === ''
             ? ''
-            : 'h-full border-2 border-gray-300 rounded-lg m-1 px-2 py-1'
+            : 'h-[100px] border-2 border-gray-300 rounded-lg m-1 px-2 py-1'
         }
         onClick={
-          isSpecialDay && isBefore(formattedDate, today) ? openModal : () => {}
+          specialDay && isBeforeWithTime(formattedDate, today)
+            ? openModal
+            : () => {}
         }
       >
         <span className={index === 0 ? 'text-red-500' : ''}>{day}</span>
-        {isSpecialDay ? (
-          <div className="flex items-center bg-gray-200 rounded-lg px-2">
+        {specialDay ? (
+          <div className="flex bg-gray-200 rounded-lg p-1">
             <div
               className={
                 isBefore(formattedDate, today)
-                  ? 'w-[13px] h-[13px] rounded-full bg-green-400'
-                  : 'w-[13px] h-[13px] rounded-full bg-red-400'
+                  ? 'w-[13px] h-[13px] rounded-full bg-green-400 my-1'
+                  : 'w-[13px] h-[13px] rounded-full bg-red-400 my-1'
               }
             ></div>
-            <span className="text-sm pl-1">{specialDay?.name}</span>
+            <span className="text-sm pl-1 w-[46px] h-[50px] overflow-hidden">
+              {specialDay?.name}
+            </span>
           </div>
         ) : null}
       </div>
@@ -72,7 +71,7 @@ const DayComponent = ({
   );
 };
 
-const AttendanceContainer = () => {
+const AttendanceContainer = ({cId}: {cId: number}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [specialDays, setSpecialDays] = useState<ClassDate[]>([]);
   const [currentYear, setCurrentYear] = useState<number>(
@@ -143,7 +142,7 @@ const AttendanceContainer = () => {
   }, [currentYear, currentMonth]);
 
   useEffect(() => {
-    getClassScheduleList(6).then(res => {
+    getClassScheduleList(cId).then(res => {
       const data: ScheduleData[] = res.data;
       console.log(data);
       const specialDays = data.map(e => {
@@ -257,7 +256,7 @@ const AttendanceContainer = () => {
             ))}
           </tbody>
         </table>
-        {isOpen ? <Attendance /> : null}
+        {isOpen ? <Attendance cId={cId} /> : null}
       </div>
     </div>
   );

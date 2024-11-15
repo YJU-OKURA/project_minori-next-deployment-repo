@@ -157,7 +157,9 @@ const MaterialList = ({
           <div
             className={`flex items-center ${
               // eslint-disable-next-line eqeqeq
-              material.name == mId ? 'bg-blue-300 text-black' : null
+              material.name == decodeURIComponent(mId)
+                ? 'bg-blue-300 text-black'
+                : null
             } rounded-full`}
             key={index}
           >

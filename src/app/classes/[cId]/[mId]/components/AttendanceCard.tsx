@@ -18,7 +18,7 @@ const AttendanceCard = ({cid}: {cid: number; uid: number}) => {
       const uids = res.map((user: ClassUser) => ({
         uid: user.uid,
         cid: cid,
-        csid: 19,
+        csid: 8,
         status: '',
       }));
       setSubmitUsers(uids);
@@ -34,6 +34,7 @@ const AttendanceCard = ({cid}: {cid: number; uid: number}) => {
   };
 
   const handleClickSave = () => {
+    console.log(submitUsers);
     postAttendance(submitUsers).then(() => {
       console.log('save');
       setIsOpen(false);

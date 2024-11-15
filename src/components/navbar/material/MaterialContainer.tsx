@@ -13,6 +13,7 @@ import {Material} from '@/src/interfaces/navbar';
 import icons from '@/public/svgs/navbar';
 import userState from '@/src/recoil/atoms/userState';
 import {useRecoilValue} from 'recoil';
+import gifs from '@/public/gif';
 // import test from '@/public/images/navbar'; // 学校のロゴイメージ
 
 const MaterialContainer = ({cId, mId}: {cId: string; mId: string}) => {
@@ -28,7 +29,7 @@ const MaterialContainer = ({cId, mId}: {cId: string; mId: string}) => {
 
   useEffect(() => {
     if (debounceVal) {
-      searchMaterial(parseInt(cId), debounceVal, 1, 5).then(res => {
+      searchMaterial(parseInt(cId), debounceVal, 1, 10).then(res => {
         setSearchMaterials(res);
       });
     }
@@ -50,10 +51,12 @@ const MaterialContainer = ({cId, mId}: {cId: string; mId: string}) => {
   //   onLoadMore();
   // }, [param.cId]);
 
-  const onLoadMore = () => {
+  const onLoadMore = async () => {
     setHasMore(false);
-    getMaterial(parseInt(cId), boardPage, 8)
-      .then(res => {
+    console.log('56 : ', boardPage);
+    await getMaterial(parseInt(cId), boardPage, 10)
+      .then(async res => {
+        console.log('59 : ', boardPage);
         if (res.length === 0) {
           setHasMore(false);
         } else {
@@ -61,13 +64,14 @@ const MaterialContainer = ({cId, mId}: {cId: string; mId: string}) => {
             ...(prevMaterials ? prevMaterials : []),
             ...res,
           ]);
-          setBoardPage(prevBoardPage => prevBoardPage + 1);
+          setBoardPage(boardPage + 1);
           setHasMore(true);
         }
       })
       .catch(() => {
         console.log('클래스에 접속된 상태가 아닙니다');
       });
+    console.log('74 : ', boardPage);
   };
 
   const handleInputText = (e: ChangeEvent<HTMLInputElement>) => {
@@ -164,7 +168,7 @@ const MaterialContainer = ({cId, mId}: {cId: string; mId: string}) => {
     <div className="w-full h-full">
       {/* search */}
       {cId && (
-        <div className="w-[calc(100%-40px)] h-[calc(100%-100px)] flex flex-col gap-4 m-auto my-3">
+        <div className="w-[calc(100%-40px)] h-full flex flex-col gap-4 m-auto my-3">
           <div className="flex items-center gap-4 py-1 bg-gray-300 rounded-lg">
             <Image
               src={icons.search}
@@ -196,12 +200,20 @@ const MaterialContainer = ({cId, mId}: {cId: string; mId: string}) => {
             <div className="w-6 h-6 m-1 bg-black rounded-full"></div>
             <div>document.pdf</div>
             </div> */}
-          <div className="h-full overflow-auto">
+          <div className="h-full overflow-auto my-2">
             <InfiniteScroll
               pageStart={1}
+              // loadMore={onLoadMore}
               loadMore={onLoadMore}
               hasMore={hasMore}
-              loader={<div key="unique"> loading...</div>}
+              loader={
+                <div
+                  key={`loader-${Date.now()}`}
+                  className="flex justify-center h-5 p-1 transition-opacity duration-300"
+                >
+                  <Image src={gifs.loading} alt="" width={100} height={20} />
+                </div>
+              }
               useWindow={false}
               threshold={20}
             >

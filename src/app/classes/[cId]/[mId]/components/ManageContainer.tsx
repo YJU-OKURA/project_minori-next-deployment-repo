@@ -14,7 +14,7 @@ const ManageContainer = (props: {cId: string}) => {
     資料: <ManageMaterialContainer />,
     クイズ: <QuizContainer cId={parseInt(props.cId)} />,
     フィードバック: <FeedbackContainer cId={parseInt(props.cId)} />,
-    出席: <AttendanceContainer />,
+    出席: <AttendanceContainer cId={parseInt(props.cId)} />,
   };
   return (
     // 퀴즈
