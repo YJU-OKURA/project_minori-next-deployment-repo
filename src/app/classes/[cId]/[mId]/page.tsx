@@ -6,7 +6,7 @@ import {SubContainer} from './components/subComponents';
 import userState from '@/src/recoil/atoms/userState';
 import materialState from '@/src/recoil/atoms/materialState';
 
-const Page = (props: {params: {cId: string; mId: string}}) => {
+const Page = (props: {params: {cId: string}}) => {
   const {params} = props;
   const user = useRecoilValue(userState);
   const [userRole, setUserRole] = useState<string>('');

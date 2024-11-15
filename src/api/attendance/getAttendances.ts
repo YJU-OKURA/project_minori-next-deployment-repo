@@ -1,9 +1,9 @@
 import req from '../apiUtils';
 
-const getAttendances = async (cId: number) => {
-  const response = await req(`/at/${cId}`, 'get', 'gin');
+const getAttendances = async (csId: number) => {
+  const response = await req(`/attendances/schedule/${csId}`, 'get', 'gin');
 
-  return response;
+  return response.data;
 };
 
 export default getAttendances;
