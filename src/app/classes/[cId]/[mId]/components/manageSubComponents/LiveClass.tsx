@@ -58,7 +58,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
   isTeacher = false,
   nickname = '',
 }) => {
-  // State 관리
   const [classStarted, setClassStarted] = useState(false);
   const [connectionState, setConnectionState] = useState<
     'connecting' | 'connected' | 'disconnected'
@@ -71,7 +70,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
   const [isSharingScreen, setIsSharingScreen] = useState(false);
   const [reconnectAttempts, setReconnectAttempts] = useState(0);
 
-  // Refs
   const deviceRef = useRef<Device | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const producerTransportRef = useRef<MediasoupTransport<AppData> | null>(null);
@@ -89,10 +87,7 @@ const LiveClass: React.FC<LiveClassProps> = ({
         ? `${protocol}://${window.location.host}/ws`
         : 'ws://localhost:8080';
 
-    // nickname이 없을 경우 기본값 설정
     const safeNickname = nickname || `User_${userId}`;
-
-    // URLSearchParams 사용하여 안전한 URL 생성
     const params = new URLSearchParams({
       roomId: classId.toString(),
       userId: userId.toString(),
@@ -119,23 +114,19 @@ const LiveClass: React.FC<LiveClassProps> = ({
     [handleError]
   );
 
-  // 최적의 인코딩 설정을 반환하는 함수
   const getOptimalEncodings = (kind: string) => {
     if (kind === 'video') {
       return [
-        {maxBitrate: 100000, scaleResolutionDownBy: 4, maxFramerate: 15}, // 낮은 품질
-        {maxBitrate: 300000, scaleResolutionDownBy: 2, maxFramerate: 30}, // 중간 품질
-        {maxBitrate: 900000, scaleResolutionDownBy: 1, maxFramerate: 60}, // 높은 품질
+        {maxBitrate: 100000, scaleResolutionDownBy: 4, maxFramerate: 15},
+        {maxBitrate: 300000, scaleResolutionDownBy: 2, maxFramerate: 30},
+        {maxBitrate: 900000, scaleResolutionDownBy: 1, maxFramerate: 60},
       ];
     } else if (kind === 'audio') {
-      return [
-        {maxBitrate: 64000}, // 음성 최적화
-      ];
+      return [{maxBitrate: 64000}];
     }
     return [];
   };
 
-  // 로컬 스트림 시작
   const startLocalStream = useCallback(async () => {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
@@ -149,12 +140,10 @@ const LiveClass: React.FC<LiveClassProps> = ({
 
       localStreamRef.current = stream;
 
-      // Producer 생성 전 상태 체크 추가
       if (!producerTransportRef.current || !deviceRef.current) {
         throw new Error('Transport or device not initialized');
       }
 
-      // Produce audio and video tracks
       for (const track of stream.getTracks()) {
         try {
           const producer = await producerTransportRef.current.produce({
@@ -186,7 +175,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
         },
       }));
 
-      // 초기 미디어 상태 설정
       stream.getTracks().forEach(track => {
         if (track.kind === 'audio') {
           track.enabled = mediaState.audio;
@@ -215,7 +203,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
     []
   );
 
-  // 화면 공유 최적화
   const getOptimalScreenShareConstraints = () => ({
     video: {
       displaySurface: 'monitor' as DisplayCaptureSurfaceType,
@@ -232,7 +219,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
     },
   });
 
-  // WebSocket 연결 설정
   const connectWebSocket = useCallback((): void => {
     if (wsRef.current?.readyState === WebSocket.CONNECTING) {
       console.log('WebSocket connection already in progress');
@@ -244,7 +230,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
-    // 연결 타임아웃 처리
     const connectionTimeout = setTimeout(() => {
       if (ws.readyState === WebSocket.CONNECTING) {
         ws.close();
@@ -258,7 +243,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
       setConnectionState('connected');
       setReconnectAttempts(0);
 
-      // 즉시 capabilities 요청
       ws.send(JSON.stringify({event: 'getRouterRtpCapabilities'}));
     };
 
@@ -276,7 +260,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
       console.log('WebSocket closed:', event);
       setConnectionState('disconnected');
 
-      // 정상적인 종료가 아닌 경우에만 재연결
       if (!event.wasClean) {
         handleReconnect();
       }
@@ -334,7 +317,7 @@ const LiveClass: React.FC<LiveClassProps> = ({
                       data: {kind, rtpParameters, appData},
                     })
                   );
-                  callback({id: Date.now().toString()}); // id를 반환하도록 수정
+                  callback({id: Date.now().toString()});
                 } catch (error) {
                   errback(
                     error instanceof Error ? error : new Error('Unknown error')
@@ -433,7 +416,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
     connectWebSocketRef.current = connectWebSocket;
   }, [connectWebSocket]);
 
-  // 화면 공유 시작
   const startScreenShare = async () => {
     try {
       const constraints = getOptimalScreenShareConstraints();
@@ -443,7 +425,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
 
       screenStreamRef.current = stream;
 
-      // Produce screen share track
       const videoTrack = stream.getVideoTracks()[0];
       const producer = await producerTransportRef.current?.produce({
         track: videoTrack,
@@ -485,7 +466,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
     }
   };
 
-  // 화면 공유 중지
   const stopScreenShare = async () => {
     const producer = producersRef.current.get('screen');
     if (producer) {
@@ -507,21 +487,16 @@ const LiveClass: React.FC<LiveClassProps> = ({
     }
   };
 
-  // 수업 종료
   const handleEndClass = useCallback(() => {
-    // Close all producers
     producersRef.current.forEach(producer => producer.close());
     producersRef.current.clear();
 
-    // Close all consumers
     consumersRef.current.forEach(consumer => consumer.close());
     consumersRef.current.clear();
 
-    // Close transports
     producerTransportRef.current?.close();
     consumerTransportRef.current?.close();
 
-    // Stop all tracks
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach(track => track.stop());
     }
@@ -529,17 +504,14 @@ const LiveClass: React.FC<LiveClassProps> = ({
       screenStreamRef.current.getTracks().forEach(track => track.stop());
     }
 
-    // Close WebSocket
     wsRef.current?.close();
 
-    // Reset states
     setClassStarted(false);
     setStreams({});
     setConnectionState('disconnected');
     setIsSharingScreen(false);
   }, []);
 
-  // 트랙 구독
   const subscribeToTrack = async (
     producerId: string,
     producerUserId: number
@@ -562,7 +534,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
     }
   };
 
-  // 미디어 상태 업데이트
   const updateMediaState = useCallback(
     (type: 'audio' | 'video', enabled: boolean) => {
       if (localStreamRef.current) {
@@ -580,7 +551,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
           [type]: enabled,
         }));
 
-        // Notify other participants about media state change
         wsRef.current?.send(
           JSON.stringify({
             event: 'mediaStateChange',
@@ -596,7 +566,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
     [userId]
   );
 
-  // 재연결 처리
   const handleReconnect = useCallback((): void => {
     if (reconnectAttempts < 5) {
       const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
@@ -626,7 +595,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
     };
   }, [handleEndClass]);
 
-  // 수업 시작
   const handleStartClass = useCallback(async () => {
     try {
       setClassStarted(true);
@@ -687,6 +655,37 @@ const LiveClass: React.FC<LiveClassProps> = ({
       ? 'grid-cols-3'
       : 'grid-cols-4';
   }, [streams]);
+
+  useEffect(() => {
+    if (classStarted) {
+      connectWebSocketRef.current?.();
+    }
+
+    return () => {
+      console.log('Cleaning up WebSocket connection');
+      if (wsRef.current) {
+        wsRef.current.close();
+        wsRef.current = null;
+      }
+      cleanupStreams();
+    };
+  }, [classStarted, cleanupStreams]);
+
+  useEffect(() => {
+    const handleNewStream = (event: MessageEvent) => {
+      const {event: eventType, data} = JSON.parse(event.data);
+      if (eventType === 'newProducer') {
+        const {producerId, userId: producerUserId} = data;
+        subscribeToTrack(producerId, producerUserId);
+      }
+    };
+
+    wsRef.current?.addEventListener('message', handleNewStream);
+
+    return () => {
+      wsRef.current?.removeEventListener('message', handleNewStream);
+    };
+  }, [subscribeToTrack]);
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100">
