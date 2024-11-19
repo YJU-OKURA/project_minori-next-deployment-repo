@@ -81,11 +81,12 @@ const LiveClass: React.FC<LiveClassProps> = ({
   const handleReconnectRef = useRef<(() => void) | null>(null);
   const connectWebSocketRef = useRef<(() => void) | null>(null);
   const wsUrl = useMemo(() => {
-    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    const baseUrl =
-      process.env.NODE_ENV === 'production'
-        ? `${protocol}://${window.location.host}/ws`
-        : 'ws://localhost:8080';
+    // const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    // const baseUrl =
+    //   process.env.NODE_ENV === 'production'
+    //     ? `${protocol}://${window.location.host}/ws`
+    //     : 'ws://localhost:8080';
+    const baseUrl = 'wss://minoriedu.com/ws';
 
     const safeNickname = nickname || `User_${userId}`;
     const params = new URLSearchParams({
