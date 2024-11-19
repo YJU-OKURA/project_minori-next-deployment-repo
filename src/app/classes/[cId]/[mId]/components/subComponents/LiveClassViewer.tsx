@@ -2,7 +2,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React, {useEffect, useRef, useState} from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
+import {Device, types} from 'mediasoup-client';
 
 interface LiveClassViewerProps {
   classId: number;
@@ -15,149 +20,134 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
   const [isCameraOn, setIsCameraOn] = useState(true);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
-  const pcRef = useRef<RTCPeerConnection | null>(null);
+  const deviceRef = useRef<Device | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
-  const iceCandidatesRef = useRef<any[]>([]);
-  const mediaStreamRef = useRef<MediaStream | null>(null);
+  const consumerTransportRef = useRef<types.Transport | null>(null);
+  const consumersRef = useRef<Map<string, types.Consumer>>(new Map());
 
-  const startWebSocket = () => {
-    const ws = new WebSocket(
-      // `ws://localhost:8080/?classId=${classId}&userId=${userId}`
-      `ws://3.39.137.182:8080/?classId=${classId}&userId=${userId}`
-    );
+  const wsUrl = useMemo(() => {
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const baseUrl =
+      process.env.NODE_ENV === 'production'
+        ? `${protocol}://${window.location.host}/mediasoup`
+        : 'ws://localhost:8000/mediasoup';
+
+    return `${baseUrl}?classId=${classId}&userId=${userId}`;
+  }, [classId, userId]);
+
+  const startWebSocket = useCallback(() => {
+    const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
-    ws.onopen = async () => {
+    ws.onopen = () => {
       console.log('WebSocket connected');
-      iceCandidatesRef.current.forEach(candidate => {
-        ws.send(JSON.stringify({event: 'candidate', data: candidate}));
-      });
-      iceCandidatesRef.current = [];
-
-      if (pcRef.current) {
-        try {
-          const mediaStream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: true,
-          });
-          mediaStreamRef.current = mediaStream;
-          mediaStream
-            .getTracks()
-            .forEach(track => pcRef.current?.addTrack(track, mediaStream));
-          if (localVideoRef.current) {
-            localVideoRef.current.srcObject = mediaStream;
-          }
-          const offer = await pcRef.current.createOffer();
-          await pcRef.current.setLocalDescription(offer);
-          ws.send(
-            JSON.stringify({
-              event: 'offer',
-              data: pcRef.current.localDescription,
-            })
-          );
-        } catch (error) {
-          console.error('Failed to start media stream', error);
-        }
-      }
+      ws.send(JSON.stringify({event: 'getRouterRtpCapabilities'}));
     };
 
     ws.onmessage = async event => {
       const {event: evt, data} = JSON.parse(event.data);
       console.log('Message received:', evt, data);
-      if (evt === 'offer' && pcRef.current) {
-        try {
-          console.log('Received offer:', data);
-          await pcRef.current.setRemoteDescription(
-            new RTCSessionDescription(data)
+
+      switch (evt) {
+        case 'routerRtpCapabilities': {
+          if (!deviceRef.current) {
+            const device = new Device();
+            await device.load({routerRtpCapabilities: data});
+            deviceRef.current = device;
+            ws.send(JSON.stringify({event: 'createConsumerTransport'}));
+          }
+          break;
+        }
+
+        case 'consumerTransportCreated': {
+          const transport = deviceRef.current?.createRecvTransport(data);
+          if (!transport) return;
+          consumerTransportRef.current = transport;
+
+          transport.on(
+            'connect',
+            async ({dtlsParameters}, callback, errback) => {
+              try {
+                ws.send(
+                  JSON.stringify({
+                    event: 'connectConsumerTransport',
+                    data: {dtlsParameters},
+                  })
+                );
+                callback();
+              } catch (error) {
+                errback(error as Error);
+              }
+            }
           );
-          const answer = await pcRef.current.createAnswer();
-          await pcRef.current.setLocalDescription(answer);
-          ws.send(JSON.stringify({event: 'answer', data: answer}));
-        } catch (error) {
-          console.error('Failed to handle offer:', error);
+
+          ws.send(JSON.stringify({event: 'getProducers'}));
+          break;
         }
-      } else if (evt === 'candidate') {
-        try {
-          await pcRef.current?.addIceCandidate(new RTCIceCandidate(data));
-        } catch (error) {
-          console.error('Failed to add ICE candidate', error);
+
+        case 'newProducer': {
+          const {producerId} = data;
+          ws.send(
+            JSON.stringify({
+              event: 'consume',
+              data: {
+                producerId,
+                rtpCapabilities: deviceRef.current?.rtpCapabilities,
+              },
+            })
+          );
+          break;
         }
+
+        case 'consumed': {
+          const {id, producerId: remoteProducerId, kind, rtpParameters} = data;
+          const consumer = await consumerTransportRef.current?.consume({
+            id,
+            producerId: remoteProducerId,
+            kind,
+            rtpParameters,
+          });
+
+          if (!consumer) return;
+
+          consumersRef.current.set(id, consumer);
+
+          const stream = new MediaStream([consumer.track]);
+          if (kind === 'video' && remoteVideoRef.current) {
+            remoteVideoRef.current.srcObject = stream;
+          }
+
+          ws.send(
+            JSON.stringify({
+              event: 'resumeConsumer',
+              data: {consumerId: id},
+            })
+          );
+          break;
+        }
+
+        default:
+          break;
       }
     };
 
     ws.onclose = () => {
       console.log('WebSocket closed');
     };
-  };
+  }, [wsUrl]);
 
   useEffect(() => {
     if (inClass) {
-      const pc = new RTCPeerConnection({
-        iceServers: [
-          {
-            urls: [
-              'stun:stun.l.google.com:19302',
-              'stun:stun1.l.google.com:19302',
-              'stun:stun2.l.google.com:19302',
-              'stun:stun3.l.google.com:19302',
-              'stun:stun4.l.google.com:19302',
-            ],
-          },
-          {
-            urls: 'turn:3.39.137.182:3478',
-            username: 'minori',
-            credential: 'minoriwebrtc',
-          },
-        ],
-      });
-      pc.addEventListener('icecandidate', event => {
-        if (event.candidate) {
-          wsRef.current?.send(
-            JSON.stringify({
-              event: 'candidate',
-              data: event.candidate,
-            })
-          );
-        }
-      });
-      pcRef.current = pc;
-
-      pc.onicecandidate = event => {
-        if (event.candidate) {
-          const candidateData = JSON.stringify({
-            event: 'candidate',
-            data: event.candidate.toJSON(),
-          });
-          if (wsRef.current?.readyState === WebSocket.OPEN) {
-            wsRef.current.send(candidateData);
-          } else {
-            iceCandidatesRef.current.push(event.candidate.toJSON());
-          }
-        }
-      };
-
-      pc.ontrack = event => {
-        if (remoteVideoRef.current) {
-          remoteVideoRef.current.srcObject = event.streams[0];
-        }
-      };
-
       startWebSocket();
 
       return () => {
-        pcRef.current?.close();
         wsRef.current?.close();
-        pcRef.current = null;
-        wsRef.current = null;
-        if (localVideoRef.current) {
-          localVideoRef.current.srcObject = null;
-        }
-        if (remoteVideoRef.current) {
-          remoteVideoRef.current.srcObject = null;
-        }
+        consumerTransportRef.current?.close();
+        consumersRef.current.forEach(consumer => consumer.close());
+        consumersRef.current.clear();
       };
     }
-  }, [inClass]);
+  }, [inClass, startWebSocket]);
 
   const handleJoinClass = () => {
     setInClass(true);
@@ -165,36 +155,10 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
 
   const handleLeaveClass = () => {
     wsRef.current?.close();
-    pcRef.current?.close();
-    pcRef.current = null;
-    wsRef.current = null;
+    consumerTransportRef.current?.close();
+    consumersRef.current.forEach(consumer => consumer.close());
+    consumersRef.current.clear();
     setInClass(false);
-    if (localVideoRef.current) {
-      localVideoRef.current.srcObject = null;
-    }
-    if (remoteVideoRef.current) {
-      remoteVideoRef.current.srcObject = null;
-    }
-  };
-
-  const toggleMicrophone = () => {
-    if (mediaStreamRef.current) {
-      const audioTrack = mediaStreamRef.current.getAudioTracks()[0];
-      if (audioTrack) {
-        audioTrack.enabled = !audioTrack.enabled;
-        setIsMicMuted(!audioTrack.enabled);
-      }
-    }
-  };
-
-  const toggleCamera = () => {
-    if (mediaStreamRef.current) {
-      const videoTrack = mediaStreamRef.current.getVideoTracks()[0];
-      if (videoTrack) {
-        videoTrack.enabled = !videoTrack.enabled;
-        setIsCameraOn(videoTrack.enabled);
-      }
-    }
   };
 
   return (
@@ -217,7 +181,7 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
             </button>
             <div className="flex space-x-4 mt-4">
               <button
-                onClick={toggleMicrophone}
+                onClick={() => setIsMicMuted(!isMicMuted)}
                 className={`${
                   isMicMuted ? 'bg-gray-500' : 'bg-blue-500'
                 } hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md`}
@@ -225,7 +189,7 @@ const LiveClassViewer: React.FC<LiveClassViewerProps> = ({classId, userId}) => {
                 {isMicMuted ? 'マイクオン' : 'マイクオフ'}
               </button>
               <button
-                onClick={toggleCamera}
+                onClick={() => setIsCameraOn(!isCameraOn)}
                 className={`${
                   isCameraOn ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-500'
                 } text-white font-bold py-2 px-4 rounded-md`}
