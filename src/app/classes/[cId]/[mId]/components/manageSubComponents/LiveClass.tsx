@@ -53,6 +53,12 @@ type AppData = {
   [key: string]: unknown;
 };
 
+interface SocketIOError extends Error {
+  description?: string;
+  context?: any;
+  type?: string;
+}
+
 const LiveClass: React.FC<LiveClassProps> = ({
   classId,
   userId,
@@ -228,6 +234,8 @@ const LiveClass: React.FC<LiveClassProps> = ({
   }, [reconnectAttempts, handleEndClass]);
 
   const connectSocket = useCallback(() => {
+    console.log('Connecting to Socket.IO server...');
+
     const socket = io(window.location.origin, {
       path: '/mediasoup',
       transports: ['websocket'],
@@ -239,25 +247,35 @@ const LiveClass: React.FC<LiveClassProps> = ({
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
+      timeout: 20000,
+      forceNew: true,
+      autoConnect: false,
     });
 
+    socket.on('connect_error', (error: SocketIOError) => {
+      console.error('Socket.IO connection error details:', {
+        message: error.message,
+        ...(error.description && {description: error.description}),
+        ...(error.context && {context: error.context}),
+        ...(error.type && {type: error.type}),
+        stack: error.stack,
+      });
+      setConnectionState('disconnected');
+    });
+
+    // 연결 시도 전 상태 로깅
+    console.log('Attempting Socket.IO connection with config:', {
+      url: window.location.origin,
+      path: '/mediasoup',
+      query: {
+        roomId: classId,
+        userId: userId,
+        nickname: nickname || `User_${userId}`,
+      },
+    });
+
+    socket.connect();
     socketRef.current = socket;
-
-    socket.on('connect', () => {
-      console.log('Socket.IO connected successfully');
-      setConnectionState('connected');
-      setReconnectAttempts(0);
-    });
-
-    socket.on('connect_error', error => {
-      console.error('Socket.IO connection error:', error);
-      setConnectionState('disconnected');
-    });
-
-    socket.on('disconnect', reason => {
-      console.log('Socket.IO disconnected:', reason);
-      setConnectionState('disconnected');
-    });
 
     return () => {
       socket.close();
