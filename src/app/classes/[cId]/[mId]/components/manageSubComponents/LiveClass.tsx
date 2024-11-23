@@ -1,12 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
+import React, {useEffect, useRef, useState, useCallback} from 'react';
 import {Device, types} from 'mediasoup-client';
 import AttendanceCard from '../AttendanceCard';
 import ConnectionStatus from './ConnectionStatus';
 import ControlButtons from './ControlButtons';
 import VideoBox from './VideoBox';
+import {io, Socket} from 'socket.io-client';
 
 interface StreamsState {
   [streamId: string]: {
@@ -71,7 +72,7 @@ const LiveClass: React.FC<LiveClassProps> = ({
   const [reconnectAttempts, setReconnectAttempts] = useState(0);
 
   const deviceRef = useRef<Device | null>(null);
-  const wsRef = useRef<WebSocket | null>(null);
+  const socketRef = useRef<Socket | null>(null);
   const producerTransportRef = useRef<MediasoupTransport<AppData> | null>(null);
   const consumerTransportRef = useRef<MediasoupTransport<AppData> | null>(null);
   const producersRef = useRef<Map<string, Producer<AppData>>>(new Map());
@@ -79,20 +80,7 @@ const LiveClass: React.FC<LiveClassProps> = ({
   const localStreamRef = useRef<MediaStream | null>(null);
   const screenStreamRef = useRef<MediaStream | null>(null);
   const handleReconnectRef = useRef<(() => void) | null>(null);
-  const connectWebSocketRef = useRef<(() => void) | null>(null);
-  const wsUrl = useMemo(() => {
-    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    const host = window.location.host;
-    const baseUrl = `${protocol}://${host}/mediasoup`;
-
-    const params = new URLSearchParams({
-      roomId: classId.toString(),
-      userId: userId.toString(),
-      nickname: encodeURIComponent(nickname || `User_${userId}`),
-    });
-
-    return `${baseUrl}?${params}`;
-  }, [classId, userId, nickname]);
+  const connectSocketRef = useRef<(() => void) | null>(null);
 
   const getOptimalEncodings = (kind: string) => {
     if (kind === 'video') {
@@ -216,7 +204,7 @@ const LiveClass: React.FC<LiveClassProps> = ({
       screenStreamRef.current.getTracks().forEach(track => track.stop());
     }
 
-    wsRef.current?.close();
+    socketRef.current?.close();
 
     setClassStarted(false);
     setStreams({});
@@ -231,7 +219,7 @@ const LiveClass: React.FC<LiveClassProps> = ({
 
       setTimeout(() => {
         setReconnectAttempts(prev => prev + 1);
-        connectWebSocketRef.current?.();
+        connectSocketRef.current?.();
       }, delay);
     } else {
       console.error('Max reconnection attempts reached');
@@ -239,54 +227,46 @@ const LiveClass: React.FC<LiveClassProps> = ({
     }
   }, [reconnectAttempts, handleEndClass]);
 
-  const connectWebSocket = useCallback(() => {
-    if (wsRef.current?.readyState === WebSocket.CONNECTING) {
-      console.log('WebSocket connection already in progress');
-      return;
-    }
+  const connectSocket = useCallback(() => {
+    const socket = io(window.location.origin, {
+      path: '/mediasoup',
+      transports: ['websocket'],
+      query: {
+        roomId: classId.toString(),
+        userId: userId.toString(),
+        nickname: encodeURIComponent(nickname || `User_${userId}`),
+      },
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
 
-    console.log('Connecting to WebSocket:', wsUrl);
-    const ws = new WebSocket(wsUrl);
-    wsRef.current = ws;
+    socketRef.current = socket;
 
-    ws.onopen = () => {
-      console.log('WebSocket connected successfully');
+    socket.on('connect', () => {
+      console.log('Socket.IO connected successfully');
       setConnectionState('connected');
       setReconnectAttempts(0);
-    };
+    });
 
-    ws.onerror = error => {
-      console.error('WebSocket error:', error);
+    socket.on('connect_error', error => {
+      console.error('Socket.IO connection error:', error);
       setConnectionState('disconnected');
-      handleReconnect();
-    };
+    });
 
-    ws.onclose = event => {
-      console.log('WebSocket closed:', event);
+    socket.on('disconnect', reason => {
+      console.log('Socket.IO disconnected:', reason);
       setConnectionState('disconnected');
-      handleReconnect();
-    };
-
-    // 연결 타임아웃 설정
-    const connectionTimeout = setTimeout(() => {
-      if (ws.readyState === WebSocket.CONNECTING) {
-        console.log('Connection timeout, closing socket');
-        ws.close();
-        handleReconnect();
-      }
-    }, 10000);
+    });
 
     return () => {
-      clearTimeout(connectionTimeout);
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.close();
-      }
+      socket.close();
     };
-  }, [wsUrl, handleReconnect]);
+  }, [classId, userId, nickname]);
 
   useEffect(() => {
-    connectWebSocketRef.current = connectWebSocket;
-  }, [connectWebSocket]);
+    connectSocketRef.current = connectSocket;
+  }, [connectSocket]);
 
   const startScreenShare = async () => {
     try {
@@ -366,16 +346,11 @@ const LiveClass: React.FC<LiveClassProps> = ({
     try {
       const {rtpCapabilities} = deviceRef.current!;
 
-      wsRef.current?.send(
-        JSON.stringify({
-          event: 'consume',
-          data: {
-            producerId,
-            rtpCapabilities,
-            userId: producerUserId,
-          },
-        })
-      );
+      socketRef.current?.emit('consume', {
+        producerId,
+        rtpCapabilities,
+        userId: producerUserId,
+      });
     } catch (error) {
       console.error('Failed to subscribe to track:', error);
     }
@@ -398,16 +373,11 @@ const LiveClass: React.FC<LiveClassProps> = ({
           [type]: enabled,
         }));
 
-        wsRef.current?.send(
-          JSON.stringify({
-            event: 'mediaStateChange',
-            data: {
-              userId,
-              type,
-              enabled,
-            },
-          })
-        );
+        socketRef.current?.emit('mediaStateChange', {
+          userId,
+          type,
+          enabled,
+        });
       }
     },
     [userId]
@@ -422,7 +392,7 @@ const LiveClass: React.FC<LiveClassProps> = ({
   useEffect(() => {
     return () => {
       handleEndClass();
-      wsRef.current?.close();
+      socketRef.current?.close();
       localStreamRef.current?.getTracks().forEach(track => track.stop());
     };
   }, [handleEndClass]);
@@ -431,7 +401,7 @@ const LiveClass: React.FC<LiveClassProps> = ({
     try {
       setClassStarted(true);
       setConnectionState('connecting');
-      connectWebSocketRef.current?.();
+      connectSocketRef.current?.();
     } catch (error) {
       console.error('Failed to start class:', error);
       setClassStarted(false);
@@ -463,14 +433,14 @@ const LiveClass: React.FC<LiveClassProps> = ({
 
   useEffect(() => {
     if (classStarted) {
-      connectWebSocketRef.current?.();
+      connectSocketRef.current?.();
     }
 
     return () => {
       console.log('Cleaning up WebSocket connection');
-      if (wsRef.current) {
-        wsRef.current.close();
-        wsRef.current = null;
+      if (socketRef.current) {
+        socketRef.current.close();
+        socketRef.current = null;
       }
       cleanupStreams();
     };
@@ -490,32 +460,35 @@ const LiveClass: React.FC<LiveClassProps> = ({
 
   useEffect(() => {
     if (classStarted) {
-      connectWebSocketRef.current?.();
+      connectSocketRef.current?.();
     }
 
     return () => {
       console.log('Cleaning up WebSocket connection');
-      if (wsRef.current) {
-        wsRef.current.close();
-        wsRef.current = null;
+      if (socketRef.current) {
+        socketRef.current.close();
+        socketRef.current = null;
       }
       cleanupStreams();
     };
   }, [classStarted, cleanupStreams]);
 
   useEffect(() => {
-    const handleNewStream = (event: MessageEvent) => {
-      const {event: eventType, data} = JSON.parse(event.data);
-      if (eventType === 'newProducer') {
-        const {producerId, userId: producerUserId} = data;
-        subscribeToTrack(producerId, producerUserId);
-      }
+    const handleNewProducer = (data: {producerId: string; userId: number}) => {
+      const {producerId, userId: producerUserId} = data;
+      subscribeToTrack(producerId, producerUserId);
     };
 
-    wsRef.current?.addEventListener('message', handleNewStream);
+    if (socketRef.current) {
+      // Socket.IO 이벤트 리스너 등록
+      socketRef.current.on('newProducer', handleNewProducer);
+    }
 
     return () => {
-      wsRef.current?.removeEventListener('message', handleNewStream);
+      if (socketRef.current) {
+        // Socket.IO 이벤트 리스너 제거
+        socketRef.current.off('newProducer', handleNewProducer);
+      }
     };
   }, [subscribeToTrack]);
 

@@ -46,7 +46,7 @@
     "recoil": "^0.7.7",
     "recoil-persist": "^5.1.0",
     "simple-peer": "^9.11.1",
-    "socket.io-client": "^4.7.5",
+    "socket.io-client": "^4.8.1",
     "swiper": "^11.1.0",
     "ts-node": "^10.9.2"
   },
