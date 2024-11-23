@@ -82,16 +82,16 @@ const LiveClass: React.FC<LiveClassProps> = ({
   const connectWebSocketRef = useRef<(() => void) | null>(null);
   const wsUrl = useMemo(() => {
     const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    const baseUrl = `${protocol}://${window.location.host}/mediasoup/socket.io`;
+    const host = window.location.host;
+    const baseUrl = `${protocol}://${host}/mediasoup`;
 
-    const safeNickname = encodeURIComponent(nickname || `User_${userId}`);
     const params = new URLSearchParams({
       roomId: classId.toString(),
       userId: userId.toString(),
-      nickname: safeNickname,
+      nickname: encodeURIComponent(nickname || `User_${userId}`),
     });
 
-    return `${baseUrl}?${params.toString()}`;
+    return `${baseUrl}?${params}`;
   }, [classId, userId, nickname]);
 
   const getOptimalEncodings = (kind: string) => {
@@ -199,63 +199,90 @@ const LiveClass: React.FC<LiveClassProps> = ({
     },
   });
 
-  const MAX_RECONNECT_ATTEMPTS = 3;
-  const RECONNECT_INTERVAL = 2000;
+  const handleEndClass = useCallback(() => {
+    producersRef.current.forEach(producer => producer.close());
+    producersRef.current.clear();
+
+    consumersRef.current.forEach(consumer => consumer.close());
+    consumersRef.current.clear();
+
+    producerTransportRef.current?.close();
+    consumerTransportRef.current?.close();
+
+    if (localStreamRef.current) {
+      localStreamRef.current.getTracks().forEach(track => track.stop());
+    }
+    if (screenStreamRef.current) {
+      screenStreamRef.current.getTracks().forEach(track => track.stop());
+    }
+
+    wsRef.current?.close();
+
+    setClassStarted(false);
+    setStreams({});
+    setConnectionState('disconnected');
+    setIsSharingScreen(false);
+  }, []);
+
+  const handleReconnect = useCallback((): void => {
+    if (reconnectAttempts < 5) {
+      const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
+      console.log(`Reconnecting (${reconnectAttempts + 1}/5) in ${delay}ms`);
+
+      setTimeout(() => {
+        setReconnectAttempts(prev => prev + 1);
+        connectWebSocketRef.current?.();
+      }, delay);
+    } else {
+      console.error('Max reconnection attempts reached');
+      handleEndClass();
+    }
+  }, [reconnectAttempts, handleEndClass]);
 
   const connectWebSocket = useCallback(() => {
-    let reconnectAttempts = 0;
+    if (wsRef.current?.readyState === WebSocket.CONNECTING) {
+      console.log('WebSocket connection already in progress');
+      return;
+    }
 
-    const connect = () => {
-      if (wsRef.current?.readyState === WebSocket.CONNECTING) {
-        console.log('WebSocket connection already in progress');
-        return;
-      }
+    console.log('Connecting to WebSocket:', wsUrl);
+    const ws = new WebSocket(wsUrl);
+    wsRef.current = ws;
 
-      console.log('Attempting WebSocket connection:', wsUrl);
-
-      const ws = new WebSocket(wsUrl);
-      wsRef.current = ws;
-
-      const connectionTimeout = setTimeout(() => {
-        if (ws.readyState === WebSocket.CONNECTING) {
-          ws.close();
-          handleReconnect();
-        }
-      }, 10000);
-
-      ws.onopen = () => {
-        clearTimeout(connectionTimeout);
-        console.log('WebSocket connected successfully');
-        setConnectionState('connected');
-        reconnectAttempts = 0;
-      };
-
-      ws.onerror = error => {
-        console.error('WebSocket error:', error);
-        handleReconnect();
-      };
-
-      ws.onclose = () => {
-        console.log('WebSocket closed');
-        handleReconnect();
-      };
+    ws.onopen = () => {
+      console.log('WebSocket connected successfully');
+      setConnectionState('connected');
+      setReconnectAttempts(0);
     };
 
-    const handleReconnect = () => {
-      if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
-        console.log(`Reconnecting... Attempt ${reconnectAttempts + 1}`);
-        setTimeout(() => {
-          reconnectAttempts++;
-          connect();
-        }, RECONNECT_INTERVAL);
-      } else {
-        console.error('Max reconnection attempts reached');
-        setConnectionState('disconnected');
-      }
+    ws.onerror = error => {
+      console.error('WebSocket error:', error);
+      setConnectionState('disconnected');
+      handleReconnect();
     };
 
-    connect();
-  }, [wsUrl]);
+    ws.onclose = event => {
+      console.log('WebSocket closed:', event);
+      setConnectionState('disconnected');
+      handleReconnect();
+    };
+
+    // 연결 타임아웃 설정
+    const connectionTimeout = setTimeout(() => {
+      if (ws.readyState === WebSocket.CONNECTING) {
+        console.log('Connection timeout, closing socket');
+        ws.close();
+        handleReconnect();
+      }
+    }, 10000);
+
+    return () => {
+      clearTimeout(connectionTimeout);
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
+    };
+  }, [wsUrl, handleReconnect]);
 
   useEffect(() => {
     connectWebSocketRef.current = connectWebSocket;
@@ -332,31 +359,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
     }
   };
 
-  const handleEndClass = useCallback(() => {
-    producersRef.current.forEach(producer => producer.close());
-    producersRef.current.clear();
-
-    consumersRef.current.forEach(consumer => consumer.close());
-    consumersRef.current.clear();
-
-    producerTransportRef.current?.close();
-    consumerTransportRef.current?.close();
-
-    if (localStreamRef.current) {
-      localStreamRef.current.getTracks().forEach(track => track.stop());
-    }
-    if (screenStreamRef.current) {
-      screenStreamRef.current.getTracks().forEach(track => track.stop());
-    }
-
-    wsRef.current?.close();
-
-    setClassStarted(false);
-    setStreams({});
-    setConnectionState('disconnected');
-    setIsSharingScreen(false);
-  }, []);
-
   const subscribeToTrack = async (
     producerId: string,
     producerUserId: number
@@ -410,21 +412,6 @@ const LiveClass: React.FC<LiveClassProps> = ({
     },
     [userId]
   );
-
-  const handleReconnect = useCallback((): void => {
-    if (reconnectAttempts < 5) {
-      const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
-      console.log(`Reconnecting (${reconnectAttempts + 1}/5) in ${delay}ms`);
-
-      setTimeout(() => {
-        setReconnectAttempts(prev => prev + 1);
-        connectWebSocketRef.current?.();
-      }, delay);
-    } else {
-      console.error('Max reconnection attempts reached');
-      handleEndClass();
-    }
-  }, [reconnectAttempts, handleEndClass]);
 
   useEffect(() => {
     handleReconnectRef.current = handleReconnect;
