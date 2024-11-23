@@ -239,6 +239,7 @@ const LiveClass: React.FC<LiveClassProps> = ({
     const socket = io(window.location.origin, {
       path: '/mediasoup',
       transports: ['websocket'],
+      upgrade: false,
       query: {
         roomId: classId.toString(),
         userId: userId.toString(),
@@ -247,13 +248,19 @@ const LiveClass: React.FC<LiveClassProps> = ({
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
-      timeout: 20000,
+      timeout: 10000,
       forceNew: true,
       autoConnect: false,
     });
 
+    // 연결 상태 모니터링 강화
+    socket.on('connect', () => {
+      console.log('Socket connected:', socket.id);
+      setConnectionState('connected');
+    });
+
     socket.on('connect_error', (error: SocketIOError) => {
-      console.error('Socket.IO connection error details:', {
+      console.error('Socket connection error:', {
         message: error.message,
         ...(error.description && {description: error.description}),
         ...(error.context && {context: error.context}),
@@ -263,15 +270,9 @@ const LiveClass: React.FC<LiveClassProps> = ({
       setConnectionState('disconnected');
     });
 
-    // 연결 시도 전 상태 로깅
-    console.log('Attempting Socket.IO connection with config:', {
-      url: window.location.origin,
-      path: '/mediasoup',
-      query: {
-        roomId: classId,
-        userId: userId,
-        nickname: nickname || `User_${userId}`,
-      },
+    socket.on('disconnect', reason => {
+      console.log('Socket disconnected:', reason);
+      setConnectionState('disconnected');
     });
 
     socket.connect();
