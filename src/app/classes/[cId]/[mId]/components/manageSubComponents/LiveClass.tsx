@@ -251,6 +251,20 @@ const LiveClass: React.FC<LiveClassProps> = ({
       forceNew: true,
       autoConnect: false,
       withCredentials: true,
+      extraHeaders: {
+        'X-Forwarded-Proto': 'https',
+      },
+    });
+
+    // 연결 상태 모니터링 강화
+    socket.on('connect', () => {
+      console.log('Socket connected successfully');
+      setConnectionState('connected');
+    });
+
+    socket.on('disconnect', reason => {
+      console.log('Socket disconnected:', reason);
+      setConnectionState('disconnected');
     });
 
     socket.on('connect_error', (error: SocketIOError) => {
