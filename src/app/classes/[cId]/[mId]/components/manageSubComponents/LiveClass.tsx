@@ -248,36 +248,22 @@ const LiveClass: React.FC<LiveClassProps> = ({
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
       timeout: 20000,
-      forceNew: true,
-      autoConnect: false,
       withCredentials: true,
-      extraHeaders: {
-        'X-Forwarded-Proto': 'https',
-      },
-    });
-
-    // 연결 상태 모니터링 강화
-    socket.on('connect', () => {
-      console.log('Socket connected successfully');
-      setConnectionState('connected');
-    });
-
-    socket.on('disconnect', reason => {
-      console.log('Socket disconnected:', reason);
-      setConnectionState('disconnected');
+      // SSL/TLS 설정
+      secure: true,
+      rejectUnauthorized: false,
     });
 
     socket.on('connect_error', (error: SocketIOError) => {
       console.error('Socket connection error:', {
         message: error.message,
-        ...(error.description && {description: error.description}),
-        ...(error.context && {context: error.context}),
-        ...(error.type && {type: error.type}),
-        stack: error.stack,
+        description: error.description,
+        context: error.context,
+        type: error.type,
         url: window.location.origin,
         path: '/mediasoup',
+        protocol: window.location.protocol,
       });
-      setConnectionState('disconnected');
     });
 
     socket.connect();
